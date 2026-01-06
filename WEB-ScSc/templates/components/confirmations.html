@@ -1,0 +1,279 @@
+<!-- Confirmation Modal -->
+<div class="modal fade" id="confirmationModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">{{ _(24) }}</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p id="confirmationMessage"></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="confirmNo">{{ _(112) }}</button>
+                <button type="button" class="btn btn-primary" id="confirmYes">{{ _(111) }}</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Edit Teacher Modal -->
+<div class="modal fade" id="teacherModal" tabindex="-1">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="teacherModalTitle">{{ _(0) }}</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="teacherForm">
+                    <input type="hidden" name="original_name">
+                    <div class="row">
+                        <div class="col-md-5">
+                            <div class="mb-3">
+                                <label for="teacherForm-name" class="form-label">{{ _(28) }}</label>
+                                <input id="teacherForm-name" type="text" class="form-control" name="name" required>
+                            </div>
+
+                            <!-- Subjects Selection -->
+                            <div class="mb-3">
+                                <label class="form-label">{{ _(5) }}</label>
+                                <div class="row">
+                                    <div class="col-12">
+                                        <label for="availableSubjects" class="form-label small">{{ _('Available Subjects') }}</label>
+                                        <select id="availableSubjects" class="form-select" size="8">
+                                            <!-- Populated by JS -->
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="row mt-2">
+                                    <div class="col-4 d-flex flex-column align-items-start">
+                                        <div class="mb-2 w-100">
+                                            <label for="subjectHours" class="form-label small">{{ _(12) }}</label>
+                                            <input id="subjectHours" type="number" class="form-control form-control-sm" placeholder="{{ _('Hours') }}" min="1">
+                                        </div>
+                                        <button type="button" class="btn btn-sm btn-primary mb-2" onclick="addSubjectToTeacher()">{{ _(90) }} &gt;&gt;</button>
+                                        <button type="button" class="btn btn-sm btn-danger" onclick="removeSubjectFromTeacher()">&lt;&lt; {{ _(91) }}</button>
+                                    </div>
+                                    <div class="col-8">
+                                        <label for="selectedSubjects" class="form-label small">{{ _('Selected Subjects (name:hours:group)') }}</label>
+                                        <select id="selectedSubjects" class="form-select" size="8" multiple>
+                                            <!-- Populated by JS -->
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-7">
+                            <!-- Interactive Availability Editor (Desktop-like) -->
+                            <div class="mb-3">
+                                <label for="intervalDay" class="form-label">{{ _('Interactive Availability Editor') }}</label>
+                                <div class="d-flex flex-column gap-2">
+                                    <!-- Row 1: Time Slots controls -->
+                                    <div class="d-flex gap-2 align-items-end">
+                                        <div style="min-width:140px">
+                                            <select id="intervalDay" class="form-select">
+                                                <!-- populated by JS -->
+                                            </select>
+                                        </div>
+                                        <div style="min-width:220px">
+                                            <div class="d-flex gap-2">
+                                                <select id="intervalStart" class="form-select">
+                                                    <!-- populated by JS -->
+                                                </select>
+                                                <select id="intervalEnd" class="form-select">
+                                                    <!-- populated by JS -->
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <button type="button" class="btn btn-sm btn-primary" id="addTimeSlotBtn">{{ _('Add Time Slots') }}</button>
+                                        </div>
+                                    </div>
+
+                                    <!-- Row 2: Real Hours controls (stacked below) -->
+                                    <div class="d-flex gap-2 align-items-end">
+                                        <div class="d-flex align-items-center" style="gap:8px">
+                                            <label for="checkIn" class="mb-0 small text-muted" style="min-width:80px">{{ _('Check-in') }}</label>
+                                            <input id="checkIn" type="text" class="form-control form-control-sm" placeholder="HH:MM" style="width:100px">
+                                            <label for="checkOut" class="mb-0 small text-muted">{{ _('Check-out') }}</label>
+                                            <input id="checkOut" type="text" class="form-control form-control-sm" placeholder="HH:MM" style="width:100px">
+                                            <button type="button" class="btn btn-sm btn-secondary" id="addRealHoursBtn">{{ _('Add Real Hours') }}</button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="mt-2">
+                                    <div style="max-height:260px; overflow:auto">
+                                        <table class="table table-sm" id="intervalsTable">
+                                            <thead>
+                                                <tr>
+                                                    <th style="width:30px"></th>
+                                                    <th>{{ _('Day') }}</th>
+                                                    <th>{{ _('Lessons') }}</th>
+                                                    <th>{{ _('Time Slots') }}</th>
+                                                    <th>{{ _('Real Hours') }}</th>
+                                                    <th style="width:60px"></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <!-- rows inserted by JS -->
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="alert alert-warning">
+                        {{ _('⚠️ Priority Order:<br>Teacher\'s Weekly Hours (PRIMARY) - If provided, Time Slots and Lessons are calculated from this<br>Time Slots (SECONDARY) - Used only if Weekly Hours is empty. Converted to lesson numbers<br>Lessons (TERTIARY) - Used only if both above are empty')|safe }}
+                    </div>
+                    
+                    <!-- Hidden textareas for JS interval data transfer -->
+                    <textarea name="weekly_hours" style="display:none"></textarea>
+                    <textarea name="time_slots" style="display:none"></textarea>
+                    <textarea name="availability" style="display:none"></textarea>
+                    <!-- End hidden textareas -->
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ _(25) }}</button>
+                <button type="button" class="btn btn-primary" onclick="saveTeacher()">{{ _(26) }}</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Edit Group Modal -->
+<div class="modal fade" id="groupModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="groupModalTitle">{{ _(1) }}</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="groupForm">
+                    <input type="hidden" name="original_name">
+                    <div class="mb-3">
+                        <label for="groupForm-name" class="form-label">{{ _(29) }}</label>
+                        <input id="groupForm-name" type="text" class="form-control" name="name" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="groupForm-comments" class="form-label">{{ _('Comments') }}</label>
+                        <textarea id="groupForm-comments" class="form-control" name="comments" rows="2"></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ _(25) }}</button>
+                <button type="button" class="btn btn-primary" onclick="saveGroup()">{{ _(26) }}</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Edit Subject Modal -->
+<div class="modal fade" id="subjectModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="subjectModalTitle">{{ _(2) }}</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="subjectForm">
+                    <input type="hidden" name="original_name">
+                    <div class="mb-3">
+                        <label for="subjectForm-name" class="form-label">{{ _(30) }}</label>
+                        <input id="subjectForm-name" type="text" class="form-control" name="name" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="subjectForm-group" class="form-label">{{ _(13) }}</label>
+                        <select class="form-select" name="group" required>
+                            <!-- Populated by JS -->
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="subjectForm-hours" class="form-label">{{ _(31) }}</label>
+                        <input id="subjectForm-hours" type="number" class="form-control" name="hours_per_week" min="1" required>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ _(25) }}</button>
+                <button type="button" class="btn btn-primary" onclick="saveSubject()">{{ _(26) }}</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Edit Lesson Modal -->
+<div class="modal fade" id="lessonModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">{{ _(16) }}</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="lessonForm">
+                    <input type="hidden" name="day">
+                    <input type="hidden" name="lesson">
+                    <div class="mb-3">
+                        <label for="lessonForm-subject" class="form-label">{{ _(11) }}</label>
+                        <select id="lessonForm-subject" class="form-select" name="subject" required>
+                            <!-- Populated by JS -->
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="lessonForm-teacher" class="form-label">{{ _(3) }}</label>
+                        <select id="lessonForm-teacher" class="form-select" name="teacher" required>
+                            <!-- Populated by JS -->
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">{{ _('Aggressive Assigned - Against the Rules') }}</label>
+                        <div id="aggressiveSubjectsWrapper" style="position:relative">
+                            <select id="aggressiveSubjects" class="form-select" style="background:#fff8e1" title="Double-click the bar to enable">
+                                <!-- populated by JS with all subjects for this group; disabled until dblclick on wrapper -->
+                            </select>
+                            <div id="aggressiveOverlay" style="position:absolute;inset:0;background:rgba(255,255,255,0.6);cursor:default;display:block;" title="Double-click to enable"></div>
+                        </div>
+                        <input type="hidden" name="aggressive_assigned" value="0">
+                        <input type="hidden" name="aggressive_subject" value="">
+                        <div class="form-text small text-muted">{{ _('Double-click the area to enable aggressive assignment; it will only record the subject name.') }}</div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" onclick="deleteLesson()">{{ _(91) }}</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ _(25) }}</button>
+                <button type="button" class="btn btn-primary" onclick="saveLesson()">{{ _(26) }}</button>
+            </div>
+        </div>
+    </div>
+
+            <!-- Favorites Modal (Load/Manage Favorites) -->
+            <div class="modal fade" id="favoritesModal" tabindex="-1">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">{{ _('Favorites') }}</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div id="favoritesList" style="max-height:400px; overflow:auto">
+                                <!-- Populated by JS -->
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ _(25) }}</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+</div>

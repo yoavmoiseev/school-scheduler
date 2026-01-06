@@ -1,0 +1,29 @@
+<!-- Import Modal -->
+<div class="modal fade" id="importModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">{{ _('Import from Excel') }}</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                        <label class="form-label">{{ _('Select Excel file from ExcelExamples folder:') }}</label>
+                        <select id="importFileSelect" class="form-select">
+                            <option value="">{{ _('Loading...') }}</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">{{ _('Or choose a local file:') }}</label>
+                        <input id="importFileInput" type="file" accept=".xlsx,.xls" class="form-control" />
+                        <div class="form-text">{{ _('If you select a local file, it will be uploaded and imported.') }}</div>
+                    </div>
+                <div id="importResult" class="alert" style="display: none;"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ _('Cancel') }}</button>
+                <button id="import-modal-btn" type="button" class="btn btn-primary" onclick="executeImport()">{{ _('Import from Excel') }}</button>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,321 @@
+{
+  "groups": {
+    "12-Bet": {
+      "1": {
+        "Sunday": "Groups1",
+        "Tuesday": "Tik-12",
+        "Wednesday": "Math-12",
+        "Thursday": "Tik-12"
+      },
+      "2": {
+        "Sunday": "Groups1",
+        "Monday": "Rus-12",
+        "Tuesday": "Tik-12",
+        "Wednesday": "Math-12",
+        "Thursday": "Tik-12"
+      },
+      "3": {
+        "Sunday": "Math-12",
+        "Monday": "Rus-12",
+        "Tuesday": "English-12"
+      },
+      "4": {
+        "Sunday": "Math-12",
+        "Tuesday": "English-12",
+        "Wednesday": "Groups1",
+        "Thursday": "Tik-12"
+      },
+      "5": {
+        "Sunday": "Tik-12",
+        "Monday": "Rus-12",
+        "Tuesday": "Math-12",
+        "Wednesday": "Groups1",
+        "Thursday": "Groups1"
+      },
+      "6": {
+        "Sunday": "Groups1",
+        "Tuesday": "Math-12",
+        "Thursday": "Groups1"
+      },
+      "7": {
+        "Sunday": "English-12",
+        "Tuesday": "English-12"
+      },
+      "8": {
+        "Sunday": "English-12",
+        "Tuesday": "Groups1"
+      }
+    },
+    "11-Alef": {
+      "1": {
+        "Sunday": "Russian-11",
+        "Tuesday": "Math-11"
+      },
+      "2": {
+        "Sunday": "Russian-11",
+        "Tuesday": "Math-11"
+      },
+      "3": {
+        "Sunday": "English-11",
+        "Tuesday": "Tikshuv-11",
+        "Wednesday": "Tikshuv-11",
+        "Thursday": "Tikshuv-11"
+      },
+      "4": {
+        "Sunday": "English-11",
+        "Monday": "Russian-11",
+        "Tuesday": "Tikshuv-11",
+        "Thursday": "Math-11"
+      },
+      "5": {
+        "Sunday": "Math-11",
+        "Tuesday": "English-11"
+      },
+      "6": {
+        "Sunday": "Russian-11",
+        "Tuesday": "English-11"
+      },
+      "7": {
+        "Sunday": "Math-11"
+      },
+      "8": {
+        "Sunday": "Tikshuv-11"
+      }
+    },
+    "10-Yud": {
+      "1": {
+        "Sunday": "Eng-10",
+        "Tuesday": "Eng-10"
+      },
+      "2": {
+        "Sunday": "Eng-10"
+      },
+      "3": {
+        "Sunday": "Tiksh-10",
+        "Tuesday": "Math-10",
+        "Wednesday": "Math-10"
+      },
+      "4": {
+        "Sunday": "Tiksh-10",
+        "Tuesday": "Math-10"
+      },
+      "5": {
+        "Sunday": "Russ-10"
+      },
+      "6": {
+        "Monday": "Russ-10"
+      }
+    },
+    "9-Tet": {
+      "2": {
+        "Tuesday": "Eng-9"
+      },
+      "3": {
+        "Thursday": "Math-9"
+      },
+      "5": {
+        "Sunday": "Eng-9"
+      },
+      "7": {
+        "Sunday": "Tik-9",
+        "Tuesday": "Math-9",
+        "Thursday": "Math-9"
+      }
+    },
+    "8-het": {
+      "6": {
+        "Sunday": "English-8"
+      },
+      "8": {
+        "Sunday": "Math-8",
+        "Tuesday": "English-8"
+      }
+    }
+  },
+  "teachers": {
+    "Yoav M": {
+      "1": {
+        "Sunday": "Groups1",
+        "Tuesday": "Tik-12",
+        "Thursday": "Tik-12"
+      },
+      "2": {
+        "Sunday": "Groups1",
+        "Tuesday": "Tik-12",
+        "Thursday": "Tik-12"
+      },
+      "4": {
+        "Wednesday": "Groups1",
+        "Thursday": "Tik-12",
+        "Tuesday": "Tikshuv-11",
+        "Sunday": "Tiksh-10"
+      },
+      "5": {
+        "Sunday": "Tik-12",
+        "Wednesday": "Groups1",
+        "Thursday": "Groups1"
+      },
+      "6": {
+        "Sunday": "Groups1",
+        "Thursday": "Groups1"
+      },
+      "8": {
+        "Tuesday": "Groups1",
+        "Sunday": "Tikshuv-11"
+      },
+      "3": {
+        "Tuesday": "Tikshuv-11",
+        "Wednesday": "Tikshuv-11",
+        "Thursday": "Tikshuv-11",
+        "Sunday": "Tiksh-10"
+      },
+      "7": {
+        "Sunday": "Tik-9"
+      }
+    },
+    "Igor": {
+      "1": {
+        "Wednesday": "Math-12",
+        "Tuesday": "Math-11"
+      },
+      "2": {
+        "Wednesday": "Math-12",
+        "Tuesday": "Math-11"
+      },
+      "3": {
+        "Sunday": "Math-12",
+        "Tuesday": "Math-10",
+        "Wednesday": "Math-10",
+        "Thursday": "Math-9"
+      },
+      "4": {
+        "Sunday": "Math-12",
+        "Thursday": "Math-11",
+        "Tuesday": "Math-10"
+      },
+      "5": {
+        "Tuesday": "Math-12",
+        "Sunday": "Math-11"
+      },
+      "6": {
+        "Tuesday": "Math-12"
+      },
+      "7": {
+        "Sunday": "Math-11",
+        "Tuesday": "Math-9",
+        "Thursday": "Math-9"
+      },
+      "8": {
+        "Sunday": "Math-8"
+      }
+    },
+    "Inda": {
+      "3": {
+        "Tuesday": "English-12",
+        "Sunday": "English-11"
+      },
+      "4": {
+        "Tuesday": "English-12",
+        "Sunday": "English-11"
+      },
+      "7": {
+        "Sunday": "English-12",
+        "Tuesday": "English-12"
+      },
+      "8": {
+        "Sunday": "English-12",
+        "Tuesday": "English-8"
+      },
+      "5": {
+        "Tuesday": "English-11",
+        "Sunday": "Eng-9"
+      },
+      "6": {
+        "Tuesday": "English-11",
+        "Sunday": "English-8"
+      },
+      "1": {
+        "Sunday": "Eng-10",
+        "Tuesday": "Eng-10"
+      },
+      "2": {
+        "Sunday": "Eng-10",
+        "Tuesday": "Eng-9"
+      }
+    },
+    "Sasha": {
+      "2": {
+        "Monday": "Rus-12",
+        "Sunday": "Russian-11"
+      },
+      "3": {
+        "Monday": "Rus-12"
+      },
+      "5": {
+        "Monday": "Rus-12",
+        "Sunday": "Russ-10"
+      },
+      "1": {
+        "Sunday": "Russian-11"
+      },
+      "4": {
+        "Monday": "Russian-11"
+      },
+      "6": {
+        "Sunday": "Russian-11",
+        "Monday": "Russ-10"
+      }
+    }
+  },
+  "global": {
+    "1": {
+      "Sunday": "Groups1 / Russian-11 / Eng-10",
+      "Tuesday": "Tik-12 / Math-11 / Eng-10",
+      "Wednesday": "Math-12",
+      "Thursday": "Tik-12"
+    },
+    "2": {
+      "Sunday": "Groups1 / Russian-11 / Eng-10",
+      "Monday": "Rus-12",
+      "Tuesday": "Tik-12 / Math-11 / Eng-9",
+      "Wednesday": "Math-12",
+      "Thursday": "Tik-12"
+    },
+    "3": {
+      "Sunday": "Math-12 / English-11 / Tiksh-10",
+      "Monday": "Rus-12",
+      "Tuesday": "English-12 / Tikshuv-11 / Math-10",
+      "Wednesday": "Tikshuv-11 / Math-10",
+      "Thursday": "Tikshuv-11 / Math-9"
+    },
+    "4": {
+      "Sunday": "Math-12 / English-11 / Tiksh-10",
+      "Tuesday": "English-12 / Tikshuv-11 / Math-10",
+      "Wednesday": "Groups1",
+      "Thursday": "Tik-12 / Math-11",
+      "Monday": "Russian-11"
+    },
+    "5": {
+      "Sunday": "Tik-12 / Math-11 / Russ-10 / Eng-9",
+      "Monday": "Rus-12",
+      "Tuesday": "Math-12 / English-11",
+      "Wednesday": "Groups1",
+      "Thursday": "Groups1"
+    },
+    "6": {
+      "Sunday": "Groups1 / Russian-11 / English-8",
+      "Tuesday": "Math-12 / English-11",
+      "Thursday": "Groups1",
+      "Monday": "Russ-10"
+    },
+    "7": {
+      "Sunday": "English-12 / Math-11 / Tik-9",
+      "Tuesday": "English-12 / Math-9",
+      "Thursday": "Math-9"
+    },
+    "8": {
+      "Sunday": "English-12 / Tikshuv-11 / Math-8",
+      "Tuesday": "Groups1 / English-8"
+    }
+  }
+}

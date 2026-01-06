@@ -1,0 +1,292 @@
+index,english
+0,Add Teacher
+1,Add Group
+2,Add Subject
+3,Teachers
+4,Groups
+5,Subjects
+6,Day View
+7,Group Scheduler
+8,Teacher Scheduler
+9,General Configuration
+10,Name
+11,Subject
+12,Hours
+13,Group
+14,Teachers Weekly Hours
+15,Availability
+16,Edit Selected
+17,Delete Selected
+18,Move Up ↑
+19,Move Down ↓
+20,Select a teacher to edit
+21,Select a group to edit
+22,Select a subject to edit
+23,Are you sure you want to delete?
+24,Confirm
+25,Cancel
+26,Save
+27,Close
+28,Teacher Name
+29,Group Name
+30,Subject Name
+31,Hours Per Week
+32,Select group:
+33,Select teacher:
+34,Autofill
+35,Clear
+36,Print to PDF
+37,Monday
+38,Tuesday
+39,Wednesday
+40,Thursday
+41,Friday
+42,Saturday
+43,Sunday
+44,Lesson
+45,Time Range
+46,Schedule created successfully
+47,Errors occurred:
+48,Rebuild the schedule? This will delete the current schedule and create a new one.
+49,"Delete all schedules? This will remove all generated schedules but keep Teachers, Groups, and Subjects."
+50,Are you sure you want to save the configuration? This will apply the changes.
+51,Configuration saved successfully
+52,GUI Language
+53,Application Name
+54,Application Size
+55,Autofill Direction
+56,Max Autofill Retries
+57,Max Sequence Lessons
+58,Max Per Day
+59,Number of Lessons
+60,Weekdays
+61,English
+62,Hebrew
+63,Russian
+64,Forward
+65,Backward
+66,Random
+67,Import from Excel
+68,Export to Excel
+69,Export to PDF
+70,Clear All Schedules
+71,Refresh
+72,Help
+73,About
+74,Settings
+75,Exit
+76,File
+77,Edit
+78,View
+79,Tools
+80,Language
+81,Theme
+82,Light
+83,Dark
+84,Auto
+85,Search
+86,Filter
+87,Sort
+88,Ascending
+89,Descending
+90,Add
+91,Remove
+92,Update
+93,Duplicate
+94,Copy
+95,Paste
+96,Cut
+97,Undo
+98,Redo
+99,Select All
+100,Deselect All
+101,Assigned/Available
+102,No teacher found for
+103,Could not place all hours for
+104,placed
+105,Check In
+106,Check Out
+107,Apply
+108,Reset
+109,Default
+110,Custom
+111,Yes
+112,No
+113,OK
+114,Error
+115,Warning
+116,Info
+117,Success
+118,Loading...
+119,Please wait...
+120,Processing...
+121,Completed
+122,Failed
+123,Pending
+124,Active
+125,Inactive
+126,Enabled
+127,Disabled
+128,Required field
+129,Invalid input
+130,Value too large
+131,Value too small
+132,Invalid format
+133,Already exists
+134,Not found
+135,Access denied
+136,Operation cancelled
+137,Operation completed
+138,Saving...
+139,Saved
+140,Not saved
+141,Changes detected
+142,No changes
+143,Discard changes?
+144,Export completed
+145,Import completed
+146,Export failed
+147,Import failed
+148,Select file
+149,Upload
+150,Download
+151,Preview
+152,Print
+153,Page
+154,of
+155,First
+156,Last
+157,Next
+158,Previous
+159,Show
+160,Hide
+161,Expand
+162,Collapse
+163,Open
+164,Close All
+165,Refresh All
+166,Clear All
+167,Delete All
+168,Export All
+169,Import All
+170,Select Date
+171,Today
+172,Yesterday
+173,Tomorrow
+174,This Week
+175,Last Week
+176,Next Week
+177,This Month
+178,Last Month
+179,Next Month
+180,This Year
+181,Last Year
+182,Next Year
+183,Custom Range
+184,Start Date
+185,End Date
+186,Start Time
+187,End Time
+188,Duration
+189,Total
+190,Average
+191,Minimum
+192,Maximum
+193,Count
+194,Sum
+195,Percentage
+196,Status
+197,Type
+198,Category
+199,Priority
+200,Description
+201,Passwords do not match
+202,Account created successfully! Redirecting to login...
+203,Signup failed
+204,An error occurred. Please try again.
+205,Login failed
+206,Please select a file
+207,Logout failed
+208,Please select a subject from available subjects
+209,This subject is already added
+210,Teacher name is required
+211,"Choose day, start and end"
+212,All existing data will be erased. An Export to Excel will run first. Continue?
+213,Start must be before end
+214,Choose day and enter check in/out
+215,Times do not match any lessons
+216,Select a teacher to delete
+217,Select a teacher to move
+218,Select a group to edit
+219,Create your account
+220,Login to your account
+221,First Name
+222,Last Name
+223,Email (optional)
+224,Username
+225,Password
+226,Confirm Password
+227,Sign Up
+228,Login
+229,Already have an account? Login
+230,Don't have an account? Sign Up
+231,Show Alert Close
+232,Clear All Data
+233,Rebuild All
+234,Logout
+235,Day Scheduler
+236,Select Weekday
+237,Available Subjects
+238,Selected Subjects (name:hours:group)
+239,Interactive Availability Editor
+240,Add Time Slots
+241,Check-in
+242,Check-out
+243,Add Real Hours
+244,Day
+245,Lessons
+246,Time Slots
+247,Real Hours
+248,Priority Order:
+249,Teacher's Weekly Hours
+250,Time Slots (SECONDARY)
+251,Lessons (TERTIARY)
+252,Loading...
+253,Edit Teacher
+254,Click to set time
+255,Click to edit
+256,Delete slot
+257,All
+258,Edit Group
+259,Edit Subject
+260,Delete
+261,Sign Up
+262,School Scheduler
+263,"Username must be at least 3 characters and contain only letters, numbers, and underscores"
+264,Password must be at least 6 characters
+265,"Before rebuilding, please export your current data to Excel as a backup."
+266,I already exported
+267,Export now
+268,Rebuild All (Autofill)
+269,"Maximum 10 favorites reached. Open ""Load from Favorites"", remove one or more entries, then try saving again. Opening the list now."
+270,Maximum 10 favorites reached. Delete one before saving.
+271,Save to Favorites
+272,Load from Favorites
+273,Save to Favorites
+274,Load from Favorites
+275,Saved to Favorites
+276,"If provided, Time Slots and Lessons are calculated from this"
+277,Used only if Weekly Hours is empty. Converted to lesson numbers
+278,Used only if both above are empty
+279,Total Required / Assigned
+280,Comments
+281,Teacher's Weekly Hours
+282,Time Slots (SECONDARY)
+283,Lessons (TERTIARY)
+284,Teacher's Weekly Hours (PRIMARY)
+285,"⚠️ Priority Order:<br>Teacher's Weekly Hours (PRIMARY) - If provided, Time Slots and Lessons are calculated from this<br>Time Slots (SECONDARY) - Used only if Weekly Hours is empty. Converted to lesson numbers<br>Lessons (TERTIARY) - Used only if both above are empty"
+286,💡 Tips:
+287,Click on any time range in the table to edit it inline
+288,"Time format: H:MM-H:MM or HH:MM-HH:MM (e.g., 9:15-10:00 or 09:15-10:00)"
+289,"Press Enter to save, Escape to cancel inline editing"
+290,"Number of slots will auto-sync with ""Number of lessons"" setting"

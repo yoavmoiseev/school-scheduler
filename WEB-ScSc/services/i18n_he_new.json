@@ -1,0 +1,17 @@
+{
+  "Delete all data files (teachers/groups/subjects/schedules)?": "למחוק את כל קבצי הנתונים (מורים/קבוצות/מקצועות/מערכות)?",
+  "Are you sure you want to logout?": "האם אתה בטוח שברצונך להתנתק?",
+  "Set priorities for rebuild. Use Up/Down to change order. Press Run when ready.": "הגדר סדרי עדיפויות לבנייה מחדש. השתמש/י במעלה/מטה כדי לשנות את הסדר. לחץ/י על 'הפעל' כשמוכן/ה.",
+  "Run": "הפעל",
+  "Days Priority": "עדיפות ימים",
+  "Teachers Priority": "עדיפות מורים",
+  "Subjects Priority": "עדיפות מקצועות",
+  "Groups Priority": "עדיפות קבוצות",
+  "⚠️ Priority Order:<br>Teacher's Weekly Hours (PRIMARY) - If provided, Time Slots and Lessons are calculated from this<br>Time Slots (SECONDARY) - Used only if Weekly Hours is empty. Converted to lesson numbers<br>Lessons (TERTIARY) - Used only if both above are empty": "⚠️ סדר עדיפויות:<br>שעות שבועיות של המורה (ראשוני) - אם הוזנו, טווחי הזמן ושיעורים יחושבו על פיהם<br>טווחי זמן (משני) - ישמשו רק אם שדה 'שעות שבועיות' ריק. יומרו למספרי שיעור<br>שיעורים (שלישוני) - ישמשו רק אם שני השדות שלעיל ריקים",
+  "Rebuild All.": "בנה הכל מחדש",
+  "Rebuild results": "תוצאות הבנייה מחדש",
+  "Errors:": "שגיאות:",
+  "No teacher found for subject 'חינוך גופני' in group '\u05d9\"\u05d0'": "לא נמצא מורה לנושא 'חינוך גופני' בקבוצה '\u05d9\"\u05d0'",
+  "Attempts: ": "ניסיונות:",
+  "Don't have an account?": "אין חשבון?"
+}

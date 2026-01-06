@@ -1,0 +1,57 @@
+<!-- Rebuild All Modal -->
+<div class="modal fade" id="rebuildModal" tabindex="-1">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">{{ _('Rebuild All (Autofill)') }}</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <div id="rebuild-step-export">
+          <p>{{ _('Before rebuilding, please export your current data to Excel as a backup.') }}</p>
+          <div class="d-flex gap-2">
+            <button id="rebuild-export-now" class="btn btn-secondary">{{ _('Export now') }}</button>
+            <button id="rebuild-continue" class="btn btn-primary">{{ _('I already exported') }}</button>
+            <button id="rebuild-cancel" class="btn btn-light" data-bs-dismiss="modal">{{ _('Cancel') }}</button>
+          </div>
+          <hr />
+        </div>
+
+        <div id="rebuild-step-priorities" style="display:none">
+          <p>{{ _('Set priorities for rebuild. Use Up/Down to change order. Press Run when ready.') }}</p>
+          <div class="row">
+            <div class="col-md-3">
+              <h6>{{ _('Groups Priority') }}</h6>
+              <div id="prio-groups" class="list-group prio-list" style="max-height:400px;overflow:auto"></div>
+            </div>
+            <div class="col-md-3">
+              <h6>{{ _('Subjects Priority') }}</h6>
+              <div id="prio-subjects" class="list-group prio-list" style="max-height:400px;overflow:auto"></div>
+            </div>
+            <div class="col-md-3">
+              <h6>{{ _('Teachers Priority') }}</h6>
+              <div id="prio-teachers" class="list-group prio-list" style="max-height:400px;overflow:auto"></div>
+            </div>
+            <div class="col-md-3">
+              <h6>{{ _('Days Priority') }}</h6>
+              <div id="prio-days" class="list-group prio-list" style="max-height:400px;overflow:auto"></div>
+            </div>
+          </div>
+        </div>
+
+        <div id="rebuild-progress" style="display:none">
+          <p id="rebuild-progress-text">{{ _('Running...') }}</p>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button id="rebuild-run" type="button" class="btn btn-success" style="display:none">{{ _('Run') }}</button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ _('Close') }}</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+.prio-item { display:flex; align-items:center; justify-content:space-between }
+.prio-move { margin-left:8px }
+</style>

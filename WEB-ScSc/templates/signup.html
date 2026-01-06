@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="{{ current_lang if current_lang is defined else 'en' }}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ _('Sign Up') }} - {{ _('School Scheduler') }}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px 0;
+        }
+        .auth-card {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            padding: 40px;
+            max-width: 500px;
+            width: 100%;
+            margin: 20px 0;
+        }
+        .auth-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .auth-header h1 {
+            color: #667eea;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .auth-header p {
+            color: #6c757d;
+            margin-bottom: 0;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            padding: 12px;
+            font-weight: 600;
+        }
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+        }
+        .form-control:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+        }
+        .auth-footer {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .auth-footer a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 600;
+        }
+        .auth-footer a:hover {
+            text-decoration: underline;
+        }
+        .alert {
+            border-radius: 10px;
+        }
+        .row {
+            margin-left: -8px;
+            margin-right: -8px;
+        }
+        .row > div {
+            padding-left: 8px;
+            padding-right: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="auth-card">
+        <div class="auth-header">
+            <h1 data-i18n="School Scheduler">📚 School Scheduler</h1>
+            <p data-i18n="Create your account">Create your account</p>
+            <div style="margin-top:10px; text-align:right;">
+                <select id="langSelect" class="form-select form-select-sm" style="width:140px;display:inline-block;">
+                    <option value="English" {% if current_lang=='English' %}selected{% endif %}>English</option>
+                    <option value="Hebrew" {% if current_lang=='Hebrew' %}selected{% endif %}>עברית</option>
+                    <option value="Russian" {% if current_lang=='Russian' %}selected{% endif %}>Русский</option>
+                </select>
+            </div>
+        </div>
+        
+        <div id="alert-container"></div>
+        
+        <form id="signupForm">
+            <div class="row mb-3">
+                <div class="col-md-6">
+                        <label for="first_name" class="form-label" data-i18n="First Name">First Name</label>
+                        <input type="text" class="form-control" id="first_name" name="first_name" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="last_name" class="form-label" data-i18n="Last Name">Last Name</label>
+                        <input type="text" class="form-control" id="last_name" name="last_name" required>
+                    </div>
+            </div>
+            
+            <div class="mb-3">
+                <label for="email" class="form-label" data-i18n="Email (optional)">Email (optional)</label>
+                <input type="email" class="form-control" id="email" name="email">
+            </div>
+            
+            <div class="mb-3">
+                  <label for="username" class="form-label" data-i18n="Username">Username</label>
+                  <input type="text" class="form-control" id="username" name="username" required 
+                      pattern="[a-zA-Z0-9_]{3,}" title="{{ _('Username must be at least 3 characters and contain only letters, numbers, and underscores') }}">
+            </div>
+            
+            <div class="mb-3">
+                  <label for="password" class="form-label" data-i18n="Password">Password</label>
+                  <input type="password" class="form-control" id="password" name="password" required
+                      minlength="6" title="{{ _('Password must be at least 6 characters') }}">
+            </div>
+            
+            <div class="mb-3">
+                <label for="confirm_password" class="form-label" data-i18n="Confirm Password">Confirm Password</label>
+                <input type="password" class="form-control" id="confirm_password" name="confirm_password" required>
+            </div>
+            
+            <button type="submit" class="btn btn-primary w-100" data-i18n="Sign Up">Sign Up</button>
+        </form>
+        
+        <div class="auth-footer">
+            <span><span data-i18n="Already have an account?">Already have an account?</span> <a href="/login" data-i18n="Login">Login</a></span>
+        </div>
+    </div>
+    
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="{{ url_for('static', filename='js/api_client.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/i18n.js') }}"></script>
+    <script>
+        $('#signupForm').on('submit', async function(e) {
+            e.preventDefault();
+            
+            const password = $('#password').val();
+            const confirm_password = $('#confirm_password').val();
+            
+            if (password !== confirm_password) {
+                showAlert('danger', _('Passwords do not match'));
+                return;
+            }
+            
+            const formData = {
+                username: $('#username').val(),
+                password: password,
+                first_name: $('#first_name').val(),
+                last_name: $('#last_name').val(),
+                email: $('#email').val() || null
+            };
+            
+            try {
+                const response = await fetch('/api/auth/signup', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(formData)
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    showAlert('success', _('Account created successfully! Redirecting to login...'));
+                    setTimeout(() => {
+                        window.location.href = '/login';
+                    }, 2000);
+                } else {
+                    showAlert('danger', data.error || _('Signup failed'));
+                }
+            } catch (error) {
+                showAlert('danger', _('An error occurred. Please try again.'));
+            }
+        });
+        
+        function showAlert(type, message) {
+            const alert = `
+                <div class="alert alert-${type} alert-dismissible fade show" role="alert">
+                    ${message}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            `;
+            $('#alert-container').html(alert);
+        }
+        // Language selector: redirect with ?lang=...
+        $('#langSelect').on('change', function() {
+            const v = $(this).val();
+            const url = new URL(window.location.href);
+            url.searchParams.set('lang', v);
+            window.location.href = url.pathname + '?' + url.searchParams.toString();
+        });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Load translations then apply client-side translations for elements with data-i18n
+        $(document).ready(async function() {
+            const lang = $('html').attr('lang') || 'English';
+            await I18N.load(lang);
+            $('[data-i18n]').each(function() {
+                const key = $(this).data('i18n');
+                $(this).text(_(key));
+            });
+        });
+    </script>
+</body>
+</html>

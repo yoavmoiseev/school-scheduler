@@ -1,0 +1,94 @@
+{
+  "subjects": [
+    {
+      "name": "Tik-12",
+      "hours_per_week": 6,
+      "group": "12-Bet"
+    },
+    {
+      "name": "Tikshuv-11",
+      "hours_per_week": 5,
+      "group": "11-Alef"
+    },
+    {
+      "name": "Tiksh-10",
+      "hours_per_week": 2,
+      "group": "10-Yud"
+    },
+    {
+      "name": "Tik-9",
+      "hours_per_week": 2,
+      "group": "9-Tet"
+    },
+    {
+      "name": "Math-12",
+      "hours_per_week": 6,
+      "group": "12-Bet"
+    },
+    {
+      "name": "Math-11",
+      "hours_per_week": 5,
+      "group": "11-Alef"
+    },
+    {
+      "name": "Math-10",
+      "hours_per_week": 3,
+      "group": "10-Yud"
+    },
+    {
+      "name": "Math-9",
+      "hours_per_week": 3,
+      "group": "9-Tet"
+    },
+    {
+      "name": "Math-8",
+      "hours_per_week": 2,
+      "group": "8-het"
+    },
+    {
+      "name": "English-12",
+      "hours_per_week": 5,
+      "group": "12-Bet"
+    },
+    {
+      "name": "English-11",
+      "hours_per_week": 4,
+      "group": "11-Alef"
+    },
+    {
+      "name": "Eng-10",
+      "hours_per_week": 3,
+      "group": "10-Yud"
+    },
+    {
+      "name": "Eng-9",
+      "hours_per_week": 2,
+      "group": "9-Tet"
+    },
+    {
+      "name": "English-8",
+      "hours_per_week": 2,
+      "group": "8-het"
+    },
+    {
+      "name": "Rus-12",
+      "hours_per_week": 4,
+      "group": "12-Bet"
+    },
+    {
+      "name": "Russian-11",
+      "hours_per_week": 4,
+      "group": "11-Alef"
+    },
+    {
+      "name": "Russ-10",
+      "hours_per_week": 2,
+      "group": "10-Yud"
+    },
+    {
+      "name": "Groups1",
+      "hours_per_week": 5,
+      "group": "12-Bet"
+    }
+  ]
+}

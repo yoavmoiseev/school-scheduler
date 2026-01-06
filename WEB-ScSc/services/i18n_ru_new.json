@@ -1,0 +1,20 @@
+{
+  "Delete all data files (teachers/groups/subjects/schedules)?": "Удалить все файлы данных (учителя/группы/предметы/расписания)?",
+  "Are you sure you want to logout?": "Вы уверены, что хотите выйти?",
+  "Set priorities for rebuild. Use Up/Down to change order. Press Run when ready.": "Установите приоритеты для перестроения. Используйте Вверх/Вниз для изменения порядка. Нажмите «Запустить», когда будете готовы.",
+  "Run": "Запустить",
+  "Days Priority": "Приоритет дней",
+  "Teachers Priority": "Приоритет учителей",
+  "Subjects Priority": "Приоритет предметов",
+  "Groups Priority": "Приоритет групп",
+  "⚠️ Priority Order:<br>Teacher's Weekly Hours (PRIMARY) - If provided, Time Slots and Lessons are calculated from this<br>Time Slots (SECONDARY) - Used only if Weekly Hours is empty. Converted to lesson numbers<br>Lessons (TERTIARY) - Used only if both above are empty": "⚠️ Порядок приоритетов:<br>Недельные часы преподавателя (ПЕРВИЧНЫЕ) - если заданы, по ним рассчитываются временные интервалы и номера уроков<br>Временные интервалы (ВТОРИЧНЫЕ) - используются только если поле 'Недельные часы' пусто. Преобразуются в номера уроков<br>Уроки (ТЕРЦИЧНЫЕ) - используются только если оба вышеуказанных поля пусты",
+  "Rebuild All.": "Пересобрать всё",
+  "Rebuild results": "Результаты пересборки",
+  "Errors:": "Ошибки:",
+  "No teacher found for subject 'חינוך גופני' in group '\u05d9\"\u05d0'": "Не найден преподаватель по предмету 'חינוך גופני' в группе '\u05d9\"\u05d0'",
+  "Attempts: ": "Попытки:",
+  "Login to your account": "Войдите в свою учётную запись",
+  "Don't have an account?": "Ещё нет аккаунта?",
+  "Sign Up": "Зарегистрироваться",
+  "School Scheduler": "Редактор расписания школы"
+}

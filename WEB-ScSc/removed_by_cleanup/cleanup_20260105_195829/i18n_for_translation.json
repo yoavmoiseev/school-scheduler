@@ -1,0 +1,1748 @@
+[
+  {
+    "index": 0,
+    "english": "Add Teacher",
+    "hebrew": "הוסף מורה",
+    "russian": "Добавить учителя"
+  },
+  {
+    "index": 1,
+    "english": "Add Group",
+    "hebrew": "הוסף קבוצה",
+    "russian": "Добавить группу"
+  },
+  {
+    "index": 2,
+    "english": "Add Subject",
+    "hebrew": "הוסף מקצוע",
+    "russian": "Добавить предмет"
+  },
+  {
+    "index": 3,
+    "english": "Teachers",
+    "hebrew": "מורים",
+    "russian": "Учителя"
+  },
+  {
+    "index": 4,
+    "english": "Groups",
+    "hebrew": "קבוצות",
+    "russian": "Группы"
+  },
+  {
+    "index": 5,
+    "english": "Subjects",
+    "hebrew": "מקצועות",
+    "russian": "Предметы"
+  },
+  {
+    "index": 6,
+    "english": "Day View",
+    "hebrew": "תצוגת יום",
+    "russian": "Просмотр дня"
+  },
+  {
+    "index": 7,
+    "english": "Group Scheduler",
+    "hebrew": "מתזמן קבוצות",
+    "russian": "Расписание групп"
+  },
+  {
+    "index": 8,
+    "english": "Teacher Scheduler",
+    "hebrew": "מתזמן מורים",
+    "russian": "Расписание учителей"
+  },
+  {
+    "index": 9,
+    "english": "General Configuration",
+    "hebrew": "הגדרות כלליות",
+    "russian": "Общие настройки"
+  },
+  {
+    "index": 10,
+    "english": "Name",
+    "hebrew": "שם",
+    "russian": "Имя"
+  },
+  {
+    "index": 11,
+    "english": "Subject",
+    "hebrew": "מקצוע",
+    "russian": "Предмет"
+  },
+  {
+    "index": 12,
+    "english": "Hours",
+    "hebrew": "שעות",
+    "russian": "Часы"
+  },
+  {
+    "index": 13,
+    "english": "Group",
+    "hebrew": "קבוצה",
+    "russian": "Группа"
+  },
+  {
+    "index": 14,
+    "english": "Teachers Weekly Hours",
+    "hebrew": "שעות שבועיות של מורים",
+    "russian": "Недельные часы учителей"
+  },
+  {
+    "index": 15,
+    "english": "Availability",
+    "hebrew": "זמינות",
+    "russian": "Доступность"
+  },
+  {
+    "index": 16,
+    "english": "Edit Selected",
+    "hebrew": "ערוך נבחר",
+    "russian": "Редактировать выбранное"
+  },
+  {
+    "index": 17,
+    "english": "Delete Selected",
+    "hebrew": "מחק נבחר",
+    "russian": "Удалить выбранное"
+  },
+  {
+    "index": 18,
+    "english": "Move Up ↑",
+    "hebrew": "העבר למעלה ↑",
+    "russian": "Переместить вверх ↑"
+  },
+  {
+    "index": 19,
+    "english": "Move Down ↓",
+    "hebrew": "העבר למטה ↓",
+    "russian": "Переместить вниз ↓"
+  },
+  {
+    "index": 20,
+    "english": "Select a teacher to edit",
+    "hebrew": "בחר מורה לעריכה",
+    "russian": "Выберите учителя для редактирования"
+  },
+  {
+    "index": 21,
+    "english": "Select a group to edit",
+    "hebrew": "בחר קבוצה לעריכה",
+    "russian": "Выберите группу для редактирования"
+  },
+  {
+    "index": 22,
+    "english": "Select a subject to edit",
+    "hebrew": "בחר מקצוע לעריכה",
+    "russian": "Выберите предмет для редактирования"
+  },
+  {
+    "index": 23,
+    "english": "Are you sure you want to delete?",
+    "hebrew": "האם אתה בטוח שברצונך למחוק?",
+    "russian": "Вы уверены, что хотите удалить?"
+  },
+  {
+    "index": 24,
+    "english": "Confirm",
+    "hebrew": "אישור",
+    "russian": "Подтвердить"
+  },
+  {
+    "index": 25,
+    "english": "Cancel",
+    "hebrew": "ביטול",
+    "russian": "Отмена"
+  },
+  {
+    "index": 26,
+    "english": "Save",
+    "hebrew": "שמור",
+    "russian": "Сохранить"
+  },
+  {
+    "index": 27,
+    "english": "Close",
+    "hebrew": "סגור",
+    "russian": "Закрыть"
+  },
+  {
+    "index": 28,
+    "english": "Teacher Name",
+    "hebrew": "שם מורה",
+    "russian": "Имя учителя"
+  },
+  {
+    "index": 29,
+    "english": "Group Name",
+    "hebrew": "שם קבוצה",
+    "russian": "Название группы"
+  },
+  {
+    "index": 30,
+    "english": "Subject Name",
+    "hebrew": "שם מקצוע",
+    "russian": "Название предмета"
+  },
+  {
+    "index": 31,
+    "english": "Hours Per Week",
+    "hebrew": "שעות בשבוע",
+    "russian": "Часов в неделю"
+  },
+  {
+    "index": 32,
+    "english": "Select group:",
+    "hebrew": "בחר קבוצה:",
+    "russian": "Выберите группу:"
+  },
+  {
+    "index": 33,
+    "english": "Select teacher:",
+    "hebrew": "בחר מורה:",
+    "russian": "Выберите учителя:"
+  },
+  {
+    "index": 34,
+    "english": "Autofill",
+    "hebrew": "מילוי אוטומטי",
+    "russian": "Автозаполнение"
+  },
+  {
+    "index": 35,
+    "english": "Clear",
+    "hebrew": "נקה",
+    "russian": "Очистить"
+  },
+  {
+    "index": 36,
+    "english": "Print to PDF",
+    "hebrew": "הדפס ל-PDF",
+    "russian": "Печать в PDF"
+  },
+  {
+    "index": 37,
+    "english": "Monday",
+    "hebrew": "יום שני",
+    "russian": "Понедельник"
+  },
+  {
+    "index": 38,
+    "english": "Tuesday",
+    "hebrew": "יום שלישי",
+    "russian": "Вторник"
+  },
+  {
+    "index": 39,
+    "english": "Wednesday",
+    "hebrew": "יום רביעי",
+    "russian": "Среда"
+  },
+  {
+    "index": 40,
+    "english": "Thursday",
+    "hebrew": "יום חמישי",
+    "russian": "Четверг"
+  },
+  {
+    "index": 41,
+    "english": "Friday",
+    "hebrew": "יום שישי",
+    "russian": "Пятница"
+  },
+  {
+    "index": 42,
+    "english": "Saturday",
+    "hebrew": "יום שבת",
+    "russian": "Суббота"
+  },
+  {
+    "index": 43,
+    "english": "Sunday",
+    "hebrew": "יום ראשון",
+    "russian": "Воскресенье"
+  },
+  {
+    "index": 44,
+    "english": "Lesson",
+    "hebrew": "שיעור",
+    "russian": "Урок"
+  },
+  {
+    "index": 45,
+    "english": "Time Range",
+    "hebrew": "טווח זמן",
+    "russian": "Временной диапазон"
+  },
+  {
+    "index": 46,
+    "english": "Schedule created successfully",
+    "hebrew": "מערכת שעות נוצרה בהצלחה",
+    "russian": "Расписание успешно создано"
+  },
+  {
+    "index": 47,
+    "english": "Errors occurred:",
+    "hebrew": "אירעו שגיאות:",
+    "russian": "Произошли ошибки:"
+  },
+  {
+    "index": 48,
+    "english": "Rebuild the schedule? This will delete the current schedule and create a new one.",
+    "hebrew": "לבנות מחדש את המערכת? פעולה זו תמחק את המערכת הנוכחית ותיצור חדשה.",
+    "russian": "Перестроить расписание? Это удалит текущее расписание и создаст новое."
+  },
+  {
+    "index": 49,
+    "english": "Delete all schedules? This will remove all generated schedules but keep Teachers, Groups, and Subjects.",
+    "hebrew": "למחוק את כל המערכות? פעולה זו תסיר את כל המערכות שנוצרו אך תשאיר מורים, קבוצות ומקצועות.",
+    "russian": "Удалить все расписания? Это удалит все созданные расписания, но сохранит учителей, группы и предметы."
+  },
+  {
+    "index": 50,
+    "english": "Are you sure you want to save the configuration? This will apply the changes.",
+    "hebrew": "האם אתה בטוח שברצונך לשמור את ההגדרות? פעולה זו תחיל את השינויים.",
+    "russian": "Вы уверены, что хотите сохранить конфигурацию? Это применит изменения."
+  },
+  {
+    "index": 51,
+    "english": "Configuration saved successfully",
+    "hebrew": "ההגדרות נשמרו בהצלחה",
+    "russian": "Конфигурация успешно сохранена"
+  },
+  {
+    "index": 52,
+    "english": "GUI Language",
+    "hebrew": "שפת ממשק",
+    "russian": "Язык интерфейса"
+  },
+  {
+    "index": 53,
+    "english": "Application Name",
+    "hebrew": "שם יישום",
+    "russian": "Название приложения"
+  },
+  {
+    "index": 54,
+    "english": "Application Size",
+    "hebrew": "גודל יישום",
+    "russian": "Размер приложения"
+  },
+  {
+    "index": 55,
+    "english": "Autofill Direction",
+    "hebrew": "כיוון מילוי אוטומטי",
+    "russian": "Направление автозаполнения"
+  },
+  {
+    "index": 56,
+    "english": "Max Autofill Retries",
+    "hebrew": "מקסימום נסיונות מילוי",
+    "russian": "Максимум попыток автозаполнения"
+  },
+  {
+    "index": 57,
+    "english": "Max Sequence Lessons",
+    "hebrew": "מקסימום שיעורים רצופים",
+    "russian": "Максимум уроков подряд"
+  },
+  {
+    "index": 58,
+    "english": "Max Per Day",
+    "hebrew": "מקסימום ליום",
+    "russian": "Максимум в день"
+  },
+  {
+    "index": 59,
+    "english": "Number of Lessons",
+    "hebrew": "מספר שיעורים",
+    "russian": "Количество уроков"
+  },
+  {
+    "index": 60,
+    "english": "Weekdays",
+    "hebrew": "ימי שבוע",
+    "russian": "Дни недели"
+  },
+  {
+    "index": 61,
+    "english": "English",
+    "hebrew": "אנגלית",
+    "russian": "Английский"
+  },
+  {
+    "index": 62,
+    "english": "Hebrew",
+    "hebrew": "עברית",
+    "russian": "Иврит"
+  },
+  {
+    "index": 63,
+    "english": "Russian",
+    "hebrew": "רוסית",
+    "russian": "Русский"
+  },
+  {
+    "index": 64,
+    "english": "Forward",
+    "hebrew": "קדימה",
+    "russian": "Вперёд"
+  },
+  {
+    "index": 65,
+    "english": "Backward",
+    "hebrew": "אחורה",
+    "russian": "Назад"
+  },
+  {
+    "index": 66,
+    "english": "Random",
+    "hebrew": "אקראי",
+    "russian": "Случайно"
+  },
+  {
+    "index": 67,
+    "english": "Import from Excel",
+    "hebrew": "ייבא מאקסל",
+    "russian": "Импорт из Excel"
+  },
+  {
+    "index": 68,
+    "english": "Export to Excel",
+    "hebrew": "ייצא לאקסל",
+    "russian": "Экспорт в Excel"
+  },
+  {
+    "index": 69,
+    "english": "Export to PDF",
+    "hebrew": "ייצא ל-PDF",
+    "russian": "Экспорт в PDF"
+  },
+  {
+    "index": 70,
+    "english": "Clear All Schedules",
+    "hebrew": "נקה את כל המערכות",
+    "russian": "Очистить все расписания"
+  },
+  {
+    "index": 71,
+    "english": "Refresh",
+    "hebrew": "רענן",
+    "russian": "Обновить"
+  },
+  {
+    "index": 72,
+    "english": "Help",
+    "hebrew": "עזרה",
+    "russian": "Помощь"
+  },
+  {
+    "index": 73,
+    "english": "About",
+    "hebrew": "אודות",
+    "russian": "О программе"
+  },
+  {
+    "index": 74,
+    "english": "Settings",
+    "hebrew": "הגדרות",
+    "russian": "Настройки"
+  },
+  {
+    "index": 75,
+    "english": "Exit",
+    "hebrew": "יציאה",
+    "russian": "Выход"
+  },
+  {
+    "index": 76,
+    "english": "File",
+    "hebrew": "קובץ",
+    "russian": "Файл"
+  },
+  {
+    "index": 77,
+    "english": "Edit",
+    "hebrew": "עריכה",
+    "russian": "Редактировать"
+  },
+  {
+    "index": 78,
+    "english": "View",
+    "hebrew": "תצוגה",
+    "russian": "Вид"
+  },
+  {
+    "index": 79,
+    "english": "Tools",
+    "hebrew": "כלים",
+    "russian": "Инструменты"
+  },
+  {
+    "index": 80,
+    "english": "Language",
+    "hebrew": "שפה",
+    "russian": "Язык"
+  },
+  {
+    "index": 81,
+    "english": "Theme",
+    "hebrew": "ערכת נושא",
+    "russian": "Тема"
+  },
+  {
+    "index": 82,
+    "english": "Light",
+    "hebrew": "בהיר",
+    "russian": "Светлая"
+  },
+  {
+    "index": 83,
+    "english": "Dark",
+    "hebrew": "כהה",
+    "russian": "Тёмная"
+  },
+  {
+    "index": 84,
+    "english": "Auto",
+    "hebrew": "אוטומטי",
+    "russian": "Авто"
+  },
+  {
+    "index": 85,
+    "english": "Search",
+    "hebrew": "חיפוש",
+    "russian": "Поиск"
+  },
+  {
+    "index": 86,
+    "english": "Filter",
+    "hebrew": "סינון",
+    "russian": "Фильтр"
+  },
+  {
+    "index": 87,
+    "english": "Sort",
+    "hebrew": "מיון",
+    "russian": "Сортировка"
+  },
+  {
+    "index": 88,
+    "english": "Ascending",
+    "hebrew": "עולה",
+    "russian": "По возрастанию"
+  },
+  {
+    "index": 89,
+    "english": "Descending",
+    "hebrew": "יורד",
+    "russian": "По убыванию"
+  },
+  {
+    "index": 90,
+    "english": "Add",
+    "hebrew": "הוסף",
+    "russian": "Добавить"
+  },
+  {
+    "index": 91,
+    "english": "Remove",
+    "hebrew": "הסר",
+    "russian": "Удалить"
+  },
+  {
+    "index": 92,
+    "english": "Update",
+    "hebrew": "עדכן",
+    "russian": "Обновить"
+  },
+  {
+    "index": 93,
+    "english": "Duplicate",
+    "hebrew": "שכפל",
+    "russian": "Дублировать"
+  },
+  {
+    "index": 94,
+    "english": "Copy",
+    "hebrew": "העתק",
+    "russian": "Копировать"
+  },
+  {
+    "index": 95,
+    "english": "Paste",
+    "hebrew": "הדבק",
+    "russian": "Вставить"
+  },
+  {
+    "index": 96,
+    "english": "Cut",
+    "hebrew": "גזור",
+    "russian": "Вырезать"
+  },
+  {
+    "index": 97,
+    "english": "Undo",
+    "hebrew": "בטל",
+    "russian": "Отменить"
+  },
+  {
+    "index": 98,
+    "english": "Redo",
+    "hebrew": "בצע שוב",
+    "russian": "Повторить"
+  },
+  {
+    "index": 99,
+    "english": "Select All",
+    "hebrew": "בחר הכל",
+    "russian": "Выбрать всё"
+  },
+  {
+    "index": 100,
+    "english": "Deselect All",
+    "hebrew": "בטל בחירה",
+    "russian": "Отменить выбор"
+  },
+  {
+    "index": 101,
+    "english": "Assigned/Available",
+    "hebrew": "משוייך/זמין",
+    "russian": "Назначено/Доступно"
+  },
+  {
+    "index": 102,
+    "english": "No teacher found for",
+    "hebrew": "לא נמצא מורה עבור",
+    "russian": "Не найден учитель для"
+  },
+  {
+    "index": 103,
+    "english": "Could not place all hours for",
+    "hebrew": "לא ניתן למקם את כל השעות עבור",
+    "russian": "Не удалось разместить все часы для"
+  },
+  {
+    "index": 104,
+    "english": "placed",
+    "hebrew": "ממוקם",
+    "russian": "размещено"
+  },
+  {
+    "index": 105,
+    "english": "Check In",
+    "hebrew": "כניסה",
+    "russian": "Время прихода"
+  },
+  {
+    "index": 106,
+    "english": "Check Out",
+    "hebrew": "יציאה",
+    "russian": "Время ухода"
+  },
+  {
+    "index": 107,
+    "english": "Apply",
+    "hebrew": "החל",
+    "russian": "Применить"
+  },
+  {
+    "index": 108,
+    "english": "Reset",
+    "hebrew": "אפס",
+    "russian": "Сбросить"
+  },
+  {
+    "index": 109,
+    "english": "Default",
+    "hebrew": "ברירת מחדל",
+    "russian": "По умолчанию"
+  },
+  {
+    "index": 110,
+    "english": "Custom",
+    "hebrew": "מותאם אישית",
+    "russian": "Пользовательский"
+  },
+  {
+    "index": 111,
+    "english": "Yes",
+    "hebrew": "כן",
+    "russian": "Да"
+  },
+  {
+    "index": 112,
+    "english": "No",
+    "hebrew": "לא",
+    "russian": "Нет"
+  },
+  {
+    "index": 113,
+    "english": "OK",
+    "hebrew": "אישור",
+    "russian": "ОК"
+  },
+  {
+    "index": 114,
+    "english": "Error",
+    "hebrew": "שגיאה",
+    "russian": "Ошибка"
+  },
+  {
+    "index": 115,
+    "english": "Warning",
+    "hebrew": "אזהרה",
+    "russian": "Предупреждение"
+  },
+  {
+    "index": 116,
+    "english": "Info",
+    "hebrew": "מידע",
+    "russian": "Информация"
+  },
+  {
+    "index": 117,
+    "english": "Success",
+    "hebrew": "הצלחה",
+    "russian": "Успех"
+  },
+  {
+    "index": 118,
+    "english": "Loading...",
+    "hebrew": "טוען...",
+    "russian": "Загрузка..."
+  },
+  {
+    "index": 119,
+    "english": "Please wait...",
+    "hebrew": "אנא המתן...",
+    "russian": "Пожалуйста, подождите..."
+  },
+  {
+    "index": 120,
+    "english": "Processing...",
+    "hebrew": "מעבד...",
+    "russian": "Обработка..."
+  },
+  {
+    "index": 121,
+    "english": "Completed",
+    "hebrew": "הושלם",
+    "russian": "Завершено"
+  },
+  {
+    "index": 122,
+    "english": "Failed",
+    "hebrew": "נכשל",
+    "russian": "Не удалось"
+  },
+  {
+    "index": 123,
+    "english": "Pending",
+    "hebrew": "ממתין",
+    "russian": "В ожидании"
+  },
+  {
+    "index": 124,
+    "english": "Active",
+    "hebrew": "פעיל",
+    "russian": "Активный"
+  },
+  {
+    "index": 125,
+    "english": "Inactive",
+    "hebrew": "לא פעיל",
+    "russian": "Неактивный"
+  },
+  {
+    "index": 126,
+    "english": "Enabled",
+    "hebrew": "מופעל",
+    "russian": "Включено"
+  },
+  {
+    "index": 127,
+    "english": "Disabled",
+    "hebrew": "מושבת",
+    "russian": "Отключено"
+  },
+  {
+    "index": 128,
+    "english": "Required field",
+    "hebrew": "שדה חובה",
+    "russian": "Обязательное поле"
+  },
+  {
+    "index": 129,
+    "english": "Invalid input",
+    "hebrew": "קלט לא חוקי",
+    "russian": "Неверный ввод"
+  },
+  {
+    "index": 130,
+    "english": "Value too large",
+    "hebrew": "ערך גדול מדי",
+    "russian": "Значение слишком большое"
+  },
+  {
+    "index": 131,
+    "english": "Value too small",
+    "hebrew": "ערך קטן מדי",
+    "russian": "Значение слишком маленькое"
+  },
+  {
+    "index": 132,
+    "english": "Invalid format",
+    "hebrew": "פורמט לא חוקי",
+    "russian": "Неверный формат"
+  },
+  {
+    "index": 133,
+    "english": "Already exists",
+    "hebrew": "כבר קיים",
+    "russian": "Уже существует"
+  },
+  {
+    "index": 134,
+    "english": "Not found",
+    "hebrew": "לא נמצא",
+    "russian": "Не найдено"
+  },
+  {
+    "index": 135,
+    "english": "Access denied",
+    "hebrew": "גישה נדחתה",
+    "russian": "Доступ запрещён"
+  },
+  {
+    "index": 136,
+    "english": "Operation cancelled",
+    "hebrew": "הפעולה בוטלה",
+    "russian": "Операция отменена"
+  },
+  {
+    "index": 137,
+    "english": "Operation completed",
+    "hebrew": "הפעולה הושלמה",
+    "russian": "Операция завершена"
+  },
+  {
+    "index": 138,
+    "english": "Saving...",
+    "hebrew": "שומר...",
+    "russian": "Сохранение..."
+  },
+  {
+    "index": 139,
+    "english": "Saved",
+    "hebrew": "נשמר",
+    "russian": "Сохранено"
+  },
+  {
+    "index": 140,
+    "english": "Not saved",
+    "hebrew": "לא נשמר",
+    "russian": "Не сохранено"
+  },
+  {
+    "index": 141,
+    "english": "Changes detected",
+    "hebrew": "זוהו שינויים",
+    "russian": "Обнаружены изменения"
+  },
+  {
+    "index": 142,
+    "english": "No changes",
+    "hebrew": "אין שינויים",
+    "russian": "Нет изменений"
+  },
+  {
+    "index": 143,
+    "english": "Discard changes?",
+    "hebrew": "להתעלם משינויים?",
+    "russian": "Отменить изменения?"
+  },
+  {
+    "index": 144,
+    "english": "Export completed",
+    "hebrew": "הייצוא הושלם",
+    "russian": "Экспорт завершён"
+  },
+  {
+    "index": 145,
+    "english": "Import completed",
+    "hebrew": "הייבוא הושלם",
+    "russian": "Импорт завершён"
+  },
+  {
+    "index": 146,
+    "english": "Export failed",
+    "hebrew": "הייצוא נכשל",
+    "russian": "Экспорт не удался"
+  },
+  {
+    "index": 147,
+    "english": "Import failed",
+    "hebrew": "הייבוא נכשל",
+    "russian": "Импорт не удался"
+  },
+  {
+    "index": 148,
+    "english": "Select file",
+    "hebrew": "בחר קובץ",
+    "russian": "Выберите файл"
+  },
+  {
+    "index": 149,
+    "english": "Upload",
+    "hebrew": "העלה",
+    "russian": "Загрузить"
+  },
+  {
+    "index": 150,
+    "english": "Download",
+    "hebrew": "הורד",
+    "russian": "Скачать"
+  },
+  {
+    "index": 151,
+    "english": "Preview",
+    "hebrew": "תצוגה מקדימה",
+    "russian": "Предпросмотр"
+  },
+  {
+    "index": 152,
+    "english": "Print",
+    "hebrew": "הדפס",
+    "russian": "Печать"
+  },
+  {
+    "index": 153,
+    "english": "Page",
+    "hebrew": "עמוד",
+    "russian": "Страница"
+  },
+  {
+    "index": 154,
+    "english": "of",
+    "hebrew": "מתוך",
+    "russian": "из"
+  },
+  {
+    "index": 155,
+    "english": "First",
+    "hebrew": "ראשון",
+    "russian": "Первая"
+  },
+  {
+    "index": 156,
+    "english": "Last",
+    "hebrew": "אחרון",
+    "russian": "Последняя"
+  },
+  {
+    "index": 157,
+    "english": "Next",
+    "hebrew": "הבא",
+    "russian": "Следующая"
+  },
+  {
+    "index": 158,
+    "english": "Previous",
+    "hebrew": "הקודם",
+    "russian": "Предыдущая"
+  },
+  {
+    "index": 159,
+    "english": "Show",
+    "hebrew": "הצג",
+    "russian": "Показать"
+  },
+  {
+    "index": 160,
+    "english": "Hide",
+    "hebrew": "הסתר",
+    "russian": "Скрыть"
+  },
+  {
+    "index": 161,
+    "english": "Expand",
+    "hebrew": "הרחב",
+    "russian": "Развернуть"
+  },
+  {
+    "index": 162,
+    "english": "Collapse",
+    "hebrew": "כווץ",
+    "russian": "Свернуть"
+  },
+  {
+    "index": 163,
+    "english": "Open",
+    "hebrew": "פתח",
+    "russian": "Открыть"
+  },
+  {
+    "index": 164,
+    "english": "Close All",
+    "hebrew": "סגור הכל",
+    "russian": "Закрыть всё"
+  },
+  {
+    "index": 165,
+    "english": "Refresh All",
+    "hebrew": "רענן הכל",
+    "russian": "Обновить всё"
+  },
+  {
+    "index": 166,
+    "english": "Clear All",
+    "hebrew": "נקה הכל",
+    "russian": "Очистить всё"
+  },
+  {
+    "index": 167,
+    "english": "Delete All",
+    "hebrew": "מחק הכל",
+    "russian": "Удалить всё"
+  },
+  {
+    "index": 168,
+    "english": "Export All",
+    "hebrew": "ייצא הכל",
+    "russian": "Экспортировать всё"
+  },
+  {
+    "index": 169,
+    "english": "Import All",
+    "hebrew": "ייבא הכל",
+    "russian": "Импортировать всё"
+  },
+  {
+    "index": 170,
+    "english": "Select Date",
+    "hebrew": "בחר תאריך",
+    "russian": "Выбрать дату"
+  },
+  {
+    "index": 171,
+    "english": "Today",
+    "hebrew": "היום",
+    "russian": "Сегодня"
+  },
+  {
+    "index": 172,
+    "english": "Yesterday",
+    "hebrew": "אתמול",
+    "russian": "Вчера"
+  },
+  {
+    "index": 173,
+    "english": "Tomorrow",
+    "hebrew": "מחר",
+    "russian": "Завтра"
+  },
+  {
+    "index": 174,
+    "english": "This Week",
+    "hebrew": "השבוע",
+    "russian": "Эта неделя"
+  },
+  {
+    "index": 175,
+    "english": "Last Week",
+    "hebrew": "שבוע שעבר",
+    "russian": "Прошлая неделя"
+  },
+  {
+    "index": 176,
+    "english": "Next Week",
+    "hebrew": "שבוע הבא",
+    "russian": "Следующая неделя"
+  },
+  {
+    "index": 177,
+    "english": "This Month",
+    "hebrew": "החודש",
+    "russian": "Этот месяц"
+  },
+  {
+    "index": 178,
+    "english": "Last Month",
+    "hebrew": "חודש שעבר",
+    "russian": "Прошлый месяц"
+  },
+  {
+    "index": 179,
+    "english": "Next Month",
+    "hebrew": "חודש הבא",
+    "russian": "Следующий месяц"
+  },
+  {
+    "index": 180,
+    "english": "This Year",
+    "hebrew": "השנה",
+    "russian": "Этот год"
+  },
+  {
+    "index": 181,
+    "english": "Last Year",
+    "hebrew": "שנה שעברה",
+    "russian": "Прошлый год"
+  },
+  {
+    "index": 182,
+    "english": "Next Year",
+    "hebrew": "שנה הבאה",
+    "russian": "Следующий год"
+  },
+  {
+    "index": 183,
+    "english": "Custom Range",
+    "hebrew": "טווח מותאם",
+    "russian": "Пользовательский диапазон"
+  },
+  {
+    "index": 184,
+    "english": "Start Date",
+    "hebrew": "תאריך התחלה",
+    "russian": "Дата начала"
+  },
+  {
+    "index": 185,
+    "english": "End Date",
+    "hebrew": "תאריך סיום",
+    "russian": "Дата окончания"
+  },
+  {
+    "index": 186,
+    "english": "Start Time",
+    "hebrew": "שעת התחלה",
+    "russian": "Время начала"
+  },
+  {
+    "index": 187,
+    "english": "End Time",
+    "hebrew": "שעת סיום",
+    "russian": "Время окончания"
+  },
+  {
+    "index": 188,
+    "english": "Duration",
+    "hebrew": "משך",
+    "russian": "Длительность"
+  },
+  {
+    "index": 189,
+    "english": "Total",
+    "hebrew": "סה\"כ",
+    "russian": "Всего"
+  },
+  {
+    "index": 190,
+    "english": "Average",
+    "hebrew": "ממוצע",
+    "russian": "Среднее"
+  },
+  {
+    "index": 191,
+    "english": "Minimum",
+    "hebrew": "מינימום",
+    "russian": "Минимум"
+  },
+  {
+    "index": 192,
+    "english": "Maximum",
+    "hebrew": "מקסימום",
+    "russian": "Максимум"
+  },
+  {
+    "index": 193,
+    "english": "Count",
+    "hebrew": "ספירה",
+    "russian": "Количество"
+  },
+  {
+    "index": 194,
+    "english": "Sum",
+    "hebrew": "סכום",
+    "russian": "Сумма"
+  },
+  {
+    "index": 195,
+    "english": "Percentage",
+    "hebrew": "אחוז",
+    "russian": "Процент"
+  },
+  {
+    "index": 196,
+    "english": "Status",
+    "hebrew": "סטטוס",
+    "russian": "Статус"
+  },
+  {
+    "index": 197,
+    "english": "Type",
+    "hebrew": "סוג",
+    "russian": "Тип"
+  },
+  {
+    "index": 198,
+    "english": "Category",
+    "hebrew": "קטגוריה",
+    "russian": "Категория"
+  },
+  {
+    "index": 199,
+    "english": "Priority",
+    "hebrew": "עדיפות",
+    "russian": "Приоритет"
+  },
+  {
+    "index": 200,
+    "english": "Description",
+    "hebrew": "תיאור",
+    "russian": "Описание"
+  },
+  {
+    "index": 201,
+    "english": "Passwords do not match",
+    "hebrew": "הסיסמאות אינן תואמות",
+    "russian": "Пароли не совпадают"
+  },
+  {
+    "index": 202,
+    "english": "Account created successfully! Redirecting to login...",
+    "hebrew": "החשבון נוצר בהצלחה! נעבור לדף ההתחברות...",
+    "russian": "Аккаунт успешно создан! Перенаправление на страницу входа..."
+  },
+  {
+    "index": 203,
+    "english": "Signup failed",
+    "hebrew": "ההרשמה נכשלה",
+    "russian": "Ошибка регистрации"
+  },
+  {
+    "index": 204,
+    "english": "An error occurred. Please try again.",
+    "hebrew": "אירעה שגיאה. נסה שוב.",
+    "russian": "Произошла ошибка. Пожалуйста, попробуйте ещё раз."
+  },
+  {
+    "index": 205,
+    "english": "Login failed",
+    "hebrew": "ההתחברות נכשלה",
+    "russian": "Ошибка входа"
+  },
+  {
+    "index": 206,
+    "english": "Please select a file",
+    "hebrew": "אנא בחר קובץ",
+    "russian": "Пожалуйста, выберите файл"
+  },
+  {
+    "index": 207,
+    "english": "Logout failed",
+    "hebrew": "יציאה נכשלה",
+    "russian": "Выход не удался"
+  },
+  {
+    "index": 208,
+    "english": "Please select a subject from available subjects",
+    "hebrew": "אנא בחר מקצוע מהרשימה הזמינה",
+    "russian": "Пожалуйста, выберите предмет из доступных"
+  },
+  {
+    "index": 209,
+    "english": "This subject is already added",
+    "hebrew": "מקצוע זה נוסף כבר",
+    "russian": "Этот предмет уже добавлен"
+  },
+  {
+    "index": 210,
+    "english": "Teacher name is required",
+    "hebrew": "שם המורה נדרש",
+    "russian": "Требуется имя учителя"
+  },
+  {
+    "index": 211,
+    "english": "Choose day, start and end",
+    "hebrew": "בחר יום, התחלה וסיום",
+    "russian": "Выберите день, начало и конец"
+  },
+  {
+    "index": 212,
+    "english": "All existing data will be erased. An Export to Excel will run first. Continue?",
+    "hebrew": "כל הנתונים הקיימים יימחקו. קודם יבוצע ייצוא ל-Excel. להמשיך?",
+    "russian": "Начало должно быть раньше конца"
+  },
+  {
+    "index": 213,
+    "english": "Start must be before end",
+    "hebrew": "בחר יום והזן שעות כניסה/יציאה",
+    "russian": "Выберите день и укажите время прихода/ухода"
+  },
+  {
+    "index": 214,
+    "english": "Choose day and enter check in/out",
+    "hebrew": "הזמנים אינם תואמים לשיעורים כלשהם",
+    "russian": "Время не соответствует ни одному уроку"
+  },
+  {
+    "index": 215,
+    "english": "Times do not match any lessons",
+    "hebrew": "בחר מורה למחיקה",
+    "russian": "Выберите учителя для удаления"
+  },
+  {
+    "index": 216,
+    "english": "Select a teacher to delete",
+    "hebrew": "בחר מורה להעברה",
+    "russian": "Выберите учителя для перемещения"
+  },
+  {
+    "index": 217,
+    "english": "Select a teacher to move",
+    "hebrew": "All existing data will be erased. An Export to Excel will run first. Continue?",
+    "russian": "Выберите группу для редактирования"
+  },
+  {
+    "index": 218,
+    "english": "Select a group to edit",
+    "hebrew": "בחר קבוצה לעריכה",
+    "russian": "Создайте аккаунт"
+  },
+  {
+    "index": 219,
+    "english": "Create your account",
+    "hebrew": "צור את החשבון שלך",
+    "russian": "Войдите в свой аккаунт"
+  },
+  {
+    "index": 220,
+    "english": "Login to your account",
+    "hebrew": "התחברות לחשבון",
+    "russian": "Имя"
+  },
+  {
+    "index": 221,
+    "english": "First Name",
+    "hebrew": "שם פרטי",
+    "russian": "Фамилия"
+  },
+  {
+    "index": 222,
+    "english": "Last Name",
+    "hebrew": "שם משפחה",
+    "russian": "Email (необязательно)"
+  },
+  {
+    "index": 223,
+    "english": "Email (optional)",
+    "hebrew": "אימייל (אופציונלי)",
+    "russian": "Имя пользователя"
+  },
+  {
+    "index": 224,
+    "english": "Username",
+    "hebrew": "שם משתמש",
+    "russian": "Пароль"
+  },
+  {
+    "index": 225,
+    "english": "Password",
+    "hebrew": "סיסמה",
+    "russian": "Подтвердите пароль"
+  },
+  {
+    "index": 226,
+    "english": "Confirm Password",
+    "hebrew": "אשר סיסמה",
+    "russian": "Регистрация"
+  },
+  {
+    "index": 227,
+    "english": "Sign Up",
+    "hebrew": "הירשם",
+    "russian": "Вход"
+  },
+  {
+    "index": 228,
+    "english": "Login",
+    "hebrew": "התחבר",
+    "russian": "Уже есть аккаунт? Войти"
+  },
+  {
+    "index": 229,
+    "english": "Already have an account? Login",
+    "hebrew": "כבר יש חשבון? התחבר",
+    "russian": "Нет аккаунта? Зарегистрироваться"
+  },
+  {
+    "index": 230,
+    "english": "Don't have an account? Sign Up",
+    "hebrew": "אין חשבון? הירשם",
+    "russian": "Закрыть сообщение"
+  },
+  {
+    "index": 231,
+    "english": "Show Alert Close",
+    "hebrew": "סגור הודעה",
+    "russian": "Очистить все данные"
+  },
+  {
+    "index": 232,
+    "english": "Clear All Data",
+    "hebrew": "נקה כל הנתונים",
+    "russian": "Пересобрать всё"
+  },
+  {
+    "index": 233,
+    "english": "Rebuild All",
+    "hebrew": "בנה מערכות מחדש",
+    "russian": "Выйти"
+  },
+  {
+    "index": 234,
+    "english": "Logout",
+    "hebrew": "התנתק",
+    "russian": "Просмотр дня"
+  },
+  {
+    "index": 235,
+    "english": "Day Scheduler",
+    "hebrew": "מתזמן יום",
+    "russian": "Выберите день недели"
+  },
+  {
+    "index": 236,
+    "english": "Select Weekday",
+    "hebrew": "בחר יום בשבוע",
+    "russian": "Доступные предметы"
+  },
+  {
+    "index": 237,
+    "english": "Available Subjects",
+    "hebrew": "מקצועות זמינים",
+    "russian": "Выбранные предметы (имя:часы:группа)"
+  },
+  {
+    "index": 238,
+    "english": "Selected Subjects (name:hours:group)",
+    "hebrew": "מקצועות נבחרים (שם:שעות:קבוצה)",
+    "russian": "Интерактивный редактор доступности"
+  },
+  {
+    "index": 239,
+    "english": "Interactive Availability Editor",
+    "hebrew": "עורך זמינות אינטראקטיבי",
+    "russian": "Добавить временные слоты"
+  },
+  {
+    "index": 240,
+    "english": "Add Time Slots",
+    "hebrew": "הוסף טווחי זמן",
+    "russian": "Время входа"
+  },
+  {
+    "index": 241,
+    "english": "Check-in",
+    "hebrew": "כניסה",
+    "russian": "Время выхода"
+  },
+  {
+    "index": 242,
+    "english": "Check-out",
+    "hebrew": "יציאה",
+    "russian": "Добавить реальные часы"
+  },
+  {
+    "index": 243,
+    "english": "Add Real Hours",
+    "hebrew": "הוסף שעות אמיתיות",
+    "russian": "День"
+  },
+  {
+    "index": 244,
+    "english": "Day",
+    "hebrew": "יום",
+    "russian": "Уроки"
+  },
+  {
+    "index": 245,
+    "english": "Lessons",
+    "hebrew": "שיעורים",
+    "russian": "Временные слоты"
+  },
+  {
+    "index": 246,
+    "english": "Time Slots",
+    "hebrew": "טווחי זמן",
+    "russian": "Реальные часы"
+  },
+  {
+    "index": 247,
+    "english": "Real Hours",
+    "hebrew": "שעות אמיתיות",
+    "russian": "Порядок приоритетов:"
+  },
+  {
+    "index": 248,
+    "english": "Priority Order:",
+    "hebrew": "סדר עדיפויות:",
+    "russian": "Порядок приоритетов:"
+  },
+  {
+    "index": 249,
+    "english": "Teacher's Weekly Hours",
+    "hebrew": "שעות שבועיות של המורה (PRIMARY)",
+    "russian": "Недельные часы преподавателя (PRIMARY)"
+  },
+  {
+    "index": 250,
+    "english": "Time Slots (SECONDARY)",
+    "hebrew": "טווחי זמן (משני)",
+    "russian": "Временные интервалы (SECONDARY)"
+  },
+  {
+    "index": 251,
+    "english": "Lessons (TERTIARY)",
+    "hebrew": "שיעורים (שלישוני)",
+    "russian": "Уроки (TERTIARY)"
+  },
+  {
+    "index": 252,
+    "english": "Loading...",
+    "hebrew": "טוען...",
+    "russian": "Редактировать учителя"
+  },
+  {
+    "index": 253,
+    "english": "Edit Teacher",
+    "hebrew": "ערוך מורה",
+    "russian": "Нажмите, чтобы установить время"
+  },
+  {
+    "index": 254,
+    "english": "Click to set time",
+    "hebrew": "לחץ כדי להגדיר זמן",
+    "russian": "Нажмите, чтобы редактировать"
+  },
+  {
+    "index": 255,
+    "english": "Click to edit",
+    "hebrew": "לחץ כדי לערוך",
+    "russian": "Удалить слот"
+  },
+  {
+    "index": 256,
+    "english": "Delete slot",
+    "hebrew": "מחק משבצת",
+    "russian": "Все"
+  },
+  {
+    "index": 257,
+    "english": "All",
+    "hebrew": "הכל",
+    "russian": "Редактировать группу"
+  },
+  {
+    "index": 258,
+    "english": "Edit Group",
+    "hebrew": "ערוך קבוצה",
+    "russian": "Редактировать предмет"
+  },
+  {
+    "index": 259,
+    "english": "Edit Subject",
+    "hebrew": "ערוך מקצוע",
+    "russian": "Удалить"
+  },
+  {
+    "index": 260,
+    "english": "Delete",
+    "hebrew": "מחק",
+    "russian": "Зарегистрироваться"
+  },
+  {
+    "index": 261,
+    "english": "Sign Up",
+    "hebrew": "הצטרף",
+    "russian": "School Scheduler"
+  },
+  {
+    "index": 262,
+    "english": "School Scheduler",
+    "hebrew": "מתזמן בית ספר",
+    "russian": "Имя пользователя должно содержать не менее 3 символов и содержать только буквы, цифры и подчёркивания"
+  },
+  {
+    "index": 263,
+    "english": "Username must be at least 3 characters and contain only letters, numbers, and underscores",
+    "hebrew": "שם המשתמש חייב להכיל לפחות 3 תווים ולכלול אותיות, ספרות וקו תחתון בלבד",
+    "russian": "Пароль должен содержать не менее 6 символов"
+  },
+  {
+    "index": 264,
+    "english": "Password must be at least 6 characters",
+    "hebrew": "הסיסמה חייבת להכיל לפחות 6 תווים",
+    "russian": "Перед перестроением, пожалуйста, экспортируйте текущие данные в Excel в качестве резервной копии."
+  },
+  {
+    "index": 265,
+    "english": "Before rebuilding, please export your current data to Excel as a backup.",
+    "hebrew": "לפני ביצוע שחזור, נא לייצא את הנתונים הנוכחיים לאקסל כגיבוי.",
+    "russian": "Я уже экспортировал"
+  },
+  {
+    "index": 266,
+    "english": "I already exported",
+    "hebrew": "כבר ייצאתי",
+    "russian": "Экспортировать сейчас"
+  },
+  {
+    "index": 267,
+    "english": "Export now",
+    "hebrew": "ייצא עכשיו",
+    "russian": "Перестроить всё (Автозаполнение)"
+  },
+  {
+    "index": 268,
+    "english": "Rebuild All (Autofill)",
+    "hebrew": "בנה מחדש הכול (מילוי אוטומטי)",
+    "russian": "Maximum 10 favorites reached. Open \"Load from Favorites\", remove one or more entries, then try saving again. Opening the list now."
+  },
+  {
+    "index": 269,
+    "english": "Maximum 10 favorites reached. Open \"Load from Favorites\", remove one or more entries, then try saving again. Opening the list now.",
+    "hebrew": "הגעת למקסימום של 10 פריטים במועדפים. פתח \"טען מהמועדפים\", מחק פריט/ים, ונסה לשמור שוב. פותח את הרשימה כעת.",
+    "russian": "Достигнуто максимум 10 избранных. Откройте \"Загрузить из избранного\", удалите одну или несколько записей, затем попробуйте сохранить снова. Открываю список."
+  },
+  {
+    "index": 270,
+    "english": "Maximum 10 favorites reached. Delete one before saving.",
+    "hebrew": "הגעת למקסימום של 10 מועדפים. מחק אחד לפני השמירה.",
+    "russian": "Достигнуто максимум 10 избранных. Удалите один перед сохранением."
+  },
+  {
+    "index": 271,
+    "english": "Save to Favorites",
+    "hebrew": "שמור למועדפים",
+    "russian": "Загрузить из избранного"
+  },
+  {
+    "index": 272,
+    "english": "Load from Favorites",
+    "hebrew": "טען מהמועדפים",
+    "russian": "Сохранено в избранное"
+  },
+  {
+    "index": 273,
+    "english": "Save to Favorites",
+    "hebrew": "נשמר במועדפים",
+    "russian": "All existing data will be erased. An Export to Excel will run first. Continue?"
+  },
+  {
+    "index": 274,
+    "english": "Load from Favorites",
+    "hebrew": "אם הוזן, טווחי הזמן ומספר השיעורים יחושבו על פיו",
+    "russian": "Если указано, временные слоты и количество уроков рассчитываются на его основе"
+  },
+  {
+    "index": 275,
+    "english": "Saved to Favorites",
+    "hebrew": "נשמר במועדפים",
+    "russian": "Используется только если поле 'Недельные часы' пусто. Преобразуется в номера уроков"
+  },
+  {
+    "index": 276,
+    "english": "If provided, Time Slots and Lessons are calculated from this",
+    "hebrew": "משמש רק אם שני השדות שלעיל ריקים",
+    "russian": "Используется только если оба вышеуказанных поля пусты"
+  },
+  {
+    "index": 277,
+    "english": "Used only if Weekly Hours is empty. Converted to lesson numbers",
+    "hebrew": "סה\"כ נדרש / מוקצה",
+    "russian": "Всего требуется / Назначено"
+  },
+  {
+    "index": 278,
+    "english": "Used only if both above are empty",
+    "hebrew": "הערות",
+    "russian": "Комментарии"
+  },
+  {
+    "index": 279,
+    "english": "Total Required / Assigned",
+    "hebrew": "סה\"כ נדרש / מוקצה",
+    "russian": "Всего требуется / Назначено"
+  },
+  {
+    "index": 280,
+    "english": "Comments",
+    "hebrew": "הערות",
+    "russian": "Комментарии"
+  },
+  {
+    "index": 281,
+    "english": "Teacher's Weekly Hours",
+    "hebrew": "שיעורים (שלישוני)",
+    "russian": "Уроки (TERTIARY)"
+  },
+  {
+    "index": 282,
+    "english": "Time Slots (SECONDARY)",
+    "hebrew": "שעות שבועיות של המורה (ראשוני)",
+    "russian": "Недельные часы преподавателя (ПЕРВИЧНО)"
+  },
+  {
+    "index": 283,
+    "english": "Lessons (TERTIARY)",
+    "hebrew": "⚠️ סדר עדיפויות:<br>שעות שבועיות של המורה (ראשוני) - אם הוזנו, טווחי הזמן ומספר השיעורים יחושבו על פיהם<br>טווחי זמן (משני) - ישמשו רק אם שדה 'שעות שבועיות' ריק. יומרו למספרי שיעור<br>שיעורים (שלישוני) - ישמשו רק אם שני השדות שלעיל ריקים",
+    "russian": "⚠️ Порядок приоритетов:<br>Недельные часы преподавателя (ПЕРВИЧНЫЕ) - Если заданы, по ним рассчитываются временные слоты и уроки<br>Временные интервалы (ВТОРИЧНЫЕ) - Используются только если поле 'Недельные часы' пусто. Преобразуются в номера уроков<br>Уроки (ТЕРЦИЧНЫЕ) - Используются только если оба вышеуказанных поля пусты"
+  },
+  {
+    "index": 284,
+    "english": "Teacher's Weekly Hours (PRIMARY)",
+    "hebrew": "💡 טיפים:",
+    "russian": "💡 Советы:"
+  },
+  {
+    "index": 285,
+    "english": "⚠️ Priority Order:<br>Teacher's Weekly Hours (PRIMARY) - If provided, Time Slots and Lessons are calculated from this<br>Time Slots (SECONDARY) - Used only if Weekly Hours is empty. Converted to lesson numbers<br>Lessons (TERTIARY) - Used only if both above are empty",
+    "hebrew": "לחץ על כל טווח זמן בטבלה כדי לערוך אותו במקום",
+    "russian": "Кликните по любому временному интервалу в таблице, чтобы отредактировать его на месте"
+  },
+  {
+    "index": 286,
+    "english": "💡 Tips:",
+    "hebrew": "פורמט זמן: H:MM-H:MM או HH:MM-HH:MM (למשל, 9:15-10:00 או 09:15-10:00)",
+    "russian": "Формат времени: H:MM-H:MM или HH:MM-HH:MM (например, 9:15-10:00 или 09:15-10:00)"
+  },
+  {
+    "index": 287,
+    "english": "Click on any time range in the table to edit it inline",
+    "hebrew": "הקש Enter לשמירה, Escape לביטול העריכה במקום",
+    "russian": "Нажмите Enter для сохранения, Escape для отмены редактирования на месте"
+  },
+  {
+    "index": 288,
+    "english": "Time format: H:MM-H:MM or HH:MM-HH:MM (e.g., 9:15-10:00 or 09:15-10:00)",
+    "hebrew": "מספר הטווחים יסונכרן אוטומטית עם ההגדרה \"מספר שיעורים\"",
+    "russian": "Количество слотов будет автоматически синхронизировано с настройкой \"Number of lessons\""
+  },
+  {
+    "index": 289,
+    "english": "Press Enter to save, Escape to cancel inline editing",
+    "hebrew": "הקש Enter לשמירה, Escape לביטול העריכה במקום",
+    "russian": "Нажмите Enter для сохранения, Escape для отмены редактирования на месте"
+  },
+  {
+    "index": 290,
+    "english": "Number of slots will auto-sync with \"Number of lessons\" setting",
+    "hebrew": "מספר הטווחים יסונכרן אוטומטית עם ההגדרה \"מספר שיעורים\"",
+    "russian": "Количество слотов будет автоматически синхронизировано с настройкой \"Number of lessons\""
+  }
+]

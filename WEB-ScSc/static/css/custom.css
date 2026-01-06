@@ -1,0 +1,170 @@
+/* Custom styles for School Scheduler */
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* RTL Support */
+html[dir="rtl"] {
+    direction: rtl;
+}
+
+html[dir="rtl"] .table {
+    text-align: right;
+}
+
+/* Table styles */
+.table-hover tbody tr {
+    cursor: pointer;
+}
+
+.table tbody tr.table-active {
+    background-color: #cfe2ff !important;
+}
+
+/* Sticky table header in scrollable containers */
+.table-responsive {
+    position: relative;
+}
+
+.table thead.sticky-top {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.table thead.sticky-top th {
+    border-top: none;
+}
+
+/* Toolbar */
+.navbar {
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* Tabs */
+.nav-tabs {
+    border-bottom: 2px solid #dee2e6;
+}
+
+/* Teacher availability textareas - better editing with LTR */
+textarea[name="weekly_hours"],
+textarea[name="time_slots"],
+textarea[name="availability"] {
+    font-family: 'Courier New', Consolas, monospace;
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+/* Highlight colon separator for better visibility */
+textarea[name="weekly_hours"]::placeholder,
+textarea[name="time_slots"]::placeholder,
+textarea[name="availability"]::placeholder {
+    font-family: 'Courier New', Consolas, monospace;
+    opacity: 0.6;
+}
+
+.nav-tabs .nav-link {
+    color: #495057;
+    border: none;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -2px;
+}
+
+.nav-tabs .nav-link:hover {
+    border-color: transparent;
+    border-bottom-color: #007bff;
+}
+
+.nav-tabs .nav-link.active {
+    color: #007bff;
+    border-color: transparent;
+    border-bottom-color: #007bff;
+    font-weight: 600;
+}
+
+.nav-tabs .nav-link.disabled {
+    color: #6c757d;
+    pointer-events: none;
+}
+
+/* Tab content */
+.tab-content {
+    padding: 20px 0;
+}
+
+/* Buttons */
+.btn-group {
+    gap: 5px;
+}
+
+/* Control panel */
+.control-panel {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.control-panel label {
+    margin: 0;
+}
+
+/* Modal improvements */
+.modal-dialog {
+    margin-top: 100px;
+}
+
+.modal-header {
+    background-color: #f8f9fa;
+    border-bottom: 2px solid #dee2e6;
+}
+
+/* Form improvements */
+.form-label {
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+}
+
+/* Configuration form */
+#configForm h5 {
+    color: #495057;
+    border-bottom: 1px solid #dee2e6;
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+}
+
+/* Loading state */
+.loading {
+    opacity: 0.5;
+    pointer-events: none;
+}
+
+/* Error messages */
+.error-message {
+    color: #dc3545;
+    font-size: 0.875rem;
+    margin-top: 0.25rem;
+}
+
+/* Success messages */
+.success-message {
+    color: #28a745;
+    font-size: 0.875rem;
+    margin-top: 0.25rem;
+}
+
+/* Responsive improvements */
+@media (max-width: 768px) {
+    .control-panel {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .control-panel select,
+    .control-panel button {
+        width: 100% !important;
+        margin: 5px 0 !important;
+    }
+}

@@ -1,0 +1,401 @@
+# Multilingual support for School Scheduler
+# Index-based translation system
+
+# English translations (indices 0-199+)
+GUI_TEXT = [
+    "Add Teacher",                      # 0
+    "Add Group",                        # 1
+
+
+# Favorites & Weekdays / Time-slot related GUI texts (English base + placeholders)
+    "Add Subject",                      # 2
+    "Teachers",                         # 3
+    "Groups",                           # 4
+    "Subjects",                         # 5
+    "Day View",                         # 6
+    "Group Scheduler",                  # 7
+    "Teacher Scheduler",                # 8
+    "General Configuration",            # 9
+    "Name",                             # 10
+    "Subject",                          # 11
+
+# Placeholder Hebrew translations for the added texts
+    "Hours",                            # 12
+    "Group",                            # 13
+    "Teachers Weekly Hours",            # 14
+    "Availability",                     # 15
+    "Edit Selected",                    # 16
+    "Delete Selected",                  # 17
+    "Move Up ↑",                        # 18
+    "Move Down ↓",                      # 19
+    "Select a teacher to edit",         # 20
+    "Select a group to edit",           # 21
+
+# Placeholder Russian translations for the added texts
+    "Select a subject to edit",         # 22
+    "Are you sure you want to delete?", # 23
+    "Confirm",                          # 24
+    "Cancel",                           # 25
+    "Save",                             # 26
+    "Close",                            # 27
+    "Teacher Name",                     # 28
+    "Group Name",                       # 29
+    "Subject Name",                     # 30
+    "Hours Per Week",                   # 31
+    "Select group:",                    # 32
+    "Select teacher:",                  # 33
+    "Autofill",                         # 34
+    "Clear",                            # 35
+    "Print to PDF",                     # 36
+    "Monday",                           # 37
+    "Tuesday",                          # 38
+    "Wednesday",                        # 39
+    "Thursday",                         # 40
+    "Friday",                           # 41
+    "Saturday",                         # 42
+    "Sunday",                           # 43
+    "Lesson",                           # 44
+    "Time Range",                       # 45
+    "Schedule created successfully",    # 46
+    "Errors occurred:",                 # 47
+    "Rebuild the schedule? This will delete the current schedule and create a new one.", # 48
+    "Delete all schedules? This will remove all generated schedules but keep Teachers, Groups, and Subjects.", # 49
+    "Are you sure you want to save the configuration? This will apply the changes.", # 50
+    "Configuration saved successfully", # 51
+    "GUI Language",                     # 52
+    "Application Name",                 # 53
+    "Application Size",                 # 54
+    "Autofill Direction",               # 55
+    "Max Autofill Retries",             # 56
+    "Max Sequence Lessons",             # 57
+    "Max Per Day",                      # 58
+    "Number of Lessons",                # 59
+    "Weekdays",                         # 60
+    "English",                          # 61
+    "Hebrew",                           # 62
+    "Russian",                          # 63
+    "Forward",                          # 64
+    "Backward",                         # 65
+    "Random",                           # 66
+    "Import from Excel",                # 67
+    "Export to Excel",                  # 68
+    "Export to PDF",                    # 69
+    "Clear All Schedules",              # 70
+    "Refresh",                          # 71
+    "Help",                             # 72
+    "About",                            # 73
+    "Settings",                         # 74
+    "Exit",                             # 75
+    "File",                             # 76
+    "Edit",                             # 77
+    "View",                             # 78
+    "Tools",                            # 79
+    "Language",                         # 80
+    "Theme",                            # 81
+    "Light",                            # 82
+    "Dark",                             # 83
+    "Auto",                             # 84
+    "Search",                           # 85
+    "Filter",                           # 86
+    "Sort",                             # 87
+    "Ascending",                        # 88
+    "Descending",                       # 89
+    "Add",                              # 90
+    "Remove",                           # 91
+    "Update",                           # 92
+    "Duplicate",                        # 93
+    "Copy",                             # 94
+    "Paste",                            # 95
+    "Cut",                              # 96
+    "Undo",                             # 97
+    "Redo",                             # 98
+    "Select All",                       # 99
+    "Deselect All",                     # 100
+    "Assigned/Available",               # 101
+    "No teacher found for",             # 102
+    "Could not place all hours for",    # 103
+    "placed",                           # 104
+    "Check In",                         # 105
+    "Check Out",                        # 106
+    "Apply",                            # 107
+    "Reset",                            # 108
+    "Default",                          # 109
+    "Custom",                           # 110
+    "Yes",                              # 111
+    "No",                               # 112
+    "OK",                               # 113
+    "Error",                            # 114
+    "Warning",                          # 115
+    "Info",                             # 116
+    "Success",                          # 117
+    "Loading...",                       # 118
+    "Please wait...",                   # 119
+    "Processing...",                    # 120
+    "Completed",                        # 121
+    "Failed",                           # 122
+    "Pending",                          # 123
+    "Active",                           # 124
+    "Inactive",                         # 125
+    "Enabled",                          # 126
+    "Disabled",                         # 127
+    "Required field",                   # 128
+    "Invalid input",                    # 129
+    "Value too large",                  # 130
+    "Value too small",                  # 131
+    "Invalid format",                   # 132
+    "Already exists",                   # 133
+    "Not found",                        # 134
+    "Access denied",                    # 135
+    "Operation cancelled",              # 136
+    "Operation completed",              # 137
+    "Saving...",                        # 138
+    "Saved",                            # 139
+    "Not saved",                        # 140
+    "Changes detected",                 # 141
+    "No changes",                       # 142
+    "Discard changes?",                 # 143
+    "Export completed",                 # 144
+    "Import completed",                 # 145
+    "Export failed",                    # 146
+    "Import failed",                    # 147
+    "Select file",                      # 148
+    "Upload",                           # 149
+    "Download",                         # 150
+    "Preview",                          # 151
+    "Print",                            # 152
+    "Page",                             # 153
+    "of",                               # 154
+    "First",                            # 155
+    "Last",                             # 156
+    "Next",                             # 157
+    "Previous",                         # 158
+    "Show",                             # 159
+    "Hide",                             # 160
+    "Expand",                           # 161
+    "Collapse",                         # 162
+    "Open",                             # 163
+    "Close All",                        # 164
+    "Refresh All",                      # 165
+    "Clear All",                        # 166
+    "Delete All",                       # 167
+    "Export All",                       # 168
+    "Import All",                       # 169
+    "Select Date",                      # 170
+    "Today",                            # 171
+    "Yesterday",                        # 172
+    "Tomorrow",                         # 173
+    "This Week",                        # 174
+    "Last Week",                        # 175
+    "Next Week",                        # 176
+    "This Month",                       # 177
+    "Last Month",                       # 178
+    "Next Month",                       # 179
+    "This Year",                        # 180
+    "Last Year",                        # 181
+    "Next Year",                        # 182
+    "Custom Range",                     # 183
+    "Start Date",                       # 184
+    "End Date",                         # 185
+    "Start Time",                       # 186
+    "End Time",                         # 187
+    "Duration",                         # 188
+    "Total",                            # 189
+    "Average",                          # 190
+    "Minimum",                          # 191
+    "Maximum",                          # 192
+    "Count",                            # 193
+    "Sum",                              # 194
+    "Percentage",                       # 195
+    "Status",                           # 196
+    "Type",                             # 197
+    "Category",                         # 198
+    "Priority",                         # 199
+    "Description",                      # 200
+]
+
+# Additional UI messages added for signup/login/file dialogs
+GUI_TEXT.extend([
+    "Passwords do not match",
+    "Account created successfully! Redirecting to login...",
+    "Signup failed",
+    "An error occurred. Please try again.",
+    "Login failed",
+    "Please select a file",
+    "Logout failed",
+    "Please select a subject from available subjects",
+    "This subject is already added",
+    "Teacher name is required",
+    "Choose day, start and end",
+    "All existing data will be erased. An Export to Excel will run first. Continue?",
+    "Start must be before end",
+    "Choose day and enter check in/out",
+    "Times do not match any lessons",
+    "Select a teacher to delete",
+    "Select a teacher to move",
+    "Select a group to edit"
+])
+
+# Hebrew translations (עברית)
+GUI_TEXT_HE = [
+    "הוסף מורה",                        # 0
+    "הוסף קבוצה",                       # 1
+    "הוסף מקצוע",                       # 2
+    "מורים",                            # 3
+    "קבוצות",                           # 4
+    "מקצועות",                          # 5
+    "תצוגת יום",                        # 6
+    "מתזמן קבוצות",                     # 7
+    "מתזמן מורים",                      # 8
+    "הגדרות כלליות",                    # 9
+    "שם",                               # 10
+    "מקצוע",                            # 11
+    "שעות",                             # 12
+    "קבוצה",                            # 13
+    "שעות שבועיות של מורים",            # 14
+    "זמינות",                           # 15
+    "ערוך נבחר",                        # 16
+    "מחק נבחר",                         # 17
+    "העבר למעלה ↑",                     # 18
+    "העבר למטה ↓",                      # 19
+    "בחר מורה לעריכה",                  # 20
+    "בחר קבוצה לעריכה",                 # 21
+    "בחר מקצוע לעריכה",                 # 22
+    "האם אתה בטוח שברצונך למחוק?",      # 23
+    "אישור",                            # 24
+    "ביטול",                            # 25
+    "שמור",                             # 26
+    "סגור",                             # 27
+    "שם מורה",                          # 28
+    "שם קבוצה",                         # 29
+    "שם מקצוע",                         # 30
+    "שעות בשבוע",                       # 31
+    "בחר קבוצה:",                       # 32
+    "בחר מורה:",                        # 33
+    "מילוי אוטומטי",                    # 34
+    "נקה",                              # 35
+    "הדפס ל-PDF",                       # 36
+    "יום שני",                          # 37
+    "יום שלישי",                        # 38
+    "יום רביעי",                        # 39
+    "יום חמישי",                        # 40
+    "יום שישי",                         # 41
+    "יום שבת",                          # 42
+    "יום ראשון",                        # 43
+    "שיעור",                            # 44
+    "טווח זמן",                         # 45
+    "מערכת שעות נוצרה בהצלחה",          # 46
+    "אירעו שגיאות:",                    # 47
+    "לבנות מחדש את המערכת? פעולה זו תמחק את המערכת הנוכחית ותיצור חדשה.", # 48
+    "למחוק את כל המערכות? פעולה זו תסיר את כל המערכות שנוצרו אך תשאיר מורים, קבוצות ומקצועות.", # 49
+    "האם אתה בטוח שברצונך לשמור את ההגדרות? פעולה זו תחיל את השינויים.", # 50
+    "ההגדרות נשמרו בהצלחה",            # 51
+    "שפת ממשק",                         # 52
+    "שם יישום",                         # 53
+    "גודל יישום",                       # 54
+    "כיוון מילוי אוטומטי",              # 55
+    "מקסימום נסיונות מילוי",            # 56
+    "מקסימום שיעורים רצופים",           # 57
+    "מקסימום ליום",                     # 58
+    "מספר שיעורים",                     # 59
+    "ימי שבוע",                         # 60
+    "אנגלית",                           # 61
+    "עברית",                            # 62
+    "רוסית",                            # 63
+    "קדימה",                            # 64
+    "אחורה",                            # 65
+    "אקראי",                            # 66
+    "ייבא מאקסל",                       # 67
+    "ייצא לאקסל",                       # 68
+    "ייצא ל-PDF",                       # 69
+    "נקה את כל המערכות",                # 70
+    "רענן",                             # 71
+    "עזרה",                             # 72
+    "אודות",                            # 73
+    "הגדרות",                           # 74
+    "יציאה",                            # 75
+    "קובץ",                             # 76
+    "עריכה",                            # 77
+    "תצוגה",                            # 78
+    "כלים",                             # 79
+    "שפה",                              # 80
+    "ערכת נושא",                        # 81
+    "בהיר",                             # 82
+    "כהה",                              # 83
+    "אוטומטי",                          # 84
+    "חיפוש",                            # 85
+    "סינון",                            # 86
+    "מיון",                             # 87
+    "עולה",                             # 88
+    "יורד",                             # 89
+    "הוסף",                             # 90
+    "הסר",                              # 91
+    "עדכן",                             # 92
+    "שכפל",                             # 93
+    "העתק",                             # 94
+    "הדבק",                             # 95
+    "גזור",                             # 96
+    "בטל",                              # 97
+    "בצע שוב",                          # 98
+    "בחר הכל",                          # 99
+    "בטל בחירה",                        # 100
+    "משוייך/זמין",                      # 101
+    "לא נמצא מורה עבור",                # 102
+    "לא ניתן למקם את כל השעות עבור",     # 103
+    "ממוקם",                            # 104
+    "כניסה",                            # 105
+    "יציאה",                            # 106
+    "החל",                              # 107
+    "אפס",                              # 108
+    "ברירת מחדל",                       # 109
+    "מותאם אישית",                      # 110
+    "כן",                               # 111
+    "לא",                               # 112
+    "אישור",                            # 113
+    "שגיאה",                            # 114
+    "אזהרה",                            # 115
+    "מידע",                             # 116
+    "הצלחה",                            # 117
+    "טוען...",                          # 118
+    "אנא המתן...",                      # 119
+    "מעבד...",                          # 120
+    "הושלם",                            # 121
+    "נכשל",                             # 122
+    "ממתין",                            # 123
+    "פעיל",                             # 124
+    "לא פעיל",                          # 125
+    "מופעל",                            # 126
+    "מושבת",                            # 127
+    "שדה חובה",                         # 128
+    "קלט לא חוקי",                      # 129
+    "ערך גדול מדי",                     # 130
+    "ערך קטן מדי",                      # 131
+    "פורמט לא חוקי",                    # 132
+    "כבר קיים",                         # 133
+    "לא נמצא",                          # 134
+    "גישה נדחתה",                       # 135
+    "הפעולה בוטלה",                     # 136
+    "הפעולה הושלמה",                    # 137
+    "שומר...",                          # 138
+    "נשמר",                             # 139
+    "לא נשמר",                          # 140
+    "זוהו שינויים",                     # 141
+    "אין שינויים",                      # 142
+    "להתעלם משינויים?",                 # 143
+    "הייצוא הושלם",                     # 144
+    "הייבוא הושלם",                     # 145
+    "הייצוא נכשל",                      # 146
+    "הייבוא נכשל",                      # 147
+    "בחר קובץ",                         # 148
+    "העלה",                             # 149
+    "הורד",                             # 150
+    "תצוגה מקדימה",                     # 151
+    "הדפס",                             # 152
+    "עמוד",                             # 153
+    "מתוך",                             # 154
+    "ראשון",                            # 155
+    "אחרון",                            # 156
+    "הבא",                              # 157
+    "הקודם",                            # 158
+    "הצג",                              # 159
+    "הסתר",                             # 160
+```}試ไ(Note: created a very large backup file) was successful. The create_file tool returned success. (Truncated)

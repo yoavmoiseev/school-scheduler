@@ -1,0 +1,121 @@
+{
+  "counts": {
+    "eng": 291,
+    "he": 379,
+    "ru": 379
+  },
+  "mismatches": [
+    {
+      "index": 262,
+      "eng": "School Scheduler",
+      "he": "מתזמן בית ספר",
+      "ru": "School Scheduler",
+      "he_bad": false,
+      "ru_bad": true
+    },
+    {
+      "index": 271,
+      "eng": "Save to Favorites",
+      "he": "Save to Favorites",
+      "ru": "Сохранить в избранное",
+      "he_bad": true,
+      "ru_bad": false
+    },
+    {
+      "index": 272,
+      "eng": "Load from Favorites",
+      "he": "Load from Favorites",
+      "ru": "Загрузить из избранного",
+      "he_bad": true,
+      "ru_bad": false
+    },
+    {
+      "index": 273,
+      "eng": "Save to Favorites",
+      "he": "Save to Favorites",
+      "ru": "Сохранить в избранное",
+      "he_bad": true,
+      "ru_bad": false
+    },
+    {
+      "index": 274,
+      "eng": "Load from Favorites",
+      "he": "Load from Favorites",
+      "ru": "Загрузить из избранного",
+      "he_bad": true,
+      "ru_bad": false
+    },
+    {
+      "index": 275,
+      "eng": "Saved to Favorites",
+      "he": "Saved to Favorites",
+      "ru": "Сохранено в избранное",
+      "he_bad": true,
+      "ru_bad": false
+    },
+    {
+      "index": 276,
+      "eng": "If provided, Time Slots and Lessons are calculated from this",
+      "he": "If provided, Time Slots and Lessons are calculated from this",
+      "ru": "Если указано, временные интервалы и уроки вычисляются на его основе",
+      "he_bad": true,
+      "ru_bad": false
+    },
+    {
+      "index": 277,
+      "eng": "Used only if Weekly Hours is empty. Converted to lesson numbers",
+      "he": "Used only if Weekly Hours is empty. Converted to lesson numbers",
+      "ru": "Используется только если поле 'Недельные часы' пусто. Преобразуется в номера уроков",
+      "he_bad": true,
+      "ru_bad": false
+    },
+    {
+      "index": 278,
+      "eng": "Used only if both above are empty",
+      "he": "Used only if both above are empty",
+      "ru": "Используется только если оба вышеуказанных поля пусты",
+      "he_bad": true,
+      "ru_bad": false
+    },
+    {
+      "index": 284,
+      "eng": "Teacher's Weekly Hours (PRIMARY)",
+      "he": "Teacher's Weekly Hours (PRIMARY)",
+      "ru": "Недельные часы преподавателя (ПЕРВИЧНО)",
+      "he_bad": true,
+      "ru_bad": false
+    },
+    {
+      "index": 285,
+      "eng": "⚠️ Priority Order:<br>Teacher's Weekly Hours (PRIMARY) - If provided, Time Slots and Lessons are calculated from this<br>Time Slots (SECONDARY) - Used only if Weekly Hours is empty. Converted to lesson numbers<br>Lessons (TERTIARY) - Used only if both above are empty",
+      "he": "⚠️ Priority Order:<br>Teacher's Weekly Hours (PRIMARY) - If provided, Time Slots and Lessons are calculated from this<br>Time Slots (SECONDARY) - Used only if Weekly Hours is empty. Converted to lesson numbers<br>Lessons (TERTIARY) - Used only if both above are empty",
+      "ru": "⚠️ Порядок приоритета:<br>Недельные часы преподавателя (ПЕРВИЧНО) - Если указано, временные интервалы и уроки вычисляются на его основе<br>Временные интервалы (ВТОРИЧНО) - Используется только если Недельные часы пусты. Преобразуется в номера уроков<br>Уроки (ТЕРЦИАРНО) - Используется только если оба вышеуказанных поля пусты",
+      "he_bad": true,
+      "ru_bad": false
+    },
+    {
+      "index": 286,
+      "eng": "💡 Tips:",
+      "he": "💡 Tips:",
+      "ru": "💡 Подсказки:",
+      "he_bad": true,
+      "ru_bad": false
+    },
+    {
+      "index": 287,
+      "eng": "Click on any time range in the table to edit it inline",
+      "he": "Click on any time range in the table to edit it inline",
+      "ru": "Нажмите на любой временной интервал в таблице, чтобы отредактировать его на месте",
+      "he_bad": true,
+      "ru_bad": false
+    },
+    {
+      "index": 288,
+      "eng": "Time format: H:MM-H:MM or HH:MM-HH:MM (e.g., 9:15-10:00 or 09:15-10:00)",
+      "he": "Time format: H:MM-H:MM or HH:MM-HH:MM (e.g., 9:15-10:00 or 09:15-10:00)",
+      "ru": "Формат времени: H:MM-H:MM или HH:MM-HH:MM (например, 9:15-10:00 или 09:15-10:00)",
+      "he_bad": true,
+      "ru_bad": false
+    }
+  ]
+}

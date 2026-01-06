@@ -1,0 +1,296 @@
+{
+  "groups": {
+    "12-Bet": {
+      "1": {
+        "Sunday": "Math-12",
+        "Tuesday": "Tik-12",
+        "Wednesday": "Math-12"
+      },
+      "2": {
+        "Sunday": "Math-12",
+        "Monday": "Rus-12",
+        "Tuesday": "Tik-12",
+        "Wednesday": "Math-12"
+      },
+      "3": {
+        "Sunday": "English-12",
+        "Monday": "Rus-12"
+      },
+      "4": {
+        "Sunday": "English-12",
+        "Tuesday": "Math-12",
+        "Wednesday": "Tik-12"
+      },
+      "5": {
+        "Sunday": "Tik-12",
+        "Monday": "Rus-12",
+        "Tuesday": "Math-12",
+        "Wednesday": "Tik-12"
+      },
+      "6": {
+        "Sunday": "Tik-12",
+        "Tuesday": "English-12"
+      },
+      "7": {
+        "Sunday": "Rus-12",
+        "Tuesday": "English-12"
+      },
+      "8": {
+        "Sunday": "English-12"
+      }
+    },
+    "11-Alef": {
+      "1": {
+        "Sunday": "English-11",
+        "Tuesday": "Math-11"
+      },
+      "2": {
+        "Sunday": "English-11",
+        "Tuesday": "Math-11"
+      },
+      "3": {
+        "Sunday": "Math-11",
+        "Wednesday": "Math-11"
+      },
+      "4": {
+        "Sunday": "Math-11",
+        "Monday": "Russian-11",
+        "Tuesday": "Tikshuv-11"
+      },
+      "5": {
+        "Sunday": "English-11",
+        "Tuesday": "English-11"
+      },
+      "6": {
+        "Sunday": "Russian-11",
+        "Monday": "Russian-11"
+      },
+      "7": {
+        "Sunday": "Tikshuv-11"
+      },
+      "8": {
+        "Sunday": "Tikshuv-11"
+      }
+    },
+    "10-Yud": {
+      "1": {
+        "Sunday": "Tiksh-10",
+        "Tuesday": "Eng-10"
+      },
+      "2": {
+        "Sunday": "Tiksh-10",
+        "Tuesday": "Eng-10"
+      },
+      "3": {
+        "Sunday": "Russ-10",
+        "Tuesday": "Math-10"
+      },
+      "4": {
+        "Sunday": "Russ-10",
+        "Tuesday": "Eng-10"
+      },
+      "5": {
+        "Sunday": "Math-10"
+      },
+      "6": {
+        "Sunday": "Math-10"
+      }
+    },
+    "9-Tet": {
+      "3": {
+        "Sunday": "Tik-9",
+        "Tuesday": "Eng-9"
+      },
+      "4": {
+        "Sunday": "Tik-9"
+      },
+      "6": {
+        "Sunday": "Eng-9",
+        "Tuesday": "Math-9"
+      },
+      "7": {
+        "Sunday": "Math-9",
+        "Tuesday": "Math-9"
+      }
+    },
+    "8-het": {
+      "7": {
+        "Sunday": "English-8"
+      },
+      "8": {
+        "Sunday": "Math-8",
+        "Tuesday": "English-8"
+      }
+    }
+  },
+  "teachers": {
+    "Yoav M": {
+      "1": {
+        "Tuesday": "Tik-12",
+        "Sunday": "Tiksh-10"
+      },
+      "2": {
+        "Tuesday": "Tik-12",
+        "Sunday": "Tiksh-10"
+      },
+      "4": {
+        "Wednesday": "Tik-12",
+        "Tuesday": "Tikshuv-11",
+        "Sunday": "Tik-9"
+      },
+      "5": {
+        "Sunday": "Tik-12",
+        "Wednesday": "Tik-12"
+      },
+      "6": {
+        "Sunday": "Tik-12"
+      },
+      "7": {
+        "Sunday": "Tikshuv-11"
+      },
+      "8": {
+        "Sunday": "Tikshuv-11"
+      },
+      "3": {
+        "Sunday": "Tik-9"
+      }
+    },
+    "Igor": {
+      "1": {
+        "Sunday": "Math-12",
+        "Wednesday": "Math-12",
+        "Tuesday": "Math-11"
+      },
+      "2": {
+        "Sunday": "Math-12",
+        "Wednesday": "Math-12",
+        "Tuesday": "Math-11"
+      },
+      "4": {
+        "Tuesday": "Math-12",
+        "Sunday": "Math-11"
+      },
+      "5": {
+        "Tuesday": "Math-12",
+        "Sunday": "Math-10"
+      },
+      "3": {
+        "Sunday": "Math-11",
+        "Wednesday": "Math-11",
+        "Tuesday": "Math-10"
+      },
+      "6": {
+        "Sunday": "Math-10",
+        "Tuesday": "Math-9"
+      },
+      "7": {
+        "Sunday": "Math-9",
+        "Tuesday": "Math-9"
+      },
+      "8": {
+        "Sunday": "Math-8"
+      }
+    },
+    "Inda": {
+      "3": {
+        "Sunday": "English-12",
+        "Tuesday": "Eng-9"
+      },
+      "4": {
+        "Sunday": "English-12",
+        "Tuesday": "Eng-10"
+      },
+      "6": {
+        "Tuesday": "English-12",
+        "Sunday": "Eng-9"
+      },
+      "7": {
+        "Tuesday": "English-12",
+        "Sunday": "English-8"
+      },
+      "8": {
+        "Sunday": "English-12",
+        "Tuesday": "English-8"
+      },
+      "1": {
+        "Sunday": "English-11",
+        "Tuesday": "Eng-10"
+      },
+      "2": {
+        "Sunday": "English-11",
+        "Tuesday": "Eng-10"
+      },
+      "5": {
+        "Sunday": "English-11",
+        "Tuesday": "English-11"
+      }
+    },
+    "Sasha": {
+      "2": {
+        "Monday": "Rus-12"
+      },
+      "3": {
+        "Monday": "Rus-12",
+        "Sunday": "Russ-10"
+      },
+      "5": {
+        "Monday": "Rus-12"
+      },
+      "7": {
+        "Sunday": "Rus-12"
+      },
+      "4": {
+        "Monday": "Russian-11",
+        "Sunday": "Russ-10"
+      },
+      "6": {
+        "Sunday": "Russian-11",
+        "Monday": "Russian-11"
+      }
+    }
+  },
+  "global": {
+    "1": {
+      "Sunday": "Math-12 / English-11 / Tiksh-10",
+      "Tuesday": "Tik-12 / Math-11 / Eng-10",
+      "Wednesday": "Math-12"
+    },
+    "2": {
+      "Sunday": "Math-12 / English-11 / Tiksh-10",
+      "Monday": "Rus-12",
+      "Tuesday": "Tik-12 / Math-11 / Eng-10",
+      "Wednesday": "Math-12"
+    },
+    "3": {
+      "Sunday": "English-12 / Math-11 / Russ-10 / Tik-9",
+      "Monday": "Rus-12",
+      "Wednesday": "Math-11",
+      "Tuesday": "Math-10 / Eng-9"
+    },
+    "4": {
+      "Sunday": "English-12 / Math-11 / Russ-10 / Tik-9",
+      "Tuesday": "Math-12 / Tikshuv-11 / Eng-10",
+      "Wednesday": "Tik-12",
+      "Monday": "Russian-11"
+    },
+    "5": {
+      "Sunday": "Tik-12 / English-11 / Math-10",
+      "Monday": "Rus-12",
+      "Tuesday": "Math-12 / English-11",
+      "Wednesday": "Tik-12"
+    },
+    "6": {
+      "Sunday": "Tik-12 / Russian-11 / Math-10 / Eng-9",
+      "Tuesday": "English-12 / Math-9",
+      "Monday": "Russian-11"
+    },
+    "7": {
+      "Sunday": "Rus-12 / Tikshuv-11 / Math-9 / English-8",
+      "Tuesday": "English-12 / Math-9"
+    },
+    "8": {
+      "Sunday": "English-12 / Tikshuv-11 / Math-8",
+      "Tuesday": "English-8"
+    }
+  }
+}

@@ -1,0 +1,4 @@
+2155: get_text - def get_text(index, lang='English'):
+2187: get_all_texts - def get_all_texts(lang='English'):
+2197: get_language_code - def get_language_code(lang):
+2209: is_rtl - def is_rtl(lang):
