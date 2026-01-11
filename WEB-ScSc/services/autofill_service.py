@@ -9,9 +9,14 @@ class AutofillService:
         self.checker = conflict_checker
         self.color_service = color_service
     
-    def autofill_group(self, group_name, max_retries=100):
+    def autofill_group(self, group_name, max_retries=100, preserve_existing=True):
         """
         Autofill schedule for a group.
+        Args:
+            group_name: Name of the group to autofill
+            max_retries: Maximum number of retry attempts
+            preserve_existing: If True, keep existing lessons and only fill empty slots.
+                             If False, start from scratch (used by Rebuild All)
         Returns: (success: bool, schedule: dict, errors: list)
         """
         config = self.excel.get_config()
@@ -62,10 +67,35 @@ class AutofillService:
         
         # Build teacher busy map from existing schedules (excluding current group)
         existing_schedules = self.excel.get_group_schedules()
-        if group_name in existing_schedules:
-            del existing_schedules[group_name]  # Don't count current group
+        
+        # Load existing schedule for this group to preserve manual selections (if preserve_existing=True)
+        if preserve_existing and group_name in existing_schedules:
+            current_schedule = existing_schedules[group_name]
+            # Copy existing lessons into schedule
+            for day in current_schedule:
+                if day not in schedule:
+                    schedule[day] = {}
+                for lesson_num, lesson_data in current_schedule[day].items():
+                    schedule[day][lesson_num] = lesson_data
+            # Remove from existing_schedules to avoid double-counting in busy_map
+            del existing_schedules[group_name]
+        elif group_name in existing_schedules:
+            # If not preserving, just remove current group from existing_schedules
+            del existing_schedules[group_name]
         
         busy_map = self.checker.build_busy_map(existing_schedules, teachers)
+        
+        # Mark teachers from preserved lessons as busy (only if we preserved lessons)
+        if preserve_existing:
+            for day in schedule:
+                for lesson_num, lesson_data in schedule[day].items():
+                    teacher_str = lesson_data.get('teacher', '')
+                    if teacher_str:
+                        # Handle multiple teachers (semicolon-separated)
+                        teacher_names = [t.strip() for t in teacher_str.split(';')]
+                        for teacher_name in teacher_names:
+                            self.checker.mark_busy(busy_map, teacher_name, day, lesson_num)
+
         
         errors = []
         
@@ -98,7 +128,14 @@ class AutofillService:
                     total_teacher_hours = sum(subj_teacher_hours.get(n, 0) for n in assigned_teachers)
                     required = total_teacher_hours
 
+            # Count how many lessons of this subject are already placed (if preserve_existing)
             placed = 0
+            if preserve_existing:
+                for day in schedule:
+                    for lesson_data in schedule[day].values():
+                        if lesson_data.get('subject') == subj_name:
+                            placed += 1
+            
             retries = 0
 
             # Create list of all possible slots

@@ -13,5 +13,10 @@
   "Errors:": "שגיאות:",
   "No teacher found for subject 'חינוך גופני' in group '\u05d9\"\u05d0'": "לא נמצא מורה לנושא 'חינוך גופני' בקבוצה '\u05d9\"\u05d0'",
   "Attempts: ": "ניסיונות:",
-  "Don't have an account?": "אין חשבון?"
+  "Don't have an account?": "אין חשבון?",
+  "Already have an account?": "כבר יש לך חשבון?",
+  "School Scheduler": "בונה מערכת לבית ספר",
+  "Day Scheduler": "מערכת ליום",
+  "Teacher Scheduler": "מערכת למורה",
+  "Group Scheduler": "מערכת לקבוצה"
 }

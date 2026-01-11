@@ -44,7 +44,7 @@ class ExcelService:
         ws_config.append(['app_name', 'School Schedule Editor'])
         ws_config.append(['app_size', '1500x900'])
         ws_config.append(['autofill_direction', 'Left_to_Right'])
-        ws_config.append(['max_autofill_retries', '15'])
+        ws_config.append(['max_autofill_retries', '2'])
         ws_config.append(['max_sequence_lessons', '2'])
         ws_config.append(['max_per_day', '3'])
         ws_config.append(['lessons', '10'])

@@ -214,8 +214,9 @@ def rebuild_all():
                         except Exception:
                             pass
                         # Call autofill with inner single attempt to get deterministic result
+                        # preserve_existing=False ensures Rebuild All starts from scratch
                         try:
-                            success, schedule, info = autofill_service.autofill_group(name, max_retries=1)
+                            success, schedule, info = autofill_service.autofill_group(name, max_retries=1, preserve_existing=False)
                         except TypeError:
                             # fallback if signature differs
                             success, schedule, info = autofill_service.autofill_group(name)
@@ -507,6 +508,13 @@ def export_excel():
                         cell.font = Font(color=fg)
 
         # Build Teacher_ sheets (transposed: rows = lessons, columns = weekdays)
+        # First, create a map of teacher availability
+        teacher_availability = {}
+        for t in teachers:
+            tname = t.get('name', '')
+            if tname:
+                teacher_availability[tname] = t.get('available_slots', {})
+        
         for tname, tsched in (teacher_schedules.items() if teacher_schedules else []):
             sname = f'Teacher_{tname}'
             if not tname or sname in wb.sheetnames:
@@ -522,6 +530,9 @@ def export_excel():
                     header.append(wd)
             tgt.append(header)
 
+            # Get this teacher's available slots
+            avail_slots = teacher_availability.get(tname, {})
+
             for ln in lesson_nums:
                 row = [time_slots.get(ln, str(ln))]
                 for wd in (weekdays or list(tsched.keys())):
@@ -529,6 +540,12 @@ def export_excel():
                     if tsched and wd in tsched and ln in tsched[wd]:
                         ld = tsched[wd][ln]
                         cell_val = ld.get('subject', '') if isinstance(ld, dict) else ''
+                    else:
+                        # Check if this slot is in teacher's available hours
+                        if avail_slots and wd in avail_slots and ln in avail_slots[wd]:
+                            cell_val = 'Empty'
+                        else:
+                            cell_val = ''
                     row.append(cell_val)
                 tgt.append(row)
                 # style cells for this lesson-row

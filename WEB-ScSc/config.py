@@ -11,7 +11,7 @@ class Config:
     DEFAULT_LANGUAGE = 'English'
     APP_NAME = 'School Schedule Editor'
     APP_SIZE = '1500x900'
-    MAX_AUTOFILL_RETRIES = 15
+    MAX_AUTOFILL_RETRIES = 2
     AUTOFILL_DIRECTION = 'Left_to_Right'
     MAX_SEQUENCE_LESSONS = 2
     MAX_PER_DAY = 3

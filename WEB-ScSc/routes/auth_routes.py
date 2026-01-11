@@ -70,6 +70,7 @@ def login():
     
     username = data.get('username')
     password = data.get('password')
+    lang = data.get('language')  # Get selected language from login form
     
     if not all([username, password]):
         return jsonify({
@@ -86,6 +87,10 @@ def login():
         session['first_name'] = result['user']['first_name']
         session['last_name'] = result['user']['last_name']
         session.permanent = True
+        
+        # If language was selected during login, save it to user's config
+        if lang:
+            session['login_language'] = lang
         
         return jsonify(result)
     else:

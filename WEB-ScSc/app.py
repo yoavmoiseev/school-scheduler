@@ -132,7 +132,16 @@ def inject_i18n():
         try:
             excel_service = get_user_excel_service()
             config = excel_service.get_config()
-            lang = config.get('GUI_LANGUAGE') or None
+            
+            # If user just logged in with a language selection, update their config
+            if 'login_language' in session:
+                login_lang = session.pop('login_language')
+                config['GUI_LANGUAGE'] = login_lang
+                excel_service.save_config(config)
+                lang = login_lang
+            else:
+                lang = config.get('GUI_LANGUAGE') or None
+            
             app_name = config.get('app_name', app_name)
         except Exception:
             # If user-specific service fails, ignore and continue to other fallbacks

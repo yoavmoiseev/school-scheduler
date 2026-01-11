@@ -8,7 +8,7 @@ import sys
 
 
 LANGUAGES_LIST = ['English', 'Hebrew', 'Russian']
-GUI_LANGUAGE = 'English'
+GUI_LANGUAGE = 'Russian'
 
 
 TEXTS = {
@@ -56,7 +56,7 @@ app_name = 'School Schedule Editor'
 app_size = '1500x900'
 
 
-max_autofill_retries = 15
+max_autofill_retries = 3
 autofill_direction = 'Left_to_Right'
 
 
