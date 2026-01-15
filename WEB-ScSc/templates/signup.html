@@ -124,6 +124,30 @@
                 <input type="password" class="form-control" id="confirm_password" name="confirm_password" required>
             </div>
             
+            <!-- User Agreement Section -->
+            <div class="mb-3">
+                <div class="card">
+                    <div class="card-header">
+                        <a class="text-decoration-none" data-bs-toggle="collapse" href="#userAgreement" role="button" aria-expanded="false">
+                            <span data-i18n="User Agreement">User Agreement</span> ▼
+                        </a>
+                    </div>
+                    <div class="collapse" id="userAgreement">
+                        <div class="card-body" style="max-height: 200px; overflow-y: auto; font-size: 0.85rem;">
+                            <div id="agreementText">
+                                <!-- Content loaded by JS based on language -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-check mt-2">
+                    <input class="form-check-input" type="checkbox" id="acceptAgreement" required>
+                    <label class="form-check-label" for="acceptAgreement">
+                        <span data-i18n="I accept the User Agreement">I accept the User Agreement</span>
+                    </label>
+                </div>
+            </div>
+            
             <button type="submit" class="btn btn-primary w-100" data-i18n="Sign Up">Sign Up</button>
         </form>
         
@@ -188,7 +212,30 @@
             `;
             $('#alert-container').html(alert);
         }
-        // Language selector: redirect with ?lang=...
+        
+        // Load user agreement based on current language
+        async function loadUserAgreement() {
+            const langSelect = document.getElementById('langSelect');
+            const lang = langSelect ? langSelect.value : 'English';
+            let filename = 'user_agreement_en.txt';
+            if (lang === 'Hebrew') filename = 'user_agreement_he.txt';
+            if (lang === 'Russian') filename = 'user_agreement_ru.txt';
+            
+            try {
+                const response = await fetch(`/static/legal/${filename}`);
+                const text = await response.text();
+                $('#agreementText').text(text);
+            } catch (error) {
+                $('#agreementText').text('User agreement could not be loaded.');
+            }
+        }
+        
+        // Load agreement on page load and language change
+        $(document).ready(function() {
+            loadUserAgreement();
+        });
+        
+        // Language selector: redirect with ?lang=... and reload agreement
         $('#langSelect').on('change', function() {
             const v = $(this).val();
             const url = new URL(window.location.href);

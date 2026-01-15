@@ -1,0 +1,16 @@
+USER AGREEMENT
+
+Copyright © 2026 YaM Soft. All rights reserved.
+Author: Yoav Moiseev
+
+This software is provided as FREEWARE "AS IS" without any warranties of any kind, either express or implied, including but not limited to warranties of merchantability, fitness for a particular purpose, or non-infringement.
+
+DISCLAIMER:
+- NO warranty for data integrity or accuracy
+- NO responsibility for password security or data breaches
+- NO guarantee of service availability or reliability
+- Use at your own risk
+
+The author and YaM Soft shall NOT be liable for any direct, indirect, incidental, special, or consequential damages arising out of the use or inability to use this software, even if advised of the possibility of such damages.
+
+By using this software, you accept all risks and agree that YaM Soft and the author bear no legal responsibility whatsoever.

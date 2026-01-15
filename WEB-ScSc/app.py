@@ -202,6 +202,8 @@ def download_file(filename):
     """Download a generated file"""
     file_path = os.path.join('uploads', filename)
     if os.path.exists(file_path):
+        if os.path.getsize(file_path) == 0:
+            return jsonify({'error': 'File is empty'}), 500
         return send_file(file_path, as_attachment=True)
     return jsonify({'error': 'File not found'}), 404
 

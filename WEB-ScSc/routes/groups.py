@@ -123,15 +123,53 @@ def update_group(name):
     data = request.json
     groups = excel_service.get_groups()
     
+    print(f"[DEBUG] update_group: URL name={name}, data={data}")
+    
     # Find group
     group_idx = next((i for i, g in enumerate(groups) if g['name'] == name), None)
     if group_idx is None:
+        print(f"[DEBUG] update_group: Group '{name}' not found in groups list")
         return jsonify({'error': 'Group not found'}), 404
+    
+    old_name = name
+    new_name = data.get('name')
+    
+    print(f"[DEBUG] update_group: old_name={old_name}, new_name={new_name}")
     
     # Update group
     groups[group_idx] = data
     excel_service.save_groups(groups)
+    print(f"[DEBUG] update_group: Group updated in Groups sheet")
     
+    # If name changed, update references in Subjects and Teachers
+    if old_name != new_name:
+        print(f"[DEBUG] update_group: Name changed, updating references...")
+        # Update Subjects sheet: group field
+        subjects = excel_service.get_subjects()
+        updated_subjects = False
+        for subj in subjects:
+            if subj.get('group') == old_name:
+                subj['group'] = new_name
+                updated_subjects = True
+                print(f"[DEBUG] update_group: Updated subject '{subj.get('name')}' group reference")
+        if updated_subjects:
+            excel_service.save_subjects(subjects)
+            print(f"[DEBUG] update_group: Subjects sheet saved")
+        
+        # Update Teachers sheet: subjects[].group field
+        teachers = excel_service.get_teachers()
+        updated_teachers = False
+        for teacher in teachers:
+            for subj_entry in teacher.get('subjects', []):
+                if subj_entry.get('group') == old_name:
+                    subj_entry['group'] = new_name
+                    updated_teachers = True
+                    print(f"[DEBUG] update_group: Updated teacher '{teacher.get('name')}' subject '{subj_entry.get('name')}' group reference")
+        if updated_teachers:
+            excel_service.save_teachers(teachers)
+            print(f"[DEBUG] update_group: Teachers sheet saved")
+    
+    print(f"[DEBUG] update_group: Completed successfully")
     return jsonify({'success': True, 'group': data})
 
 

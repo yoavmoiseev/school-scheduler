@@ -154,7 +154,6 @@
                 resultDiv.className = 'alert alert-danger';
                 resultDiv.textContent = '{{ _('Export failed') }}: ' + (expRes && expRes.error ? expRes.error : '');
                 if (topBtn) topBtn.disabled = false;
-                if (modalBtn) modalBtn.disabled = false;
                 return;
             }
 
@@ -162,9 +161,8 @@
             const clearRes = await clearAllDataNoConfirm();
             if (!clearRes || !clearRes.success) {
                 resultDiv.className = 'alert alert-danger';
-                resultDiv.textContent = '{{ _('Clear failed') }}: ' + (clearRes && clearRes.error ? clearRes.error : '');
+                resultDiv.textContent = '{{ _('Clear failed') }}' + ': ' + (clearRes && clearRes.error ? clearRes.error : '');
                 if (topBtn) topBtn.disabled = false;
-                if (modalBtn) modalBtn.disabled = false;
                 return;
             }
 
@@ -189,7 +187,7 @@
                     resultDiv.textContent = '{{ _('Import failed') }}: ' + error.message;
                 }
                 if (topBtn) topBtn.disabled = false;
-                if (modalBtn) modalBtn.disabled = false;
+
                 return;
             }
 
@@ -199,7 +197,6 @@
                 resultDiv.className = 'alert alert-warning';
                 resultDiv.textContent = '{{ _('Please select a file or choose a local file') }}';
                 if (topBtn) topBtn.disabled = false;
-                if (modalBtn) modalBtn.disabled = false;
                 return;
             }
 
@@ -224,7 +221,15 @@
                 resultDiv.textContent = '{{ _('Import failed') }}: ' + error.message;
             }
             if (topBtn) topBtn.disabled = false;
-            if (modalBtn) modalBtn.disabled = false;
+        }
+
+        // Reset modal button state when modal is opened
+        const importModal = document.getElementById('importModal');
+        if (importModal) {
+            importModal.addEventListener('show.bs.modal', function() {
+                const modalBtn = document.getElementById('import-modal-btn');
+                if (modalBtn) modalBtn.disabled = false;
+            });
         }
     </script>
     <script src="{{ url_for('static', filename='js/confirmations.js') }}"></script>

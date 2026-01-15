@@ -1194,8 +1194,18 @@ async function saveGroup() {
     
     try {
         if (originalName) {
+            console.log('[DEBUG] Updating group:', originalName, '->', name);
             await API.put(`/api/groups/${originalName}`, groupData);
+            // If name changed, refresh Teachers and Subjects tabs to reflect updated references
+            if (originalName !== name) {
+                console.log('[DEBUG] Group name changed, refreshing Teachers and Subjects');
+                // Small delay to ensure backend has saved changes
+                await new Promise(resolve => setTimeout(resolve, 200));
+                loadTeachers();
+                loadSubjects();
+            }
         } else {
+            console.log('[DEBUG] Creating new group:', name);
             await API.post('/api/groups', groupData);
         }
         bootstrap.Modal.getInstance(document.getElementById('groupModal')).hide();
@@ -1229,16 +1239,27 @@ async function deleteGroup() {
 async function loadSubjects() {
     try {
         const subjects = await API.get('/api/subjects');
+        const teachers = await API.get('/api/teachers');
         const tbody = $('#subjectsTable tbody');
         tbody.empty();
         
         subjects.forEach(subject => {
+            // Find all teachers who teach this subject in this group
+            const teachersForSubject = teachers.filter(teacher => {
+                return teacher.subjects && teacher.subjects.some(s => 
+                    s.name === subject.name && 
+                    (s.group === subject.group || (!s.group && !subject.group))
+                );
+            }).map(t => t.name);
+            
+            const teachersText = teachersForSubject.join(', ');
+            
             const row = $('<tr>')
                 .data('subject', subject)
                 .append($('<td>').text(subject.name))
                 .append($('<td>').text(subject.group))
                 .append($('<td>').text(subject.hours_per_week))
-                .append($('<td>').text(subject.teacher || ''));
+                .append($('<td>').text(teachersText || ''));
             tbody.append(row);
         });
         
@@ -2759,27 +2780,69 @@ window.addEventListener('DOMContentLoaded', () => {
     if (!presetSelect || !weekdaysInput) return;
 
     const presets = getWeekdayPresets();
-    // set initial input from current value if present
-    const currentVal = weekdaysInput.value && weekdaysInput.value.trim();
-    if (currentVal) {
-        // try to match one of presets
-        const normalized = currentVal.split(',').map(s=>s.trim()).join(',');
-        let matched = false;
-        Object.keys(presets).forEach(key => {
-            if (presets[key].join(',') === normalized) {
-                presetSelect.value = key;
-                matched = true;
-            }
-        });
-        if (!matched) {
-            // leave default selection
+    
+    // Store original value to detect changes
+    let originalWeekdays = weekdaysInput.value;
+    
+    // Fix: Force initial update after short delay to ensure proper initialization
+    setTimeout(() => {
+        const currentVal = weekdaysInput.value && weekdaysInput.value.trim();
+        if (currentVal) {
+            const normalized = currentVal.split(',').map(s=>s.trim()).join(',');
+            Object.keys(presets).forEach(key => {
+                if (presets[key].join(',') === normalized) {
+                    presetSelect.value = key;
+                }
+            });
         }
-    }
+    }, 100);
 
-    presetSelect.addEventListener('change', (ev) => {
-        const val = ev.target.value;
-        if (presets[val]) {
-            weekdaysInput.value = presets[val].join(',');
+    presetSelect.addEventListener('click', (ev) => {
+        // Wait for selection to complete
+        setTimeout(() => {
+            const val = presetSelect.value;
+            if (presets[val]) {
+                const newWeekdays = presets[val].join(',');
+                
+                // Show warning if weekdays will change
+                if (originalWeekdays !== newWeekdays) {
+                    const confirmed = confirm(
+                        _('Warning: Changing weekday names will significantly affect the schedule!') + '\n\n' +
+                        _('Teacher working days will need to be redone.') + '\n\n' +
+                        _('Are you sure you want to continue?')
+                    );
+                    
+                    if (!confirmed) {
+                        return;
+                    }
+                    originalWeekdays = newWeekdays;
+                }
+                
+                weekdaysInput.value = newWeekdays;
+            }
+        }, 50);
+    });
+
+    // Handle manual editing of weekdays input
+    weekdaysInput.addEventListener('blur', (ev) => {
+        const newValue = weekdaysInput.value.trim();
+        const normalizedNew = newValue.split(',').map(s=>s.trim()).join(',');
+        const normalizedOriginal = originalWeekdays.split(',').map(s=>s.trim()).join(',');
+        
+        if (normalizedNew !== normalizedOriginal && normalizedNew !== '') {
+            const confirmed = confirm(
+                _('Warning: Changing weekday names will significantly affect the schedule!') + '\n\n' +
+                _('Teacher working days will need to be redone.') + '\n\n' +
+                _('Are you sure you want to continue?')
+            );
+            
+            if (!confirmed) {
+                // Revert to original
+                weekdaysInput.value = originalWeekdays;
+            } else {
+                // Update original to new value
+                originalWeekdays = newValue;
+            }
         }
     });
 });

@@ -24,7 +24,16 @@ class ExcelService:
     def load(self):
         """Load Excel file or create if not exists"""
         if os.path.exists(self.file_path):
-            self.wb = load_workbook(self.file_path)
+            # Check if file is empty or corrupted
+            if os.path.getsize(self.file_path) == 0:
+                self._create_default()
+                return
+            
+            try:
+                self.wb = load_workbook(self.file_path)
+            except Exception:
+                # If file is corrupted, create new default workbook
+                self._create_default()
         else:
             self._create_default()
     

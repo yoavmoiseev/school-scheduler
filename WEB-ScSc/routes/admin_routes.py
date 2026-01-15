@@ -598,31 +598,7 @@ def export_excel():
                 except Exception:
                     continue
 
-        # 2) Fallback: scan all example workbooks for Group_/Teacher_ sheets with content
-        examples_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'ExcelExamples')
-        if os.path.exists(examples_dir):
-            from openpyxl import load_workbook
-            import glob
-            for exfile in sorted(glob.glob(os.path.join(examples_dir, '*.xlsx'))):
-                try:
-                    ex_wb = load_workbook(exfile, data_only=True)
-                except Exception:
-                    continue
-                for sname in ex_wb.sheetnames:
-                    if sname in existing:
-                        continue
-                    if not (sname.startswith('Group_') or sname.startswith('Teacher_')):
-                        continue
-                    try:
-                        src_ws = ex_wb[sname]
-                        if not sheet_has_content(src_ws):
-                            continue
-                        tgt_ws = wb.create_sheet(sname)
-                        for row in src_ws.iter_rows(values_only=True):
-                            tgt_ws.append(list(row))
-                        existing.add(sname)
-                    except Exception:
-                        continue
+        # Fallback logic removed - only export actual database data, not examples
     except Exception:
         # non-critical: if this fails we still return core sheets
         pass
