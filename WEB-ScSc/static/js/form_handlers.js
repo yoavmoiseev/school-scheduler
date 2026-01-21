@@ -623,6 +623,17 @@ async function addSubjectToTeacher() {
 
     // Ensure we add option in canonical name:hours:group format
     const value = `${baseName}:${hours}:${group}`;
+    
+    // Check if this exact combination is already in selected list
+    const alreadyAdded = $('#selectedSubjects option').filter(function() {
+        return $(this).val() === value;
+    }).length > 0;
+    
+    if (alreadyAdded) {
+        alert(_('This subject with the same hours and group is already added'));
+        return;
+    }
+    
     const option = $('<option>').val(value).text(value);
     $('#selectedSubjects').append(option);
 
@@ -795,6 +806,7 @@ async function saveTeacher() {
         }
         bootstrap.Modal.getInstance(document.getElementById('teacherModal')).hide();
         loadTeachers();
+        loadGroups();
     } catch (error) {
         alert(_('Failed to save teacher: ') + error.message);
         console.error('Save error:', error);
@@ -1349,6 +1361,8 @@ async function saveSubject() {
         await loadSubjects();
         // Refresh teachers list so teacher selected-subjects reflect subject changes
         await loadTeachers();
+        // Refresh groups list so total required/assigned updates
+        await loadGroups();
     } catch (error) {
         alert(_('Failed to save subject: ') + error.message);
     }
@@ -1697,6 +1711,44 @@ async function loadGroupSchedule() {
     }
 }
 
+// Helper function to translate error messages with parameters
+function translateErrorMessage(err) {
+    // Handle "Could not place all hours for X (placed Y/Z)"
+    const couldNotPlaceMatch = err.match(/^Could not place all hours for (.+) \(placed (\d+)\/(\d+)\)$/);
+    if (couldNotPlaceMatch) {
+        const subj = couldNotPlaceMatch[1];
+        const numPlaced = couldNotPlaceMatch[2];
+        const numRequired = couldNotPlaceMatch[3];
+        return _('Could not place all hours for {SUBJ} (placed {NUM_PLACED}/{NUM_REQUIRED})')
+            .replace('{SUBJ}', subj)
+            .replace('{NUM_PLACED}', numPlaced)
+            .replace('{NUM_REQUIRED}', numRequired);
+    }
+    
+    // Handle "No teacher found for subject 'X' in group 'Y'"
+    const noTeacherMatch = err.match(/^No teacher found for subject '(.+)' in group '(.+)'$/);
+    if (noTeacherMatch) {
+        const subj = noTeacherMatch[1];
+        const grp = noTeacherMatch[2];
+        return _("No teacher found for subject 'SUBJECT_NAME' in group 'GROUP_NAME'")
+            .replace('SUBJECT_NAME', subj)
+            .replace('GROUP_NAME', grp);
+    }
+    
+    // Handle "Teacher 'X' has no available time slots but is assigned to: Y"
+    const noSlotsMatch = err.match(/^Teacher '(.+)' has no available time slots but is assigned to: (.+)$/);
+    if (noSlotsMatch) {
+        const teacher = noSlotsMatch[1];
+        const subjects = noSlotsMatch[2];
+        return _("Teacher '{TEACHER}' has no available time slots but is assigned to: {SUBJECTS}")
+            .replace('{TEACHER}', teacher)
+            .replace('{SUBJECTS}', subjects);
+    }
+    
+    // Default: just translate as-is
+    return _(err);
+}
+
 function autofillGroup() {
     const groupName = $('#groupSelect').val();
     if (!groupName) return;
@@ -1720,7 +1772,7 @@ function autofillGroup() {
                             msg += `${it.subject}: ${it.placed}/${it.required} (teachers: ${teachers})\n`;
                         });
                     } else if (result.errors && result.errors.length > 0) {
-                        msg += result.errors.join('\n');
+                        msg += result.errors.map(err => translateErrorMessage(err)).join('\n');
                     }
                     alert(msg);
                 }
@@ -2443,20 +2495,48 @@ async function showFavoritesModal() {
 
 async function loadFavorite(id) {
     try {
-        // use hidden iframe to trigger download (avoids popup blockers)
-        try {
-            const iframe = document.createElement('iframe');
-            iframe.style.display = 'none';
-            iframe.src = `/api/favorites/download/${id}`;
-            document.body.appendChild(iframe);
-            setTimeout(() => { try { iframe.remove(); } catch (e) {} }, 30000);
-        } catch (e) {
-            // fallback to navigation
-            try { window.location = `/api/favorites/download/${id}`; } catch (err) { console.error('download fallback failed', err); }
+        // Close favorites modal
+        const favModalEl = document.getElementById('favoritesModal');
+        if (favModalEl) {
+            try { bootstrap.Modal.getOrCreateInstance(favModalEl).hide(); } catch(e) { console.warn('hide modal failed', e); }
         }
-        // hide modal after initiating download
-        try { bootstrap.Modal.getOrCreateInstance(document.getElementById('favoritesModal')).hide(); } catch(e) { console.warn('hide modal failed', e); }
+        
+        // Step 1: Export current data (backup before clearing)
+        const expRes = await exportExcelNoNavigate();
+        if (!expRes || !expRes.success) {
+            alert(_('Export failed') + ': ' + (expRes && expRes.error ? expRes.error : ''));
+            return;
+        }
+        
+        // Step 2: Clear all data
+        const clearRes = await clearAllDataNoConfirm();
+        if (!clearRes || !clearRes.success) {
+            alert(_('Clear failed') + ': ' + (clearRes && clearRes.error ? clearRes.error : ''));
+            return;
+        }
+        
+        // Step 3: Download the favorite file as Blob
+        const response = await fetch(`/api/favorites/download/${id}`);
+        if (!response.ok) {
+            throw new Error('Failed to download favorite file');
+        }
+        const blob = await response.blob();
+        
+        // Step 4: Upload and import the file
+        const fd = new FormData();
+        fd.append('file', blob, 'favorite.xlsx');
+        
+        const uploadResp = await fetch('/api/import/upload', { method: 'POST', body: fd });
+        const result = await uploadResp.json();
+        
+        if (result.success) {
+            alert(_('Import completed'));
+            setTimeout(() => { location.reload(); }, 1000);
+        } else {
+            alert(_('Import failed') + ': ' + (result.error || ''));
+        }
     } catch (e) {
+        console.error('loadFavorite error', e);
         alert(_('Failed to load favorite') + ': ' + e.message);
     }
 }
@@ -2639,7 +2719,7 @@ async function rebuildAll() {
                         <div class="d-flex justify-content-between align-items-start">
                             <div>
                                 <strong>${grp}</strong>
-                                <div class="small text-muted">${ok? _('Success') : _('Failed')} — ${_('Attempts')}: ${displayAttempts}</div>
+                                <div class="small text-muted">${ok? _('Success') : _('Failed')} — ${_('Attempts: ')}${displayAttempts}</div>
                             </div>
                             <div>
                                 `;
@@ -2678,7 +2758,7 @@ async function rebuildAll() {
                     }
 
                     if (errors && errors.length>0) {
-                        html += `<div><strong>${_('Errors')}:</strong><pre class="small text-danger">${errors.join('\n')}</pre></div>`;
+                        html += `<div><strong>${_('Errors:')}</strong><pre class="small text-danger">${errors.map(e => translateErrorMessage(e)).join('\n')}</pre></div>`;
                     }
 
                     html += '</div></div>';

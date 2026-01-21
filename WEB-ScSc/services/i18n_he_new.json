@@ -18,5 +18,16 @@
   "School Scheduler": "בונה מערכת לבית ספר",
   "Day Scheduler": "מערכת ליום",
   "Teacher Scheduler": "מערכת למורה",
-  "Group Scheduler": "מערכת לקבוצה"
+  "Group Scheduler": "מערכת לקבוצה",
+  "I accept the User Agreement": "אני מקבל/ת את הסכם המשתמש",
+  "User Agreement": "הסכם משתמש",
+  "This subject with the same hours and group is already added": "מקצוע זה עם אותו מספר שעות וקבוצה כבר נוסף",
+  "AutoFill the schedule for GROUP_NAME? This will add lessons to empty slots while preserving any assigned lessons.": "למלא אוטומטית את מערכת השיעורים עבור GROUP_NAME? פעולה זו תוסיף שיעורים למקומות ריקים תוך שמירה על כל השיעורים שהוקצו.",
+  "Autofill completed with some issues:\n": "המילוי האוטומטי הושלם עם בעיות:\n",
+  "No teacher found for subject 'SUBJECT_NAME' in group 'GROUP_NAME'": "לא נמצא מורה למקצוע 'SUBJECT_NAME' בקבוצה 'GROUP_NAME'",
+  "Incomplete placements": "הקצאות לא מלאות",
+  "Could not place all hours for {SUBJ} (placed {NUM_PLACED}/{NUM_REQUIRED})": "לא ניתן היה למקם את כל השעות עבור {SUBJ} (הוקצו {NUM_PLACED}/{NUM_REQUIRED})",
+  "Open Teacher": "הצג מערכת מורה",
+  "Running...": "מריץ...",
+  "Teacher '{TEACHER}' has no available time slots but is assigned to: {SUBJECTS}": "למורה '{TEACHER}' אין מקומות זמינים אך הוא מוקצה ל: {SUBJECTS}"
 }

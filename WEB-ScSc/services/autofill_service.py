@@ -107,17 +107,35 @@ class AutofillService:
             assigned_teachers = []
             teacher_name_map = {t['name']: t for t in teachers}
             subj_teacher_hours = {}
+            teachers_without_slots = {}  # Track teachers without available slots
+            
             for t in teachers:
                 for ts in t.get('subjects', []):
                     if ts.get('name') == subj_name and (ts.get('group', '') == group_name or ts.get('group', '') == ''):
+                        # Check if teacher has available time slots
+                        available_slots = t.get('available_slots', {})
+                        has_slots = available_slots and any(slots for slots in available_slots.values() if slots)
+                        
+                        if not has_slots:
+                            # Teacher has no available time slots - track but don't add to assigned
+                            if t['name'] not in teachers_without_slots:
+                                teachers_without_slots[t['name']] = []
+                            teachers_without_slots[t['name']].append(f"{subj_name} ({group_name})")
+                            continue
+                        
                         assigned_teachers.append(t['name'])
                         try:
                             subj_teacher_hours[t['name']] = subj_teacher_hours.get(t['name'], 0) + int(ts.get('hours', 0) or 0)
                         except Exception:
                             subj_teacher_hours[t['name']] = subj_teacher_hours.get(t['name'], 0)
+            
+            # Report teachers without slots
+            for teacher_name, subjects_list in teachers_without_slots.items():
+                subjects_str = ', '.join(subjects_list)
+                errors.append("Teacher '{TEACHER}' has no available time slots but is assigned to: {SUBJECTS}".replace('{TEACHER}', teacher_name).replace('{SUBJECTS}', subjects_str))
 
             if not assigned_teachers:
-                errors.append(f"No teacher found for subject '{subj_name}' in group '{group_name}'")
+                errors.append("No teacher found for subject 'SUBJECT_NAME' in group 'GROUP_NAME'".replace('SUBJECT_NAME', subj_name).replace('GROUP_NAME', group_name))
                 continue
 
             # Determine required lessons for this subject
@@ -229,7 +247,7 @@ class AutofillService:
                     retries = 0
 
             if placed < required:
-                errors.append(f"Could not place all hours for {subj_name} (placed {placed}/{required})")
+                errors.append("Could not place all hours for {SUBJ} (placed {NUM_PLACED}/{NUM_REQUIRED})".replace('{SUBJ}', subj_name).replace('{NUM_PLACED}', str(placed)).replace('{NUM_REQUIRED}', str(required)))
                 incomplete.append({
                     'subject': subj_name,
                     'placed': placed,

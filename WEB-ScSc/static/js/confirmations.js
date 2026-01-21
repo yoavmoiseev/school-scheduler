@@ -57,9 +57,10 @@ const Confirmations = {
     },
     
     autofillSchedule(groupName, callback) {
+        const message = _('AutoFill the schedule for GROUP_NAME? This will add lessons to empty slots while preserving any assigned lessons.').replace('GROUP_NAME', groupName);
         this.show(
             _('Confirm'),
-            `Rebuild the schedule for ${groupName}? This will delete the current schedule and create a new one.`,
+            message,
             callback
         );
     }

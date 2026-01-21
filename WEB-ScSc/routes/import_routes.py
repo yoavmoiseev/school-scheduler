@@ -56,7 +56,11 @@ def import_upload():
     # Save to temporary uploads folder
     tmp_dir = os.path.join('uploads', 'tmp')
     os.makedirs(tmp_dir, exist_ok=True)
+    # Preserve extension for non-ASCII filenames (Hebrew, Russian, etc.)
+    _, ext = os.path.splitext(f.filename)
     filename = secure_filename(f.filename)
+    if not filename.endswith(ext):
+        filename = filename + ext
     save_path = os.path.join(tmp_dir, filename)
     try:
         f.save(save_path)
