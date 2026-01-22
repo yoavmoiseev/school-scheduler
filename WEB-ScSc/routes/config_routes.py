@@ -1,4 +1,4 @@
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, request, jsonify, session
 
 config_bp = Blueprint('config', __name__)
 
@@ -23,6 +23,11 @@ def save_config():
     """Save configuration"""
     config = request.json
     excel_service.save_config(config)
+    
+    # Update session language if it was changed
+    if 'GUI_LANGUAGE' in config:
+        session['login_language'] = config['GUI_LANGUAGE']
+    
     return jsonify({'success': True})
 
 

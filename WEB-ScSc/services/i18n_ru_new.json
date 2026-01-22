@@ -98,5 +98,9 @@
   "Check-in": "Время входа",
   "Check-out": "Время выхода",
   "Add Time Slots": "Добавить временные слоты",
-  "Add Real Hours": "Добавить реальные часы"
+  "Add Real Hours": "Добавить реальные часы",
+  "Delete Selected": "Удалить выбранное",
+  "Are you sure you want to delete {ITEM}?": "Вы уверены, что хотите удалить {ITEM}?",
+  "is already assigned to other teachers": "уже назначен другим учителям",
+  "Assigning it again will split the class into subgroups. Proceed?": "Повторное назначение разделит класс на подгруппы. Продолжить?"
 }

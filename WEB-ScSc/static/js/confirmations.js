@@ -49,9 +49,10 @@ const Confirmations = {
     },
     
     deleteItem(itemName, callback) {
+        const message = _('Are you sure you want to delete {ITEM}?').replace('{ITEM}', itemName);
         this.show(
             _('Confirm'),
-            `Are you sure you want to delete ${itemName}?`,
+            message,
             callback
         );
     },

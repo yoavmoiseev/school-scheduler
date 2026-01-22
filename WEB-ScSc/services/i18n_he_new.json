@@ -29,5 +29,9 @@
   "Could not place all hours for {SUBJ} (placed {NUM_PLACED}/{NUM_REQUIRED})": "לא ניתן היה למקם את כל השעות עבור {SUBJ} (הוקצו {NUM_PLACED}/{NUM_REQUIRED})",
   "Open Teacher": "הצג מערכת מורה",
   "Running...": "מריץ...",
-  "Teacher '{TEACHER}' has no available time slots but is assigned to: {SUBJECTS}": "למורה '{TEACHER}' אין מקומות זמינים אך הוא מוקצה ל: {SUBJECTS}"
+  "Teacher '{TEACHER}' has no available time slots but is assigned to: {SUBJECTS}": "למורה '{TEACHER}' אין מקומות זמינים אך הוא מוקצה ל: {SUBJECTS}",
+  "Delete Selected": "מחק נבחר",
+  "Are you sure you want to delete {ITEM}?": "האם אתה בטוח שברצונך למחוק את {ITEM}?",
+  "is already assigned to other teachers": "כבר מוקצה למורים אחרים",
+  "Assigning it again will split the class into subgroups. Proceed?": "הקצאה חוזרת תחלק את הכיתה לתת-קבוצות. להמשיך?"
 }

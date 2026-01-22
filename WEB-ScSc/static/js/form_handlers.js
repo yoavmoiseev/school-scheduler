@@ -649,7 +649,6 @@ function removeSubjectFromTeacher() {
 async function saveTeacher() {
     // Синхронизируем текстовые поля с teacherIntervals перед сохранением
     syncTextareasFromIntervals();
-    console.log('[DEBUG] saveTeacher: teacherIntervals перед сохранением', teacherIntervals);
     const form = $('#teacherForm');
         const originalName = form.find('input[name="original_name"]').val();
         const name = form.find('input[name="name"]').val().trim();
@@ -856,7 +855,6 @@ function addIntervalFromSlots() {
     const timeslots = timeStart && timeEnd ? `${timeStart}-${timeEnd}` : '';
     const lessons = `${s}-${e}`;
     teacherIntervals.push({day: day, lessons: lessons, timeslots: timeslots, real: ''});
-    console.log('[DEBUG] addIntervalFromSlots: teacherIntervals после добавления', teacherIntervals);
     renderIntervals();
     syncTextareasFromIntervals();
 }
@@ -875,7 +873,6 @@ function addIntervalFromRealHours() {
     const lessons = `${startLesson}-${endLesson}`;
     const real = `${checkIn}-${checkOut}`;
     teacherIntervals.push({day: day, lessons: lessons, timeslots: timeslots, real: real});
-    console.log('[DEBUG] addIntervalFromRealHours: teacherIntervals после добавления', teacherIntervals);
     renderIntervals();
     syncTextareasFromIntervals();
 }
@@ -911,7 +908,6 @@ function syncTextareasFromIntervals() {
     const avail = [];
     const slots = window.timeSlots || {};
     teacherIntervals.forEach(it => {
-        console.log('[DEBUG] syncTextareasFromIntervals: interval', it);
         // weekly_hours: real > timeslots > lessons (fallback)
         let weeklyStr = '';
         if (it.real && it.real.includes(':')) {
@@ -932,7 +928,6 @@ function syncTextareasFromIntervals() {
             }
         }
         if (weeklyStr) {
-            console.log('[DEBUG] syncTextareasFromIntervals: weeklyStr', weeklyStr);
             weekly.push(weeklyStr);
         }
 
@@ -963,7 +958,6 @@ function syncTextareasFromIntervals() {
             }
         }
         if (timesStr) {
-            console.log('[DEBUG] syncTextareasFromIntervals: timesStr', timesStr);
             times.push(timesStr);
         }
 
@@ -989,20 +983,15 @@ function syncTextareasFromIntervals() {
             availStr = `${it.day}:${it.lessons}`;
         }
         if (availStr) {
-            console.log('[DEBUG] syncTextareasFromIntervals: availStr', availStr);
             avail.push(availStr);
         }
     });
     $('textarea[name="weekly_hours"]').val(weekly.join('\n'));
     $('textarea[name="time_slots"]').val(times.join('\n'));
     $('textarea[name="availability"]').val(avail.join('\n'));
-    console.log('[DEBUG] textarea weekly_hours:', $('textarea[name="weekly_hours"]').val());
-    console.log('[DEBUG] textarea time_slots:', $('textarea[name="time_slots"]').val());
-    console.log('[DEBUG] textarea availability:', $('textarea[name="availability"]').val());
 }
 
 function populateIntervalsFromTeacher(teacher) {
-    console.log('[DEBUG] populateIntervalsFromTeacher: исходные данные teacher', teacher);
     teacherIntervals = [];
     const slots = window.timeSlots || {};
     // If check_in/check_out exist, use them (PRIMARY)
@@ -1035,7 +1024,6 @@ function populateIntervalsFromTeacher(teacher) {
     }
     renderIntervals();
     syncTextareasFromIntervals();
-    console.log('[DEBUG] populateIntervalsFromTeacher: teacherIntervals после заполнения', teacherIntervals);
 }
 
 
@@ -1206,18 +1194,15 @@ async function saveGroup() {
     
     try {
         if (originalName) {
-            console.log('[DEBUG] Updating group:', originalName, '->', name);
             await API.put(`/api/groups/${originalName}`, groupData);
             // If name changed, refresh Teachers and Subjects tabs to reflect updated references
             if (originalName !== name) {
-                console.log('[DEBUG] Group name changed, refreshing Teachers and Subjects');
                 // Small delay to ensure backend has saved changes
                 await new Promise(resolve => setTimeout(resolve, 200));
                 loadTeachers();
                 loadSubjects();
             }
         } else {
-            console.log('[DEBUG] Creating new group:', name);
             await API.post('/api/groups', groupData);
         }
         bootstrap.Modal.getInstance(document.getElementById('groupModal')).hide();
