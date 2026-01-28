@@ -912,7 +912,10 @@ sudo tail -f /var/log/nginx/access.log /var/log/nginx/error.log
 
 ```bash
 cd ~/apps/WEB-ScSc
-git pull
+git fetch origin
+# Жёстко синхронизировать рабочую копию с origin/main
+git reset --hard origin/main
+sudo chown -R ubuntu:ubuntu /home/ubuntu/apps/WEB-ScSc
 sudo systemctl restart flask-app
 ```
 
@@ -968,6 +971,85 @@ cp /home/ubuntu/apps/WEB-ScSc.backup/data/users.db /home/ubuntu/apps/WEB-ScSc/da
 # Восстановить файлы:
 cp -r /home/ubuntu/apps/WEB-ScSc.backup/uploads/* /home/ubuntu/apps/WEB-ScSc/uploads/
 ```
+
+---
+
+## ✅ Критическая секция: гарантированный и предсказуемый деплой
+
+Ниже — проверенные правила, которые нужно соблюдать, чтобы обновления из GitHub
+всегда автоматически отражались на сервере и чтобы не было "двойных" копий кода.
+
+1) Структура репозитория и рабочая директория сервиса
+- Отслеживаемая версия приложения находится в подпапке `WEB-ScSc/` репозитория.
+- Сервис systemd должен запускать приложение из этой подпапки, а не из верхнего уровня.
+    Рекомендуемый `flask-app.service` (пример):
+
+```ini
+[Unit]
+Description=Flask School Schedule App
+After=network.target
+
+[Service]
+User=ubuntu
+WorkingDirectory=/home/ubuntu/apps/WEB-ScSc/WEB-ScSc
+Environment=PATH=/home/ubuntu/apps/WEB-ScSc/venv/bin
+ExecStart=/home/ubuntu/apps/WEB-ScSc/venv/bin/python3 app.py
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target
+```
+
+2) Корректный рабочий процесс (developer -> server)
+- Локально: правки → тест → `git add .` → `git commit -m "..."` → `git push origin main`
+- На сервере (автоматически или вручную):
+
+```bash
+cd /home/ubuntu/apps/WEB-ScSc
+git fetch origin
+git reset --hard origin/main
+sudo chown -R ubuntu:ubuntu /home/ubuntu/apps/WEB-ScSc
+sudo systemctl restart flask-app
+```
+
+3) Никогда не держать две рабочие копии одновременно
+- Не создавайте вручную дубли файлов на верхнем уровне (top-level). Если до этого были
+    неотслеживаемые файлы (они отображаются как `??` в `git status`), их нужно удалить
+    или перенести в `WEB-ScSc/` и закоммитить. Иначе `git pull` не перезапишет их.
+
+4) Виртуальное окружение
+- При обновлении можно восстановить `venv` из бэкапа или пересоздать:
+
+```bash
+python3 -m venv /home/ubuntu/apps/WEB-ScSc/venv
+/home/ubuntu/apps/WEB-ScSc/venv/bin/pip install -r /home/ubuntu/apps/WEB-ScSc/WEB-ScSc/requirements.txt
+```
+
+5) Быстрая диагностика (если сайт не изменился после `git reset`)
+- Проверить, откуда запущен процесс:
+
+```bash
+sudo systemctl show -p ExecStart -p WorkingDirectory flask-app
+ps aux | grep python | grep flask-app
+```
+
+- Проверить git status и untracked файлы:
+
+```bash
+cd /home/ubuntu/apps/WEB-ScSc
+git status --porcelain
+git ls-files --others --exclude-standard
+```
+
+6) Рекомендация: используйте `git reset --hard origin/main` (вместо `git pull`),
+     чтобы гарантированно привести рабочую копию в соответствие с `origin/main`.
+
+7) Про `offline` ветку
+- Ветка `offline` содержит автономную сборку, её **не нужно** использовать для продакшена.
+
+Если следовать этим инструкциям, обновления с GitHub будут попадать на сервер корректно
+и сервис будет запускать именно ту копию, которую вы правите и пушите.
 
 ### 📞 Контакты и ссылки
 

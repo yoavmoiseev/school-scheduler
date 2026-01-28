@@ -176,12 +176,15 @@ WEB-ScSc/
    # Используй скрипт
    .\update_server.ps1
    
-   # ИЛИ вручную
+   # ИЛИ вручную (рекомендуется жёсткая синхронизация на сервере)
    git add .
    git commit -m "Описание изменений"
-   git push
-   ssh -i ~\.ssh\oracle_cloud_key ubuntu@151.145.84.100 'cd ~/apps/WEB-ScSc && git pull && sudo systemctl restart flask-app'
+   git push origin main
+   ssh -i ~\.ssh\oracle_cloud_key ubuntu@151.145.84.100 'cd ~/apps/WEB-ScSc && git fetch origin && git reset --hard origin/main && sudo chown -R ubuntu:ubuntu /home/ubuntu/apps/WEB-ScSc && sudo systemctl restart flask-app'
    ```
+
+   **Примечание:** Убедитесь, что `flask-app.service` использует `WorkingDirectory=/home/ubuntu/apps/WEB-ScSc/WEB-ScSc`,
+   иначе systemd может запускать другой (неотслеживаемый) набор файлов.
 
 3. **Проверка**
    - Открой https://sc.yamsoft.org
