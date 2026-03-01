@@ -13,7 +13,7 @@ def init_routes(excel_svc, autofill_svc):
     autofill_service = autofill_svc
 
 
-@schedules_bp.route('/api/schedules/group/<group_name>', methods=['GET'])
+@schedules_bp.route('/api/schedules/group/<path:group_name>', methods=['GET'])
 def get_group_schedule(group_name):
     """Get schedule for a specific group"""
     schedules = excel_service.get_group_schedules()
@@ -29,7 +29,7 @@ def get_teacher_schedule(teacher_name):
     return jsonify(schedule)
 
 
-@schedules_bp.route('/api/schedules/group/<group_name>', methods=['POST'])
+@schedules_bp.route('/api/schedules/group/<path:group_name>', methods=['POST'])
 def save_group_schedule(group_name):
     """Save schedule for a specific group"""
     schedule = request.json
@@ -38,7 +38,7 @@ def save_group_schedule(group_name):
     return jsonify({'success': True})
 
 
-@schedules_bp.route('/api/schedules/group/<group_name>/lesson', methods=['POST'])
+@schedules_bp.route('/api/schedules/group/<path:group_name>/lesson', methods=['POST'])
 def add_lesson(group_name):
     """Add or update a single lesson in group schedule"""
     data = request.json
@@ -65,7 +65,7 @@ def add_lesson(group_name):
     return jsonify({'success': True})
 
 
-@schedules_bp.route('/api/schedules/group/<group_name>/lesson', methods=['DELETE'])
+@schedules_bp.route('/api/schedules/group/<path:group_name>/lesson', methods=['DELETE'])
 def delete_lesson(group_name):
     """Delete a single lesson from group schedule"""
     data = request.json
@@ -111,7 +111,16 @@ def autofill_schedule():
     if schedule and any(schedule.values()):  # If any day has lessons
         excel_service.save_group_schedule(group_name, schedule)
         excel_service.rebuild_teacher_schedules()
-    
+
+        # If this is a united group, propagate its lessons to each sub-group's schedule
+        groups = excel_service.get_groups()
+        group_obj = next((g for g in groups if g['name'] == group_name), None)
+        if group_obj and group_obj.get('is_united') and group_obj.get('sub_groups'):
+            for sub_group_name in group_obj['sub_groups']:
+                excel_service.merge_into_group_schedule(sub_group_name, schedule)
+            # Rebuild teacher schedules again after sub-group updates
+            excel_service.rebuild_teacher_schedules()
+
     return jsonify({
         'success': success,
         'schedule': schedule,

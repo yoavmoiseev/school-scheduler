@@ -236,6 +236,20 @@ Behavior:
 - **Rebuild All button**: Clears everything and rebuilds all group schedules from scratch
 - **No changes** to Rebuild All logic - it works exactly as before
 
+## 2026-03-01 — United Group feature + name validation translations
+- Added overrides for new United Group UI strings (HE + RU):
+  - "United Group" → HE: "קבוצה מאוחדת" / RU: "Объединённая группа"
+  - "Sub-groups in this united group:" → HE: "תת-קבוצות בקבוצה המאוחדת:" / RU: "Подгруппы в объединённой группе:"
+  - "Add All" → HE: "הוסף הכל" / RU: "Добавить все"
+  - "Name contains forbidden characters: / \\ : ? * [ ]" → HE: "השם מכיל תווים אסורים: / \\ : ? * [ ]" / RU: "Имя содержит запрещённые символы: / \\ : ? * [ ]"
+
+Files modified:
+- `services/i18n_he_new.json` (added overrides)
+- `services/i18n_ru_new.json` (added overrides)
+
+Notes:
+- After this change, restart the server and hard-refresh the browser (Ctrl+F5) to pick up client-side changes
+
 Notes:
 - After this change, restart the server to apply the changes
 - Test workflow: 1) Manually assign some lessons to a group, 2) Click AutoFill, 3) Verify manual lessons are preserved and empty slots are filled

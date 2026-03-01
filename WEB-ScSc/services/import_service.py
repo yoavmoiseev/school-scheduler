@@ -310,16 +310,27 @@ class ImportService:
             
             group_name = row[0]
             comment = row[1] if len(row) > 1 else None
+            # Col 3: IsUnited (0/1 or blank)
+            is_united_raw = row[2] if len(row) > 2 else None
+            is_united = bool(is_united_raw) if is_united_raw is not None else False
+            # Col 4: SubGroups (semicolon-separated)
+            sub_groups_raw = row[3] if len(row) > 3 else None
+            sub_groups = [s.strip() for s in str(sub_groups_raw).split(';') if s.strip()] if sub_groups_raw else []
 
-            # Store comment as a single-element subjects list to avoid
-            # accidental splitting into characters (issues with RTL/Unicode)
             group_data = {
                 'name': group_name,
-                'subjects': [str(comment)] if comment else []
+                'subjects': [str(comment)] if comment else [],
+                'is_united': is_united,
+                'sub_groups': sub_groups
             }
             
             if group_name in group_names_to_idx:
                 idx = group_names_to_idx[group_name]
+                # Preserve is_united/sub_groups from existing if not in import file
+                existing = groups_list[idx]
+                if not is_united and existing.get('is_united'):
+                    group_data['is_united'] = existing['is_united']
+                    group_data['sub_groups'] = existing.get('sub_groups', [])
                 groups_list[idx] = group_data
                 updated += 1
             else:

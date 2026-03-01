@@ -182,7 +182,7 @@ def rebuild_all():
                 # priorities groups list may contain names
                 ordered = priorities.get('groups')
             else:
-                # normalize from groups list
+                # normalize from groups list — skip united groups (virtual, no direct schedule)
                 for g in groups:
                     name = g.get('name') if isinstance(g, dict) else (g.get('name') if hasattr(g, 'get') else None)
                     if not name:
@@ -190,8 +190,90 @@ def rebuild_all():
                     if name:
                         ordered.append(name)
 
+            # Build a map of group name -> group object for quick lookup
+            groups_map = {g.get('name'): g for g in groups if isinstance(g, dict) and g.get('name')}
+
+            # Separate united groups from regular groups.
+            # United groups must be processed FIRST so their slots are marked busy
+            # before regular sub-groups are filled. After autofill, their lessons
+            # are propagated into each sub-group's schedule.
+            united_names_ordered = []
+            regular_names_ordered = []
+            for n in ordered:
+                g = groups_map.get(n)
+                if g and g.get('is_united'):
+                    united_names_ordered.append(n)
+                else:
+                    regular_names_ordered.append(n)
+
+            # Also include any united groups not already in ordered
+            all_united = [g.get('name') for g in groups if isinstance(g, dict) and g.get('is_united') and g.get('name')]
+            for n in all_united:
+                if n not in united_names_ordered:
+                    united_names_ordered.append(n)
+
+            # ── Phase 1: clear all schedules so we start from scratch ──────────
+            try:
+                excel_service.clear_all_schedules()
+            except Exception:
+                pass
+
+            # Extract subject order from priorities (list of subject name strings)
+            subject_order = priorities.get('subjects', []) if priorities and isinstance(priorities, dict) else []
+
             rebuild_log = []
-            for name in ordered:
+
+            # ── Phase 2: build united groups (fresh) ─────────────────────────────
+            # After each united group is built, force the resulting lessons
+            # into every sub-group so those slots are reserved before the
+            # sub-group's own autofill runs.
+            for name in united_names_ordered:
+                if not name:
+                    continue
+                try:
+                    try:
+                        if excel_service:
+                            excel_service.load()
+                    except Exception:
+                        pass
+                    outer_max = int(config.get('max_autofill_retries', max_autofill_retries)) if config else max_autofill_retries
+                    attempt = 0
+                    success = False
+                    last_info = None
+                    while attempt < outer_max and not success:
+                        try:
+                            success, schedule, info = autofill_service.autofill_group(name, max_retries=1, preserve_existing=False, subject_order=subject_order)
+                        except TypeError:
+                            success, schedule, info = autofill_service.autofill_group(name)
+                        last_info = info
+                        if schedule and any(schedule.values()):
+                            try:
+                                excel_service.save_group_schedule(name, schedule)
+                            except Exception:
+                                pass
+                            # Force-insert united lessons into each sub-group NOW,
+                            # before their autofill runs, so preserve_existing keeps them.
+                            g_obj = groups_map.get(name)
+                            if g_obj and g_obj.get('sub_groups'):
+                                for sub_name in g_obj['sub_groups']:
+                                    try:
+                                        excel_service.force_merge_into_group_schedule(sub_name, schedule)
+                                    except Exception:
+                                        pass
+                        if success:
+                            break
+                        attempt += 1
+                    g_obj = groups_map.get(name)
+                    rebuild_log.append({'group': name, 'success': bool(success), 'attempts': attempt, 'info': last_info, 'is_united': True})
+                except Exception as e:
+                    rebuild_log.append({'group': name, 'success': False, 'errors': [str(e)], 'is_united': True})
+
+            # ── Phase 3: build regular groups (preserve united slots) ─────────────
+            # preserve_existing=True means autofill keeps the force-inserted united
+            # lessons and only fills the remaining empty slots with the group's own
+            # subjects.  Teacher busy_map also sees the saved united schedules,
+            # so there are no teacher double-bookings.
+            for name in regular_names_ordered:
                 if not name:
                     continue
                 try:
@@ -201,29 +283,25 @@ def rebuild_all():
                             lf.write(f"{datetime.now().isoformat()} | group_start | {name}\n")
                     except Exception:
                         pass
-                    # Outer attempts controlled by global max_autofill_retries in config
                     outer_max = int(config.get('max_autofill_retries', max_autofill_retries)) if config else max_autofill_retries
                     attempt = 0
                     success = False
                     last_info = None
                     while attempt < outer_max and not success:
-                        # reload workbook at start of each attempt to pick up any recent edits
                         try:
                             if excel_service:
                                 excel_service.load()
                         except Exception:
                             pass
-                        # Call autofill with inner single attempt to get deterministic result
-                        # preserve_existing=False ensures Rebuild All starts from scratch
+                        # preserve_existing=True: keep force-inserted united lessons,
+                        # fill remaining empty slots with this group's own subjects.
                         try:
-                            success, schedule, info = autofill_service.autofill_group(name, max_retries=1, preserve_existing=False)
+                            success, schedule, info = autofill_service.autofill_group(name, max_retries=1, preserve_existing=True, subject_order=subject_order)
                         except TypeError:
-                            # fallback if signature differs
                             success, schedule, info = autofill_service.autofill_group(name)
 
                         last_info = info
 
-                        # Save partial schedule if any lessons placed
                         if schedule and any(schedule.values()):
                             try:
                                 excel_service.save_group_schedule(name, schedule)
@@ -238,44 +316,28 @@ def rebuild_all():
                             incomplete = []
                             if isinstance(info, dict):
                                 incomplete = info.get('incomplete', []) or []
-                            elif isinstance(info, list):
-                                # legacy: parse strings for subject names
-                                incomplete = []
                             if incomplete:
-                                # Get current subjects list and reorder
                                 subs = excel_service.get_subjects() or []
-                                # Build set of failing subject names
                                 fail_names = set([it.get('subject') for it in incomplete if isinstance(it, dict) and it.get('subject')])
                                 if fail_names:
-                                    # Move failing subjects (for this group) to front, preserve order otherwise
-                                    front = [s for s in subs if s.get('name') in fail_names and (s.get('group','')==name or True)]
+                                    front = [s for s in subs if s.get('name') in fail_names]
                                     rest = [s for s in subs if s.get('name') not in fail_names]
-                                    new_order = front + rest
-                                    excel_service.save_subjects(new_order)
+                                    excel_service.save_subjects(front + rest)
                         except Exception:
                             pass
 
                         attempt += 1
 
-                    # After attempts, ensure teacher schedules rebuilt
-                    try:
-                        if excel_service:
-                            excel_service.rebuild_teacher_schedules()
-                    except Exception:
-                        pass
-
-                    # log group end with attempts and success
+                    # log group end
                     try:
                         with open(os.path.join('uploads', 'rebuild_all.log'), 'a', encoding='utf-8') as lf:
                             lf.write(f"{datetime.now().isoformat()} | group_end | {name} | attempts={attempt} | success={bool(success)}\n")
                     except Exception:
                         pass
 
-                    # collect log — include attempts and last_info/errors
-                    rebuild_log.append({'group': name, 'success': bool(success), 'attempts': attempt, 'info': last_info})
+                    rebuild_log.append({'group': name, 'success': bool(success), 'attempts': attempt, 'info': last_info, 'is_united': False})
                 except Exception as e:
-                    rebuild_log.append({'group': name, 'success': False, 'errors': [str(e)]})
-                    # continue with other groups
+                    rebuild_log.append({'group': name, 'success': False, 'errors': [str(e)], 'is_united': False})
                     continue
 
             # ensure teacher schedules rebuilt
@@ -388,14 +450,16 @@ def export_excel():
 
         ws.append([t.get('name', ''), subjects_str, total, avail_str, weekly])
 
-    # Groups (match ExcelExamples header)
+    # Groups (match ExcelExamples header + IsUnited/SubGroups for united-group support)
     ws = wb.create_sheet('Groups')
-    ws.append(['Group Name', 'Comment'])
+    ws.append(['Group Name', 'Comment', 'IsUnited', 'SubGroups'])
     groups = excel_service.get_groups() if excel_service else []
     for g in groups:
         subjects_str = '; '.join(g.get('subjects', [])) if isinstance(g, dict) else ''
         name = g.get('name', '') if isinstance(g, dict) else (g or '')
-        ws.append([name, subjects_str])
+        is_united = 1 if (isinstance(g, dict) and g.get('is_united')) else 0
+        sub_groups_str = '; '.join(g.get('sub_groups', [])) if isinstance(g, dict) else ''
+        ws.append([name, subjects_str, is_united, sub_groups_str])
 
     # Subjects (match ExcelExamples header)
     ws = wb.create_sheet('Subjects')
@@ -614,13 +678,73 @@ def export_excel():
 @admin_bp.route('/api/admin/priorities-data', methods=['GET'])
 def priorities_data():
     try:
-        groups = excel_service.get_groups() if excel_service else []
+        all_groups = excel_service.get_groups() if excel_service else []
+        # United groups are virtual — exclude from rebuild priorities
+        groups = [g for g in all_groups if not g.get('is_united')]
         subjects = excel_service.get_subjects() if excel_service else []
         teachers = excel_service.get_teachers() if excel_service else []
         cfg = excel_service.get_config() if excel_service else {}
         weekdays_str = cfg.get('WEEKDAYS', '') if cfg else ''
         weekdays = [d.strip() for d in weekdays_str.split(',')] if weekdays_str else []
-        return jsonify({'success': True, 'groups': groups, 'subjects': subjects, 'teachers': teachers, 'weekdays': weekdays})
+
+        # Auto-sort subjects by complexity: most constrained first.
+        # Priority tiers (lower sort key = earlier):
+        #   Tier 0: subjects of united groups (must place first — shared across sub-groups)
+        #   Tier 1: multi-teacher subjects (subgroups feature — very constrained)
+        #   Tier 2: subjects with a specific group assigned, sorted by hours desc + teacher scarcity
+        #   Tier 3: subjects with no group (group='') — these are generic/orphan, place last
+
+        # Build set of united group names for fast lookup
+        united_group_names = set(g.get('name', '') for g in all_groups if isinstance(g, dict) and g.get('is_united'))
+
+        # Build (subject_name, group_name) -> [teacher_objects] map
+        teacher_subj_map = {}
+        for t in teachers:
+            for ts in t.get('subjects', []):
+                key = (ts.get('name', ''), ts.get('group', ''))
+                teacher_subj_map.setdefault(key, []).append(t)
+
+        def _complexity(s):
+            s_name = s.get('name', '') if isinstance(s, dict) else ''
+            s_group = s.get('group', '') if isinstance(s, dict) else ''
+            hours = int(s.get('hours_per_week', 0) or 0) if isinstance(s, dict) else 0
+
+            # Subjects with no group go to the very bottom
+            if not s_group:
+                return (3, 0, 0)
+
+            matching = teacher_subj_map.get((s_name, s_group), []) + teacher_subj_map.get((s_name, ''), [])
+            # deduplicate by teacher name
+            seen = set()
+            unique_teachers = []
+            for t in matching:
+                tn = t.get('name', '')
+                if tn not in seen:
+                    seen.add(tn)
+                    unique_teachers.append(t)
+            teacher_count = len(unique_teachers)
+            total_slots = sum(len(v) for t in unique_teachers for v in t.get('available_slots', {}).values() if v)
+
+            is_united_subj = s_group in united_group_names
+            is_multi_teacher = teacher_count > 1
+
+            if is_united_subj:
+                tier = 0
+            elif is_multi_teacher:
+                tier = 1
+            else:
+                tier = 2
+
+            # Within tier: more hours first, then fewer slots (harder = earlier)
+            # negate hours so higher hours sorts first; negate total_slots so fewer slots sorts first
+            return (tier, -hours, total_slots if total_slots > 0 else 99999)
+
+        try:
+            subjects_sorted = sorted(subjects, key=_complexity)
+        except Exception:
+            subjects_sorted = subjects
+
+        return jsonify({'success': True, 'groups': groups, 'subjects': subjects_sorted, 'teachers': teachers, 'weekdays': weekdays})
     except Exception as e:
         return jsonify({'success': False, 'error': str(e)}), 500
 

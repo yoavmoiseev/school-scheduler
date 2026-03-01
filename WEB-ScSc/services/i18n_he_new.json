@@ -33,5 +33,19 @@
   "Delete Selected": "מחק נבחר",
   "Are you sure you want to delete {ITEM}?": "האם אתה בטוח שברצונך למחוק את {ITEM}?",
   "is already assigned to other teachers": "כבר מוקצה למורים אחרים",
-  "Assigning it again will split the class into subgroups. Proceed?": "הקצאה חוזרת תחלק את הכיתה לתת-קבוצות. להמשיך?"
+  "Assigning it again will split the class into subgroups. Proceed?": "הקצאה חוזרת תחלק את הכיתה לתת-קבוצות. להמשיך?",
+  "United Group": "קבוצה מאוחדת",
+  "United groups": "קבוצות מאוחדות",
+  "Virtual": "וירטואלי",
+  "Partial": "חלקי",
+  "Sub-groups in this united group:": "תת-קבוצות בקבוצה המאוחדת:",
+  "Add All": "הוסף הכל",
+  "Name contains forbidden characters: / \\ : ? * [ ]": "השם מכיל תווים אסורים: / \\ : ? * [ ]",
+  "Import from Excel": "ייבא מאקסל",
+  "Select Excel file from ExcelExamples folder:": "בחר קובץ Excel מתיקיית ExcelExamples:",
+  "Or choose a local file:": "או בחר קובץ מקומי:",
+  "If you select a local file, it will be uploaded and imported.": "אם תבחר קובץ מקומי, הוא יועלה ויובא.",
+  "Loading...": "טוען...",
+  "Search...": "חפש...",
+  "Original order": "סדר מקורי"
 }

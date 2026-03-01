@@ -28,48 +28,91 @@ function _cleanupBackdropsIfNoVisibleModals() {
 }
 
 // Teachers
+// Cache for sort state
+window._teachersSortDir = null;  // null = original, 'asc', 'desc'
+window._subjectsSortDir = null;
+
+function sortTeachers(dir) {
+    window._teachersSortDir = dir;
+    renderTeachers();
+}
+function sortSubjects(dir) {
+    window._subjectsSortDir = dir;
+    renderSubjects();
+}
+
+function renderTeachers() {
+    const data = window._teachersData || [];
+    const filter = (document.getElementById('teacherSearch') || {}).value || '';
+    const q = filter.trim().toLowerCase();
+    let list = q ? data.filter(t => (t.name || '').toLowerCase().startsWith(q)) : data.slice();
+    if (window._teachersSortDir === 'asc') list.sort((a,b) => (a.name||'').localeCompare(b.name||''));
+    else if (window._teachersSortDir === 'desc') list.sort((a,b) => (b.name||'').localeCompare(a.name||''));
+    const tbody = $('#teachersTable tbody');
+    tbody.empty();
+    list.forEach(teacher => {
+        const subjectsText = (teacher.subjects || []).map(s => {
+            const name = s.name || '';
+            const hours = parseInt(s.hours) || 0;
+            let grp = s.group;
+            if (grp === null || grp === undefined) grp = '';
+            if (String(grp).toLowerCase() === 'null') grp = '';
+            return `${name}:${hours}:${grp}`;
+        }).join('; ');
+        const assigned = (teacher.subjects || []).reduce((sum, s) => sum + (parseInt(s.hours)||0), 0);
+        const available = Object.values(teacher.available_slots || {}).reduce((sum, arr) => sum + arr.length, 0);
+        const weeklyHoursText = formatWeeklyHours(teacher.check_in_hours, teacher.check_out_hours);
+        const row = $('<tr>')
+            .data('teacher', teacher)
+            .append($('<td>').text(teacher.name))
+            .append($('<td>').text(subjectsText))
+            .append($('<td>').text(weeklyHoursText))
+            .append($('<td>').addClass('text-end').text(`${assigned}/${available}`));
+        tbody.append(row);
+    });
+    $('#teachersTable tbody tr').click(function() {
+        $(this).addClass('table-active').siblings().removeClass('table-active');
+    });
+}
+
+function renderSubjects() {
+    const data = window._subjectsData || [];
+    const teachersData = window._subjectsTeachersData || [];
+    const filter = (document.getElementById('subjectSearch') || {}).value || '';
+    const q = filter.trim().toLowerCase();
+    let list = q ? data.filter(s => (s.name || '').toLowerCase().startsWith(q)) : data.slice();
+    if (window._subjectsSortDir === 'asc') list.sort((a,b) => (a.name||'').localeCompare(b.name||''));
+    else if (window._subjectsSortDir === 'desc') list.sort((a,b) => (b.name||'').localeCompare(a.name||''));
+    const tbody = $('#subjectsTable tbody');
+    tbody.empty();
+    list.forEach(subject => {
+        const teachersForSubject = teachersData.filter(teacher =>
+            teacher.subjects && teacher.subjects.some(s =>
+                s.name === subject.name && (s.group === subject.group || (!s.group && !subject.group))
+            )
+        ).map(t => t.name);
+        const row = $('<tr>')
+            .data('subject', subject)
+            .append($('<td>').text(subject.name))
+            .append($('<td>').text(subject.group))
+            .append($('<td>').text(subject.hours_per_week))
+            .append($('<td>').text(teachersForSubject.join(', ') || ''));
+        tbody.append(row);
+    });
+    $('#subjectsTable tbody tr').click(function() {
+        $(this).addClass('table-active').siblings().removeClass('table-active');
+    });
+}
+
 async function loadTeachers() {
     try {
         // Load time slots first for formatting
         if (!window.timeSlots || Object.keys(window.timeSlots).length === 0) {
             await loadTimeSlots();
         }
-        
         const teachers = await API.get('/api/teachers');
-        const tbody = $('#teachersTable tbody');
-        tbody.empty();
-        
-        teachers.forEach(teacher => {
-            const subjectsText = (teacher.subjects || []).map(s => {
-                const name = s.name || '';
-                const hours = parseInt(s.hours) || 0;
-                let grp = s.group;
-                if (grp === null || grp === undefined) grp = '';
-                if (String(grp).toLowerCase() === 'null') grp = '';
-                return `${name}:${hours}:${grp}`;
-            }).join('; ');
-            
-            const assigned = teacher.subjects.reduce((sum, s) => sum + s.hours, 0);
-            const available = Object.values(teacher.available_slots || {})
-                .reduce((sum, arr) => sum + arr.length, 0);
-            
-            // Format weekly hours for display
-            const weeklyHoursText = formatWeeklyHours(teacher.check_in_hours, teacher.check_out_hours);
-            
-            const row = $('<tr>')
-                .data('teacher', teacher)
-                .append($('<td>').text(teacher.name))
-                .append($('<td>').text(subjectsText))
-                .append($('<td>').text(weeklyHoursText))
-                .append($('<td>').addClass('text-end').text(`${assigned}/${available}`));
-            
-            tbody.append(row);
-        });
-        
-        // Highlight selected row on click
-        $('#teachersTable tbody tr').click(function() {
-            $(this).addClass('table-active').siblings().removeClass('table-active');
-        });
+        window._teachersData = teachers;
+        renderTeachers();
     } catch (error) {
         console.error('Failed to load teachers:', error);
     }
@@ -106,7 +149,14 @@ document.addEventListener('DOMContentLoaded', async () => {
                             // set value and trigger change
                             try { $('#teacherSelect').val(found.value).change(); } catch(e){}
                             // wait 5 seconds so user can inspect the Teacher Scheduler, then open edit modal
-                            setTimeout(()=>{ openEditTeacherByName(found.value || teacherName); }, 5000);
+                            setTimeout(()=>{
+                                openEditTeacherByName(found.value || teacherName);
+                                // After the edit modal closes, close this tab (it was opened by Rebuild Results)
+                                const modalEl = document.getElementById('teacherModal');
+                                if (modalEl) {
+                                    modalEl.addEventListener('hidden.bs.modal', () => { window.close(); }, { once: true });
+                                }
+                            }, 5000);
                             clearInterval(waiter);
                             return;
                         }
@@ -115,7 +165,15 @@ document.addEventListener('DOMContentLoaded', async () => {
                 if (attempts >= maxAttempts) {
                     clearInterval(waiter);
                     // as fallback, wait 5 seconds then try opening edit modal
-                    try { setTimeout(()=>{ openEditTeacherByName(teacherName); }, 5000); } catch(e){ console.warn('fallback openEditTeacher failed', e); }
+                    try {
+                        setTimeout(()=>{
+                            openEditTeacherByName(teacherName);
+                            const modalEl = document.getElementById('teacherModal');
+                            if (modalEl) {
+                                modalEl.addEventListener('hidden.bs.modal', () => { window.close(); }, { once: true });
+                            }
+                        }, 5000);
+                    } catch(e){ console.warn('fallback openEditTeacher failed', e); }
                 }
             }, interval);
         }
@@ -515,6 +573,16 @@ async function getColor(name) {
     }
 }
 
+function filterAvailableSubjects(q) {
+    const allOpts = window._availableSubjectsAll || [];
+    const search = (q || '').trim().toLowerCase();
+    const select = $('#availableSubjects');
+    select.empty();
+    allOpts.filter(o => !search || o.text.toLowerCase().startsWith(search)).forEach(o => {
+        select.append($('<option>').val(o.val).text(o.text));
+    });
+}
+
 async function loadAvailableSubjects() {
     try {
         const subjects = await API.get('/api/subjects');
@@ -523,22 +591,34 @@ async function loadAvailableSubjects() {
 
         // Optionally filter by selected group
         const groupFilter = ($('#subjectGroup').val() || '').trim();
-        // Build entries per subject-group so we keep hours info
         const entries = (subjects || []).filter(s => {
             if (!s) return false;
             if (!groupFilter) return true;
-            if (groupFilter === '') return true;
             return (s.group || '') === groupFilter;
         });
 
-        // Populate select with entries containing hours and group
-        entries.forEach(s => {
+        // Cache all options for search filtering
+        window._availableSubjectsAll = entries.map(s => {
             const rawGroup = (s.group === null || s.group === undefined) ? '' : s.group;
             const groupSafe = (String(rawGroup).toLowerCase() === 'null') ? '' : rawGroup;
-            const val = `${s.name}:${s.hours_per_week || 1}:${groupSafe}`;
-            const text = `${s.name} (${groupSafe || ''}) — ${s.hours_per_week || 1}`;
-            select.append($('<option>').val(val).text(text));
+            return {
+                val: `${s.name}:${s.hours_per_week || 1}:${groupSafe}`,
+                text: `${s.name} (${groupSafe || ''}) — ${s.hours_per_week || 1}`
+            };
         });
+
+        // Apply current search value (if user already typed something)
+        const currentSearch = (document.getElementById('availableSubjectsSearch') || {}).value || '';
+        filterAvailableSubjects(currentSearch);
+
+        // Clear search box when modal opens fresh
+        const searchEl = document.getElementById('availableSubjectsSearch');
+        if (searchEl && !searchEl.dataset.listenerAttached) {
+            searchEl.dataset.listenerAttached = '1';
+            // clear on modal open
+            const modalEl = document.getElementById('teacherModal');
+            if (modalEl) modalEl.addEventListener('show.bs.modal', () => { searchEl.value = ''; });
+        }
 
         // When a subject is selected, populate the hours input with its default hours
         select.off('change.subjectHours').on('change.subjectHours', function(){
@@ -660,7 +740,8 @@ async function saveTeacher() {
         if (!name) {
             alert(_('Teacher name is required'));
             return;
-    }
+        }
+        if (!_validateName(name)) return;
     
     // Parse subjects from selected list
     const subjects = [];
@@ -1129,29 +1210,48 @@ async function moveSubject(direction) {
 }
 
 // Groups
+window._groupsSortDir = null;
+
+function sortGroups(dir) {
+    window._groupsSortDir = dir;
+    renderGroups();
+}
+
+function renderGroups() {
+    const data = window._groupsData || [];
+    const filter = (document.getElementById('groupSearch') || {}).value || '';
+    const q = filter.trim().toLowerCase();
+    let list = q ? data.filter(g => (g.name || '').toLowerCase().startsWith(q)) : data.slice();
+    if (window._groupsSortDir === 'asc') list.sort((a,b) => (a.name||'').localeCompare(b.name||''));
+    else if (window._groupsSortDir === 'desc') list.sort((a,b) => (b.name||'').localeCompare(a.name||''));
+    const tbody = $('#groupsTable tbody');
+    tbody.empty();
+    list.forEach(group => {
+        const subjectsArr = Array.isArray(group.subjects) ? group.subjects : (group.subjects ? [group.subjects] : []);
+        const commentsText = subjectsArr.join('; ');
+        const totalRequired = group.total_required || 0;
+        const totalAssigned = group.total_assigned || 0;
+        const totalsText = `${totalRequired} / ${totalAssigned}`;
+        const nameCell = group.is_united
+            ? $('<td>').append($('<span>').text(group.name)).append($('<span>').addClass('badge bg-primary ms-2').text('⊕ United'))
+            : $('<td>').text(group.name);
+        const row = $('<tr>')
+            .data('group', group)
+            .append(nameCell)
+            .append($('<td>').text(commentsText))
+            .append($('<td>').text(totalsText));
+        tbody.append(row);
+    });
+    $('#groupsTable tbody tr').click(function() {
+        $(this).addClass('table-active').siblings().removeClass('table-active');
+    });
+}
+
 async function loadGroups() {
     try {
         const groups = await API.get('/api/groups');
-        const tbody = $('#groupsTable tbody');
-        tbody.empty();
-        
-        groups.forEach(group => {
-            const subjectsArr = Array.isArray(group.subjects) ? group.subjects : (group.subjects ? [group.subjects] : []);
-            const commentsText = subjectsArr.join('; ');
-            const totalRequired = group.total_required || 0;
-            const totalAssigned = group.total_assigned || 0;
-            const totalsText = `${totalRequired} / ${totalAssigned}`;
-            const row = $('<tr>')
-                .data('group', group)
-                .append($('<td>').text(group.name))
-                .append($('<td>').text(commentsText))
-                .append($('<td>').text(totalsText));
-            tbody.append(row);
-        });
-        
-        $('#groupsTable tbody tr').click(function() {
-            $(this).addClass('table-active').siblings().removeClass('table-active');
-        });
+        window._groupsData = groups;
+        renderGroups();
     } catch (error) {
         console.error('Failed to load groups:', error);
     }
@@ -1161,6 +1261,9 @@ function addGroup() {
     $('#groupModalTitle').text(_('Add Group'));
     $('#groupForm')[0].reset();
     $('#groupForm input[name="original_name"]').val('');
+    $('#unitedGroupPanel').hide();
+    $('#unitedSubGroupsList').empty();
+    _loadGroupSelectorOptions('');
     bootstrap.Modal.getOrCreateInstance(document.getElementById('groupModal')).show();
 }
 
@@ -1178,6 +1281,17 @@ function editGroup() {
     // populate comments (subjects used to carry comments as single-element list)
     const comments = Array.isArray(group.subjects) ? group.subjects.join('; ') : (group.subjects || '');
     $('#groupForm textarea[name="comments"]').val(comments);
+
+    // United group fields
+    const isUnited = !!group.is_united;
+    $('#groupForm-isUnited').prop('checked', isUnited);
+    $('#unitedGroupPanel').toggle(isUnited);
+    // Render existing sub-groups
+    $('#unitedSubGroupsList').empty();
+    const subGroups = Array.isArray(group.sub_groups) ? group.sub_groups : [];
+    subGroups.forEach(sg => _appendSubGroupItem(sg));
+    _loadGroupSelectorOptions(group.name);
+
     bootstrap.Modal.getOrCreateInstance(document.getElementById('groupModal')).show();
 }
 
@@ -1185,11 +1299,22 @@ async function saveGroup() {
     const form = $('#groupForm');
     const originalName = form.find('input[name="original_name"]').val();
     const name = form.find('input[name="name"]').val();
+
+    if (!_validateName(name)) return;
     
     const commentsVal = form.find('textarea[name="comments"]').val();
+    const isUnited = $('#groupForm-isUnited').prop('checked');
+    const subGroups = [];
+    $('#unitedSubGroupsList li').each(function() {
+        const sgName = $(this).data('subgroup');
+        if (sgName) subGroups.push(sgName);
+    });
+
     const groupData = {
         name: name,
-        subjects: commentsVal ? [commentsVal] : []
+        subjects: commentsVal ? [commentsVal] : [],
+        is_united: isUnited,
+        sub_groups: isUnited ? subGroups : []
     };
     
     try {
@@ -1209,6 +1334,73 @@ async function saveGroup() {
         loadGroups();
     } catch (error) {
         alert(_('Failed to save group: ') + error.message);
+    }
+}
+
+// --- United Group helpers ---
+
+// Validate name: block characters forbidden in Excel sheet names and URL paths
+function _validateName(val) {
+    const forbidden = /[\/\\:?*\[\]]/;
+    if (forbidden.test(val)) {
+        alert(_('Name contains forbidden characters: / \\ : ? * [ ]'));
+        return false;
+    }
+    return true;
+}
+
+function toggleUnitedGroupPanel() {
+    const checked = $('#groupForm-isUnited').prop('checked');
+    $('#unitedGroupPanel').toggle(checked);
+    if (checked) {
+        _loadGroupSelectorOptions($('#groupForm input[name="original_name"]').val());
+    }
+}
+
+async function _loadGroupSelectorOptions(excludeName) {
+    try {
+        const groups = await API.get('/api/groups');
+        const sel = $('#unitedGroupSelector');
+        sel.empty();
+        groups.forEach(g => {
+            // Exclude itself and other united groups
+            if (g.name !== excludeName && !g.is_united) {
+                sel.append($('<option>').val(g.name).text(g.name));
+            }
+        });
+    } catch (e) {
+        console.warn('Failed to load groups for united selector', e);
+    }
+}
+
+function _appendSubGroupItem(name) {
+    const li = $('<li>').addClass('list-group-item d-flex justify-content-between align-items-center py-1 px-2').data('subgroup', name);
+    li.append($('<span>').text(name));
+    li.append($('<button>').addClass('btn btn-sm btn-outline-danger py-0 px-1').text('×').attr('type', 'button').on('click', function() { li.remove(); }));
+    $('#unitedSubGroupsList').append(li);
+}
+
+function addSubGroupFromSelector() {
+    const name = $('#unitedGroupSelector').val();
+    if (!name) return;
+    // Avoid duplicates
+    let already = false;
+    $('#unitedSubGroupsList li').each(function() { if ($(this).data('subgroup') === name) already = true; });
+    if (!already) _appendSubGroupItem(name);
+}
+
+async function addAllSubGroups() {
+    try {
+        const excludeName = $('#groupForm input[name="original_name"]').val();
+        const groups = await API.get('/api/groups');
+        groups.forEach(g => {
+            if (g.name === excludeName || g.is_united) return;
+            let already = false;
+            $('#unitedSubGroupsList li').each(function() { if ($(this).data('subgroup') === g.name) already = true; });
+            if (!already) _appendSubGroupItem(g.name);
+        });
+    } catch (e) {
+        console.warn('addAllSubGroups failed', e);
     }
 }
 
@@ -1237,32 +1429,9 @@ async function loadSubjects() {
     try {
         const subjects = await API.get('/api/subjects');
         const teachers = await API.get('/api/teachers');
-        const tbody = $('#subjectsTable tbody');
-        tbody.empty();
-        
-        subjects.forEach(subject => {
-            // Find all teachers who teach this subject in this group
-            const teachersForSubject = teachers.filter(teacher => {
-                return teacher.subjects && teacher.subjects.some(s => 
-                    s.name === subject.name && 
-                    (s.group === subject.group || (!s.group && !subject.group))
-                );
-            }).map(t => t.name);
-            
-            const teachersText = teachersForSubject.join(', ');
-            
-            const row = $('<tr>')
-                .data('subject', subject)
-                .append($('<td>').text(subject.name))
-                .append($('<td>').text(subject.group))
-                .append($('<td>').text(subject.hours_per_week))
-                .append($('<td>').text(teachersText || ''));
-            tbody.append(row);
-        });
-        
-        $('#subjectsTable tbody tr').click(function() {
-            $(this).addClass('table-active').siblings().removeClass('table-active');
-        });
+        window._subjectsData = subjects;
+        window._subjectsTeachersData = teachers;
+        renderSubjects();
     } catch (error) {
         console.error('Failed to load subjects:', error);
     }
@@ -1313,6 +1482,8 @@ async function saveSubject() {
     const form = $('#subjectForm');
     const originalName = form.find('input[name="original_name"]').val();
     const name = form.find('input[name="name"]').val();
+
+    if (!_validateName(name)) return;
     const group = form.find('select[name="group"]').val();
     const hoursPerWeek = parseInt(form.find('input[name="hours_per_week"]').val());
     
@@ -1669,12 +1840,14 @@ async function loadGroupScheduler() {
     const groups = await API.get('/api/groups');
     const select = $('#groupSelect');
     select.empty();
-    groups.forEach(g => {
+    // United groups are virtual — they have no standalone schedule
+    const regularGroups = groups.filter(g => !g.is_united);
+    regularGroups.forEach(g => {
         select.append($('<option>').val(g.name).text(g.name));
     });
     
-    if (groups.length > 0) {
-        currentGroupName = groups[0].name;
+    if (regularGroups.length > 0) {
+        currentGroupName = regularGroups[0].name;
         loadGroupSchedule();
     }
     
@@ -2688,67 +2861,91 @@ async function rebuildAll() {
             let html = '';
             if (res && res.log && Array.isArray(res.log)) {
                 html += `<div class="mb-2"><strong>${_('Rebuild results')}</strong></div>`;
-                html += '<div class="list-group">';
-                let anyFailures = false;
-                res.log.forEach(item => {
+                // Regular groups first, virtual (united) groups collapsed at the bottom
+                const regularLog = res.log.filter(i => !i.is_united);
+                const unitedLog  = res.log.filter(i =>  i.is_united);
+
+                const renderGroupItem = (item) => {
+                    let h = '';
                     const grp = item.group || '';
                     const ok = !!item.success;
+                    const isUnited = !!item.is_united;
                     const attempts = item.attempts || 0;
                     const info = item.info || {};
                     const incomplete = info.incomplete || [];
                     const errors = info.errors || [];
-                    if (!ok || (incomplete && incomplete.length>0) ) anyFailures = true;
 
                     const displayAttempts = (ok && attempts === 0) ? 1 : attempts;
-                    html += `<div class="list-group-item">
+                    const itemClass = isUnited ? 'list-group-item list-group-item-info' : 'list-group-item';
+                    const statusText = isUnited
+                        ? `<span class="badge bg-primary me-1">⊕ ${_('Virtual')}</span>${ok ? _('Success') : _('Partial')} — ${_('Attempts: ')}${displayAttempts}`
+                        : `${ok ? _('Success') : _('Failed')} — ${_('Attempts: ')}${displayAttempts}`;
+                    h += `<div class="${itemClass}">
                         <div class="d-flex justify-content-between align-items-start">
                             <div>
                                 <strong>${grp}</strong>
-                                <div class="small text-muted">${ok? _('Success') : _('Failed')} — ${_('Attempts: ')}${displayAttempts}</div>
+                                <div class="small text-muted">${statusText}</div>
                             </div>
-                            <div>
-                                `;
+                            <div>`;
 
-                    // if there are incomplete placements, offer an Open Teacher control
-                    const teachersList = (incomplete && incomplete.length>0 && incomplete[0].teachers) ? incomplete[0].teachers : [];
-                    if (teachersList && teachersList.length > 0) {
-                        if (teachersList.length === 1) {
-                            const firstProblemTeacher = teachersList[0];
-                            const href = `${window.location.origin}${window.location.pathname}?tab=teacher-scheduler&editTeacher=${encodeURIComponent(firstProblemTeacher)}`;
-                            html += `<a class="btn btn-sm btn-primary" target="_blank" href="${href}">${_('Open Teacher')}</a>`;
+                    // Collect unique teachers from ALL incomplete placements
+                    const allTeachers = [...new Set((incomplete || []).flatMap(it => it.teachers || []))];
+                    if (allTeachers.length > 0) {
+                        if (allTeachers.length === 1) {
+                            const href = `${window.location.origin}${window.location.pathname}?tab=teacher-scheduler&editTeacher=${encodeURIComponent(allTeachers[0])}`;
+                            h += `<a class="btn btn-sm btn-primary" target="_blank" href="${href}">${_('Open Teacher')}</a>`;
                         } else {
-                            // multiple teachers -> render a combo box + Open button
-                            // create a safe id based on group and index
                             const selId = 'open-teacher-select-' + (grp ? grp.replace(/[^a-zA-Z0-9_-]/g, '_') : 'grp') + '-' + Math.floor(Math.random()*10000);
-                            html += `<select id="${selId}" class="form-select form-select-sm d-inline-block me-2" style="min-width:160px">`;
-                            teachersList.forEach(t => {
+                            h += `<select id="${selId}" class="form-select form-select-sm d-inline-block me-2" style="min-width:160px">`;
+                            allTeachers.forEach(t => {
                                 const esc = String(t).replace(/"/g, '&quot;');
-                                html += `<option value="${esc}">${esc}</option>`;
+                                h += `<option value="${esc}">${esc}</option>`;
                             });
-                            html += `</select>`;
-                            // inline onclick opens selected teacher in new tab
-                            html += `<button class="btn btn-sm btn-primary" onclick="(function(){const s=document.getElementById('${selId}'); if(s && s.value) { window.open(window.location.origin+window.location.pathname+'?tab=teacher-scheduler&editTeacher='+encodeURIComponent(s.value),'_blank'); } })()">${_('Open Teacher')}</button>`;
+                            h += `</select>`;
+                            h += `<button class="btn btn-sm btn-primary" onclick="(function(){const s=document.getElementById('${selId}'); if(s && s.value) { window.open(window.location.origin+window.location.pathname+'?tab=teacher-scheduler&editTeacher='+encodeURIComponent(s.value),'_blank'); } })()">${_('Open Teacher')}</button>`;
                         }
                     }
 
-                    html += `</div></div><div class="mt-2">`;
+                    h += `</div></div><div class="mt-2">`;
 
                     if (incomplete && incomplete.length>0) {
-                        html += `<div><strong>${_('Incomplete placements')}:</strong></div><ul>`;
+                        h += `<div><strong>${_('Incomplete placements')}:</strong></div><ul>`;
                         incomplete.forEach(it=>{
                             const teachers = (it.teachers||[]).join(', ');
-                            html += `<li>${it.subject}: ${it.placed}/${it.required} (${_('Teachers')}: ${teachers})</li>`;
+                            h += `<li>${it.subject}: ${it.placed}/${it.required} (${_('Teachers')}: ${teachers})</li>`;
                         });
-                        html += '</ul>';
+                        h += '</ul>';
                     }
 
                     if (errors && errors.length>0) {
-                        html += `<div><strong>${_('Errors:')}</strong><pre class="small text-danger">${errors.map(e => translateErrorMessage(e)).join('\n')}</pre></div>`;
+                        h += `<div><strong>${_('Errors:')}</strong><pre class="small text-danger">${errors.map(e => translateErrorMessage(e)).join('\n')}</pre></div>`;
                     }
 
-                    html += '</div></div>';
+                    h += '</div></div>';
+                    return h;
+                };
+
+                let anyFailures = false;
+                html += '<div class="list-group">';
+                regularLog.forEach(item => {
+                    const incomplete = (item.info || {}).incomplete || [];
+                    if (!item.success || incomplete.length > 0) anyFailures = true;
+                    html += renderGroupItem(item);
                 });
                 html += '</div>';
+
+                // United groups — collapsed block at the bottom
+                if (unitedLog.length > 0) {
+                    const colId = 'virtual-groups-collapse-' + Math.floor(Math.random()*10000);
+                    html += `<div class="mt-3">
+                        <button class="btn btn-sm btn-outline-secondary" type="button" data-bs-toggle="collapse" data-bs-target="#${colId}" aria-expanded="false">
+                            ▼ ${_('United groups')} (${unitedLog.length})
+                        </button>
+                        <div class="collapse" id="${colId}">
+                            <div class="list-group mt-2">`;
+                    unitedLog.forEach(item => { html += renderGroupItem(item); });
+                    html += `</div></div></div>`;
+                }
 
                 if (container) container.innerHTML = html;
 

@@ -11,7 +11,12 @@
             <button class="btn btn-outline-secondary" onclick="moveTeacher('up')">{{ _(18) }}</button>
             <button class="btn btn-outline-secondary" onclick="moveTeacher('down')">{{ _(19) }}</button>
         </div>
-        
+        <div class="d-flex gap-2 mb-2 align-items-center">
+            <input id="teacherSearch" type="text" class="form-control form-control-sm" placeholder="{{ _('Search...') }}" style="max-width:220px" oninput="renderTeachers()">
+            <button class="btn btn-sm btn-outline-secondary" onclick="sortTeachers('asc')" title="A→Z">⇑ A–Z</button>
+            <button class="btn btn-sm btn-outline-secondary" onclick="sortTeachers('desc')" title="Z→A">⇓ Z–A</button>
+            <button class="btn btn-sm btn-outline-secondary" onclick="sortTeachers(null)" title="{{ _('Original order') }}">{{ _('Original order') }}</button>
+        </div>
         <div class="table-responsive" style="max-height: 500px; overflow-y: auto;">
             <table id="teachersTable" class="table table-striped table-hover">
                 <thead class="sticky-top bg-white">
@@ -40,7 +45,12 @@
             <button class="btn btn-outline-secondary" onclick="moveGroup('up')">{{ _('Move Up ↑') }}</button>
             <button class="btn btn-outline-secondary" onclick="moveGroup('down')">{{ _('Move Down ↓') }}</button>
         </div>
-        
+        <div class="d-flex gap-2 mb-2 align-items-center">
+            <input id="groupSearch" type="text" class="form-control form-control-sm" placeholder="{{ _('Search...') }}" style="max-width:220px" oninput="renderGroups()">
+            <button class="btn btn-sm btn-outline-secondary" onclick="sortGroups('asc')" title="A→Z">⇑ A–Z</button>
+            <button class="btn btn-sm btn-outline-secondary" onclick="sortGroups('desc')" title="Z→A">⇓ Z–A</button>
+            <button class="btn btn-sm btn-outline-secondary" onclick="sortGroups(null)">{{ _('Original order') }}</button>
+        </div>
         <div class="table-responsive" style="max-height: 500px; overflow-y: auto;">
             <table id="groupsTable" class="table table-striped table-hover">
                 <thead class="sticky-top bg-white">
@@ -68,7 +78,12 @@
             <button class="btn btn-outline-secondary" onclick="moveSubject('up')">{{ _('Move Up ↑') }}</button>
             <button class="btn btn-outline-secondary" onclick="moveSubject('down')">{{ _('Move Down ↓') }}</button>
         </div>
-        
+        <div class="d-flex gap-2 mb-2 align-items-center">
+            <input id="subjectSearch" type="text" class="form-control form-control-sm" placeholder="{{ _('Search...') }}" style="max-width:220px" oninput="renderSubjects()">
+            <button class="btn btn-sm btn-outline-secondary" onclick="sortSubjects('asc')" title="A→Z">⇑ A–Z</button>
+            <button class="btn btn-sm btn-outline-secondary" onclick="sortSubjects('desc')" title="Z→A">⇓ Z–A</button>
+            <button class="btn btn-sm btn-outline-secondary" onclick="sortSubjects(null)" title="{{ _('Original order') }}">{{ _('Original order') }}</button>
+        </div>
         <div class="table-responsive" style="max-height: 500px; overflow-y: auto;">
             <table id="subjectsTable" class="table table-striped table-hover">
                 <thead class="sticky-top bg-white">

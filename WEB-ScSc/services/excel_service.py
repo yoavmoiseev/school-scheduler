@@ -472,9 +472,14 @@ class ExcelService:
             if row[0]:
                 name = row[0]
                 subjects = row[1].split(';') if len(row) > 1 and row[1] else []
+                is_united = bool(row[2]) if len(row) > 2 and row[2] else False
+                sub_groups_raw = row[3] if len(row) > 3 and row[3] else ''
+                sub_groups = [s.strip() for s in sub_groups_raw.split(';') if s.strip()] if sub_groups_raw else []
                 groups.append({
                     'name': name,
-                    'subjects': [s.strip() for s in subjects if s.strip()]
+                    'subjects': [s.strip() for s in subjects if s.strip()],
+                    'is_united': is_united,
+                    'sub_groups': sub_groups
                 })
         return groups
     
@@ -482,16 +487,56 @@ class ExcelService:
         """Save groups to Excel"""
         if 'Groups' not in self.wb.sheetnames:
             ws = self.wb.create_sheet('Groups')
-            ws.append(['Name', 'Comments'])
+            ws.append(['Name', 'Comments', 'IsUnited', 'SubGroups'])
         else:
             ws = self.wb['Groups']
             ws.delete_rows(2, ws.max_row)
         
         for group in groups:
             subjects_str = '; '.join(group.get('subjects', []))
-            ws.append([group['name'], subjects_str])
+            is_united = 1 if group.get('is_united') else 0
+            sub_groups_str = '; '.join(group.get('sub_groups', []))
+            ws.append([group['name'], subjects_str, is_united, sub_groups_str])
         
         self.save()
+
+    def merge_into_group_schedule(self, group_name, lessons):
+        """Merge a set of lessons into an existing group's schedule without overwriting.
+        Used to propagate united-group lessons into each sub-group's schedule.
+        Args:
+            group_name: name of the sub-group to update
+            lessons: dict {day: {lesson_num: lesson_data}} from the united group
+        """
+        schedules = self.get_group_schedules()
+        existing = schedules.get(group_name, {})
+        for day, day_lessons in lessons.items():
+            if day not in existing:
+                existing[day] = {}
+            for lesson_num, lesson_data in day_lessons.items():
+                # Only fill if slot is empty (do not overwrite manual entries)
+                if lesson_num not in existing[day]:
+                    existing[day][lesson_num] = lesson_data
+        self.save_group_schedule(group_name, existing)
+
+    def force_merge_into_group_schedule(self, group_name, lessons):
+        """Force-insert a set of lessons into a sub-group's schedule, overwriting
+        any existing content in those slots.  Used after a united group is built
+        so that its slots are locked into each sub-group BEFORE that sub-group's
+        own autofill runs (with preserve_existing=True).  This guarantees the
+        9/N united lessons always appear in every sub-group, identical slots.
+        Args:
+            group_name: name of the sub-group to update
+            lessons: dict {day: {lesson_num: lesson_data}} from the united group
+        """
+        schedules = self.get_group_schedules()
+        existing = schedules.get(group_name, {})
+        for day, day_lessons in lessons.items():
+            if day not in existing:
+                existing[day] = {}
+            for lesson_num, lesson_data in day_lessons.items():
+                # Overwrite regardless – united lessons take priority
+                existing[day][lesson_num] = lesson_data
+        self.save_group_schedule(group_name, existing)
     
     def get_subjects(self):
         """Read Subjects sheet"""

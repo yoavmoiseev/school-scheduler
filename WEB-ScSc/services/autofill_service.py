@@ -9,7 +9,7 @@ class AutofillService:
         self.checker = conflict_checker
         self.color_service = color_service
     
-    def autofill_group(self, group_name, max_retries=100, preserve_existing=True):
+    def autofill_group(self, group_name, max_retries=100, preserve_existing=True, subject_order=None):
         """
         Autofill schedule for a group.
         Args:
@@ -55,6 +55,29 @@ class AutofillService:
         incomplete = []
         # Filter subjects for this group
         group_subjects = [s for s in subjects if s['group'] == group_name]
+
+        # Sort subjects by priority order.
+        # If a subject_order list is provided (from Rebuild All priorities UI), respect it.
+        # Otherwise auto-sort: multi-teacher subjects first (most constrained), then by hours desc.
+        if subject_order:
+            _order_index = {name: i for i, name in enumerate(subject_order)}
+            group_subjects.sort(key=lambda s: _order_index.get(s.get('name', ''), len(subject_order)))
+        else:
+            # Build a quick teacher-count map for this group's subjects
+            _subj_teacher_count = {}
+            for s in group_subjects:
+                sn = s.get('name', '')
+                cnt = sum(
+                    1 for t in teachers
+                    for ts in t.get('subjects', [])
+                    if ts.get('name') == sn and (ts.get('group', '') == group_name or ts.get('group', '') == '')
+                )
+                _subj_teacher_count[sn] = cnt
+            # multi-teacher subjects first (tier 0), then single-teacher by hours desc (tier 1)
+            group_subjects.sort(key=lambda s: (
+                0 if _subj_teacher_count.get(s.get('name', ''), 0) > 1 else 1,
+                -int(s.get('hours_per_week', 0) or 0)
+            ))
 
         # Initialize schedule
         schedule = {}

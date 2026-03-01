@@ -102,5 +102,18 @@
   "Delete Selected": "Удалить выбранное",
   "Are you sure you want to delete {ITEM}?": "Вы уверены, что хотите удалить {ITEM}?",
   "is already assigned to other teachers": "уже назначен другим учителям",
-  "Assigning it again will split the class into subgroups. Proceed?": "Повторное назначение разделит класс на подгруппы. Продолжить?"
+  "Assigning it again will split the class into subgroups. Proceed?": "Повторное назначение разделит класс на подгруппы. Продолжить?",
+  "United Group": "Объединённая группа",
+  "United groups": "Объединённые группы",
+  "Virtual": "Виртуальная",
+  "Partial": "Частично",
+  "Sub-groups in this united group:": "Подгруппы в объединённой группе:",
+  "Add All": "Добавить все",
+  "Name contains forbidden characters: / \\ : ? * [ ]": "Имя содержит запрещённые символы: / \\ : ? * [ ]",
+  "Select Excel file from ExcelExamples folder:": "Выберите файл Excel из папки ExcelExamples:",
+  "Or choose a local file:": "Или выберите локальный файл:",
+  "If you select a local file, it will be uploaded and imported.": "Если вы выберете локальный файл, он будет загружен и импортирован.",
+  "Loading...": "Загрузка...",
+  "Search...": "Поиск...",
+  "Original order": "Исходный порядок"
 }
