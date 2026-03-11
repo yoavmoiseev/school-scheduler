@@ -273,6 +273,74 @@ def rebuild_all():
             # lessons and only fills the remaining empty slots with the group's own
             # subjects.  Teacher busy_map also sees the saved united schedules,
             # so there are no teacher double-bookings.
+
+            # MRV-сортировка групп: самая ограниченная группа идёт первой.
+            # Применяется ТОЛЬКО если пользователь не задал порядок вручную через UI.
+            # Если priorities.groups задан — уважаем выбор пользователя.
+            _user_set_order = bool(priorities and isinstance(priorities, dict) and priorities.get('groups'))
+            try:
+                all_teachers = excel_service.get_teachers() if excel_service else []
+                all_subjects = excel_service.get_subjects() if excel_service else []
+                saved_schedules = excel_service.get_group_schedules() if excel_service else {}
+
+                # teacher_name -> количество доступных слотов (999 = нет ограничений)
+                def _teacher_slot_count(t):
+                    avail = t.get('available_slots', {})
+                    if not avail:
+                        return 999
+                    return sum(len(v) for v in avail.values() if v)
+
+                teacher_slots = {t['name']: _teacher_slot_count(t) for t in all_teachers}
+
+                # teacher_name -> сколько regular-групп используют этого учителя (конкуренция)
+                teacher_group_count = {}
+                for s in all_subjects:
+                    gn = s.get('group', '')
+                    if gn not in regular_names_ordered:
+                        continue
+                    sn = s.get('name', '')
+                    for t in all_teachers:
+                        for ts in t.get('subjects', []):
+                            if ts.get('name') == sn and (ts.get('group', '') == gn or ts.get('group', '') == ''):
+                                tn = t['name']
+                                teacher_group_count[tn] = teacher_group_count.get(tn, 0) + 1
+
+                def _group_constraint_score(gname):
+                    # Считаем суммарную «жёсткость» учителей этой группы
+                    score = 0
+                    seen_teachers = set()
+                    for s in all_subjects:
+                        if s.get('group') != gname:
+                            continue
+                        sn = s.get('name', '')
+                        for t in all_teachers:
+                            for ts in t.get('subjects', []):
+                                if ts.get('name') == sn and (ts.get('group', '') == gname or ts.get('group', '') == ''):
+                                    tn = t['name']
+                                    if tn in seen_teachers:
+                                        continue
+                                    seen_teachers.add(tn)
+                                    slots = teacher_slots.get(tn, 999)
+                                    competition = teacher_group_count.get(tn, 1)
+                                    # Чем меньше слотов и чем больше конкуренция — тем выше оценка
+                                    score += competition * (1000 / max(slots, 1))
+                    # Штраф за уже занятые слоты (united-уроки): меньше свободных мест = жёстче
+                    existing = saved_schedules.get(gname, {})
+                    occupied = sum(len(v) for v in existing.values())
+                    score += occupied * 10
+                    return score
+
+                if not _user_set_order:
+                    regular_names_ordered.sort(key=_group_constraint_score, reverse=True)
+
+                try:
+                    with open(os.path.join('uploads', 'rebuild_all.log'), 'a', encoding='utf-8') as lf:
+                        lf.write(f"{datetime.now().isoformat()} | MRV_group_order | user_order={_user_set_order} | {regular_names_ordered}\n")
+                except Exception:
+                    pass
+            except Exception:
+                pass  # если сортировка не удалась — продолжаем в исходном порядке
+
             for name in regular_names_ordered:
                 if not name:
                     continue
@@ -452,14 +520,22 @@ def export_excel():
 
     # Groups (match ExcelExamples header + IsUnited/SubGroups for united-group support)
     ws = wb.create_sheet('Groups')
-    ws.append(['Group Name', 'Comment', 'IsUnited', 'SubGroups'])
+    ws.append(['Group Name', 'Comment', 'IsUnited', 'SubGroups', 'Room'])
     groups = excel_service.get_groups() if excel_service else []
     for g in groups:
         subjects_str = '; '.join(g.get('subjects', [])) if isinstance(g, dict) else ''
         name = g.get('name', '') if isinstance(g, dict) else (g or '')
         is_united = 1 if (isinstance(g, dict) and g.get('is_united')) else 0
         sub_groups_str = '; '.join(g.get('sub_groups', [])) if isinstance(g, dict) else ''
-        ws.append([name, subjects_str, is_united, sub_groups_str])
+        room = g.get('room', '') if isinstance(g, dict) else ''
+        ws.append([name, subjects_str, is_united, sub_groups_str, room])
+
+    # Rooms
+    ws = wb.create_sheet('Rooms')
+    ws.append(['Name', 'Description'])
+    rooms = excel_service.get_rooms() if excel_service else []
+    for r in rooms:
+        ws.append([r.get('name', ''), r.get('description', '')])
 
     # Subjects (match ExcelExamples header)
     ws = wb.create_sheet('Subjects')
@@ -474,7 +550,7 @@ def export_excel():
 
     # Group Schedules
     ws = wb.create_sheet('Group Schedules')
-    ws.append(['Group', 'Day', 'Lesson', 'Subject', 'Teacher', 'Color BG', 'Color FG'])
+    ws.append(['Group', 'Day', 'Lesson', 'Subject', 'Teacher', 'Color BG', 'Color FG', 'Room'])
     group_schedules = excel_service.get_group_schedules() if excel_service else {}
     for group_name, days in (group_schedules.items() if group_schedules else []):
         for day, lessons in (days.items() if days else []):
@@ -486,7 +562,8 @@ def export_excel():
                     ld.get('subject', '') if isinstance(ld, dict) else '',
                     ld.get('teacher', '') if isinstance(ld, dict) else '',
                     ld.get('color_bg', '#FFFFFF') if isinstance(ld, dict) else '#FFFFFF',
-                    ld.get('color_fg', '#000000') if isinstance(ld, dict) else '#000000'
+                    ld.get('color_fg', '#000000') if isinstance(ld, dict) else '#000000',
+                    ld.get('room', '') if isinstance(ld, dict) else ''
                 ])
 
     # Teacher Schedules

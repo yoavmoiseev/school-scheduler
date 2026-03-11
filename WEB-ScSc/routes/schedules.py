@@ -102,7 +102,41 @@ def autofill_schedule():
     # Get max retries from config
     config = excel_service.get_config()
     max_retries = int(config.get('max_autofill_retries', 100))
-    
+
+    # ── Pre-step: handle united groups ──────────────────────────────────────
+    # Find all united groups that contain this group as a sub-group.
+    # For each such united group, ensure its schedule is built and force-inserted
+    # into this group's slots BEFORE autofill runs — exactly like Rebuild All does.
+    all_groups = excel_service.get_groups()
+    groups_map = {g['name']: g for g in all_groups if isinstance(g, dict) and g.get('name')}
+    united_parents = [
+        g for g in all_groups
+        if isinstance(g, dict) and g.get('is_united') and group_name in (g.get('sub_groups') or [])
+    ]
+    if united_parents:
+        for united_group in united_parents:
+            united_name = united_group['name']
+            # Check if united group already has a saved schedule
+            existing_schedules = excel_service.get_group_schedules()
+            united_schedule = existing_schedules.get(united_name, {})
+            # If no schedule exists yet, run autofill for the united group first
+            if not united_schedule or not any(united_schedule.values()):
+                try:
+                    u_success, u_schedule, _ = autofill_service.autofill_group(
+                        united_name, max_retries=max_retries, preserve_existing=False
+                    )
+                    if u_schedule and any(u_schedule.values()):
+                        excel_service.save_group_schedule(united_name, u_schedule)
+                        excel_service.rebuild_teacher_schedules()
+                        united_schedule = u_schedule
+                except Exception:
+                    pass
+            # Force-insert united group's lessons into this sub-group's slots
+            if united_schedule and any(united_schedule.values()):
+                excel_service.force_merge_into_group_schedule(group_name, united_schedule)
+        excel_service.rebuild_teacher_schedules()
+    # ────────────────────────────────────────────────────────────────────────
+
     # Run autofill
     success, schedule, info = autofill_service.autofill_group(group_name, max_retries)
     

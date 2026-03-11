@@ -115,5 +115,19 @@
   "If you select a local file, it will be uploaded and imported.": "Если вы выберете локальный файл, он будет загружен и импортирован.",
   "Loading...": "Загрузка...",
   "Search...": "Поиск...",
-  "Original order": "Исходный порядок"
+  "Original order": "Исходный порядок",
+  "Rooms": "Кабинеты",
+  "Room": "Кабинет",
+  "Add Room": "Добавить кабинет",
+  "Edit Room": "Редактировать кабинет",
+  "Description": "Описание",
+  "No room": "Без кабинета",
+  "Select a room to edit": "Выберите кабинет для редактирования",
+  "Select a room to delete": "Выберите кабинет для удаления",
+  "Failed to save room: ": "Ошибка сохранения кабинета: ",
+  "Failed to delete room: ": "Ошибка удаления кабинета: ",
+  "Aggressive Assigned - Against the Rules": "Агрессивное назначение - нарушение правил",
+  "Double-click the area to enable aggressive assignment.": "Дважды щёлкните по области, чтобы включить агрессивное назначение.",
+  "All schedules cleared": "Все расписания очищены",
+  "All data cleared": "Все данные удалены"
 }

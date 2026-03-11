@@ -47,5 +47,19 @@
   "If you select a local file, it will be uploaded and imported.": "אם תבחר קובץ מקומי, הוא יועלה ויובא.",
   "Loading...": "טוען...",
   "Search...": "חפש...",
-  "Original order": "סדר מקורי"
+  "Original order": "סדר מקורי",
+  "Rooms": "חדרים",
+  "Room": "חדר",
+  "Add Room": "הוסף חדר",
+  "Edit Room": "ערוך חדר",
+  "Description": "תיאור",
+  "No room": "ללא חדר",
+  "Select a room to edit": "בחר חדר לעריכה",
+  "Select a room to delete": "בחר חדר למחיקה",
+  "Failed to save room: ": "שגיאה בשמירת החדר: ",
+  "Failed to delete room: ": "שגיאה במחיקת החדר: ",
+  "Aggressive Assigned - Against the Rules": "הקצאה אגרסיבית - נגד הכללים",
+  "Double-click the area to enable aggressive assignment.": "לחץ לחיצה כפולה כדי להפעיל את ההקצאה האגרסיבית.",
+  "All schedules cleared": "כל המערכות נוקו",
+  "All data cleared": "כל הנתונים נמחקו"
 }

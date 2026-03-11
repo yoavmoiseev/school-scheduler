@@ -886,6 +886,7 @@ async function saveTeacher() {
         }
         bootstrap.Modal.getInstance(document.getElementById('teacherModal')).hide();
         loadTeachers();
+        loadSubjects();
         loadGroups();
     } catch (error) {
         alert(_('Failed to save teacher: ') + error.message);
@@ -1235,9 +1236,21 @@ function renderGroups() {
         const nameCell = group.is_united
             ? $('<td>').append($('<span>').text(group.name)).append($('<span>').addClass('badge bg-primary ms-2').text('⊕ United'))
             : $('<td>').text(group.name);
+        // Room cell: for united groups aggregate sub-group rooms
+        let roomText = group.room || '';
+        if (group.is_united && (group.sub_groups || []).length > 0) {
+            const allGroupsData = window._groupsData || [];
+            const subRooms = (group.sub_groups || []).map(sg => {
+                const sgData = allGroupsData.find(gg => gg.name === sg);
+                return sgData ? (sgData.room || '') : '';
+            }).filter(r => r);
+            roomText = [...new Set(subRooms)].join(', ');
+        }
+        const roomCell = $('<td>').text(roomText);
         const row = $('<tr>')
             .data('group', group)
             .append(nameCell)
+            .append(roomCell)
             .append($('<td>').text(commentsText))
             .append($('<td>').text(totalsText));
         tbody.append(row);
@@ -1257,17 +1270,20 @@ async function loadGroups() {
     }
 }
 
-function addGroup() {
+async function addGroup() {
     $('#groupModalTitle').text(_('Add Group'));
     $('#groupForm')[0].reset();
     $('#groupForm input[name="original_name"]').val('');
     $('#unitedGroupPanel').hide();
     $('#unitedSubGroupsList').empty();
     _loadGroupSelectorOptions('');
+    await _loadRoomSelectorOptions();
+    $('#groupForm-room').prop('disabled', false).val('');
+    $('#groupForm-unitedRooms').hide().text('');
     bootstrap.Modal.getOrCreateInstance(document.getElementById('groupModal')).show();
 }
 
-function editGroup() {
+async function editGroup() {
     const selected = $('#groupsTable tbody tr.table-active');
     if (selected.length === 0) {
         alert(_('Select a group to edit'));
@@ -1292,6 +1308,17 @@ function editGroup() {
     subGroups.forEach(sg => _appendSubGroupItem(sg));
     _loadGroupSelectorOptions(group.name);
 
+    // Room field
+    await _loadRoomSelectorOptions();
+    if (isUnited) {
+        $('#groupForm-room').prop('disabled', true).val('');
+        const roomText = _getUnitedRoomsText(subGroups);
+        $('#groupForm-unitedRooms').show().text(_('Rooms') + ': ' + (roomText || '—'));
+    } else {
+        $('#groupForm-room').prop('disabled', false).val(group.room || '');
+        $('#groupForm-unitedRooms').hide().text('');
+    }
+
     bootstrap.Modal.getOrCreateInstance(document.getElementById('groupModal')).show();
 }
 
@@ -1310,11 +1337,13 @@ async function saveGroup() {
         if (sgName) subGroups.push(sgName);
     });
 
+    const room = isUnited ? '' : ($('#groupForm-room').val() || '');
     const groupData = {
         name: name,
         subjects: commentsVal ? [commentsVal] : [],
         is_united: isUnited,
-        sub_groups: isUnited ? subGroups : []
+        sub_groups: isUnited ? subGroups : [],
+        room: room,
     };
     
     try {
@@ -1354,6 +1383,18 @@ function toggleUnitedGroupPanel() {
     $('#unitedGroupPanel').toggle(checked);
     if (checked) {
         _loadGroupSelectorOptions($('#groupForm input[name="original_name"]').val());
+        // For united groups: disable room select, show aggregated sub-group rooms
+        $('#groupForm-room').prop('disabled', true).val('');
+        const subGroups = [];
+        $('#unitedSubGroupsList li').each(function() {
+            const sgName = $(this).data('subgroup');
+            if (sgName) subGroups.push(sgName);
+        });
+        const roomText = _getUnitedRoomsText(subGroups);
+        $('#groupForm-unitedRooms').show().text(_('Rooms') + ': ' + (roomText || '—'));
+    } else {
+        $('#groupForm-room').prop('disabled', false);
+        $('#groupForm-unitedRooms').hide().text('');
     }
 }
 
@@ -1371,6 +1412,28 @@ async function _loadGroupSelectorOptions(excludeName) {
     } catch (e) {
         console.warn('Failed to load groups for united selector', e);
     }
+}
+
+async function _loadRoomSelectorOptions() {
+    try {
+        const rooms = await API.get('/api/rooms');
+        const sel = $('#groupForm-room');
+        const current = sel.val();
+        sel.empty().append($('<option>').val('').text('\u2014 ' + _('No room') + ' \u2014'));
+        rooms.forEach(r => sel.append($('<option>').val(r.name).text(r.name)));
+        if (current) sel.val(current);
+    } catch (e) {
+        console.warn('Failed to load rooms for group selector', e);
+    }
+}
+
+function _getUnitedRoomsText(subGroups) {
+    const allGroupsData = window._groupsData || [];
+    const rooms = (subGroups || []).map(sg => {
+        const sgData = allGroupsData.find(g => g.name === sg);
+        return sgData ? (sgData.room || '') : '';
+    }).filter(r => r);
+    return [...new Set(rooms)].join(', ');
 }
 
 function _appendSubGroupItem(name) {
@@ -1419,6 +1482,104 @@ async function deleteGroup() {
                 loadGroups();
             } catch (error) {
                 alert(_('Failed to delete group: ') + error.message);
+            }
+        }
+    });
+}
+
+// --- Rooms CRUD ---
+
+async function loadRooms() {
+    try {
+        const rooms = await API.get('/api/rooms');
+        const groups = window._groupsData || await API.get('/api/groups');
+        window._roomsData = rooms;
+        window._groupsDataForRooms = groups;
+        renderRooms();
+    } catch (error) {
+        console.error('Failed to load rooms:', error);
+    }
+}
+
+function renderRooms() {
+    const rooms = window._roomsData || [];
+    const groups = window._groupsData || window._groupsDataForRooms || [];
+    const tbody = $('#roomsTable tbody');
+    tbody.empty();
+    rooms.forEach(room => {
+        const assignedGroups = groups.filter(g => g.room === room.name && !g.is_united).map(g => g.name).join(', ');
+        const row = $('<tr>')
+            .data('room', room)
+            .append($('<td>').text(room.name))
+            .append($('<td>').text(room.description || ''))
+            .append($('<td>').text(assignedGroups));
+        tbody.append(row);
+    });
+    $('#roomsTable tbody tr').click(function() {
+        $(this).addClass('table-active').siblings().removeClass('table-active');
+    });
+}
+
+function addRoom() {
+    $('#roomModalTitle').text(_('Add Room'));
+    $('#roomForm')[0].reset();
+    $('#roomForm input[name="original_name"]').val('');
+    bootstrap.Modal.getOrCreateInstance(document.getElementById('roomModal')).show();
+}
+
+function editRoom() {
+    const selected = $('#roomsTable tbody tr.table-active');
+    if (selected.length === 0) {
+        alert(_('Select a room to edit'));
+        return;
+    }
+    const room = selected.data('room');
+    $('#roomModalTitle').text(_('Edit Room'));
+    $('#roomForm input[name="original_name"]').val(room.name);
+    $('#roomForm input[name="name"]').val(room.name);
+    $('#roomForm textarea[name="description"]').val(room.description || '');
+    bootstrap.Modal.getOrCreateInstance(document.getElementById('roomModal')).show();
+}
+
+async function saveRoom() {
+    const form = $('#roomForm');
+    const originalName = form.find('input[name="original_name"]').val();
+    const name = form.find('input[name="name"]').val().trim();
+    if (!name) { alert(_('Name required')); return; }
+
+    const roomData = {
+        name: name,
+        description: form.find('textarea[name="description"]').val() || '',
+    };
+    try {
+        if (originalName) {
+            await API.put(`/api/rooms/${originalName}`, roomData);
+        } else {
+            await API.post('/api/rooms', roomData);
+        }
+        bootstrap.Modal.getInstance(document.getElementById('roomModal')).hide();
+        loadRooms();
+        loadGroups(); // refresh groups table in case room name changed
+    } catch (error) {
+        alert(_('Failed to save room: ') + error.message);
+    }
+}
+
+async function deleteRoom() {
+    const selected = $('#roomsTable tbody tr.table-active');
+    if (selected.length === 0) {
+        alert(_('Select a room to delete'));
+        return;
+    }
+    const room = selected.data('room');
+    Confirmations.deleteItem(room.name, async (confirmed) => {
+        if (confirmed) {
+            try {
+                await API.delete(`/api/rooms/${room.name}`);
+                loadRooms();
+                loadGroups();
+            } catch (error) {
+                alert(_('Failed to delete room: ') + error.message);
             }
         }
     });
@@ -1860,8 +2021,14 @@ async function loadGroupSchedule() {
     
     try {
         const schedule = await API.get(`/api/schedules/group/${currentGroupName}`);
+        // Get the group's default room to show even for lessons saved before room feature
+        const groupsData = window._groupsData || [];
+        const groupInfo = groupsData.find(g => g.name === currentGroupName);
+        const groupRoom = groupInfo ? (groupInfo.room || '') : '';
         await ScheduleGrid.render('#groupScheduleGrid', schedule, {
             editable: true,
+            hideGroup: true,
+            groupRoom: groupRoom,
             onCellClick: (day, lesson, lessonData) => showLessonModal(day, lesson, lessonData)
         });
     } catch (error) {
@@ -2017,7 +2184,8 @@ async function loadDayView() {
 
     try {
         // Build a single table: rows = lessons, columns = groups
-        const groups = await API.get('/api/groups');
+        const allGroups = await API.get('/api/groups');
+        const groups = allGroups.filter(g => !g.is_united);
         const container = $('#daySchedulerGrid');
         container.empty();
 
@@ -2182,13 +2350,16 @@ async function showLessonModal(day, lesson, lessonData) {
         });
 
         // Preselect values: if lessonData has subject, try to select it
+        // Use .filter() instead of CSS attribute selector to safely handle values with quotes (e.g. י"ב)
         if (lessonData && lessonData.subject) {
-            const opt = subjectSelect.find(`option[value="${lessonData.subject}"]`);
+            const subjectVal = lessonData.subject;
+            const opt = subjectSelect.find('option').filter(function() { return $(this).val() === subjectVal; });
             if (opt.length) {
-                subjectSelect.val(lessonData.subject).trigger('change.filterTeachers');
+                subjectSelect.val(subjectVal).trigger('change.filterTeachers');
                 setTimeout(() => {
-                    const tOpt = teacherSelect.find(`option[value="${lessonData.teacher}"]`);
-                    if (tOpt.length) teacherSelect.val(lessonData.teacher);
+                    const teacherVal = lessonData.teacher;
+                    const tOpt = teacherSelect.find('option').filter(function() { return $(this).val() === teacherVal; });
+                    if (tOpt.length) teacherSelect.val(teacherVal);
                 }, 50);
             }
         } else {
@@ -2204,7 +2375,14 @@ async function showLessonModal(day, lesson, lessonData) {
             const allSubjects = await API.get('/api/subjects') || [];
             const aggressive = $('#aggressiveSubjects');
             aggressive.empty();
-            allSubjects.filter(s => (s.group || '') === currentGroupName).forEach(s => {
+            // Include subjects from united groups that contain this group as a sub-group
+            const allGroupsListAgg = window._groupsData || [];
+            const unitedNamesForAgg = allGroupsListAgg
+                .filter(g => g.is_united && (g.sub_groups || []).includes(currentGroupName))
+                .map(g => g.name);
+            allSubjects.filter(s =>
+                (s.group || '') === currentGroupName || unitedNamesForAgg.includes(s.group || '')
+            ).forEach(s => {
                 aggressive.append($('<option>').val(s.name).text(s.name));
             });
             // reset flags
@@ -2238,6 +2416,27 @@ async function showLessonModal(day, lesson, lessonData) {
             console.warn('Failed to populate aggressiveSubjects', e);
         }
 
+        // Populate room selector
+        try {
+            const roomsStatus = await API.get(`/api/rooms/free?day=${encodeURIComponent(day)}&lesson=${lesson}`);
+            const roomSel = $('#lessonForm-room');
+            roomSel.empty().append($('<option>').val('').text('\u2014 ' + _('No room') + ' \u2014'));
+            roomsStatus.forEach(r => {
+                const label = r.name + (r.free ? ' \u2713' : ' \u2717');
+                const opt = $('<option>').val(r.name).text(label);
+                if (!r.free) opt.css('color', '#999');
+                roomSel.append(opt);
+            });
+            let preselect = (lessonData && lessonData.room) ? lessonData.room : '';
+            if (!preselect) {
+                const gData = (window._groupsData || []).find(g => g.name === currentGroupName);
+                if (gData && gData.room) preselect = gData.room;
+            }
+            roomSel.val(preselect);
+        } catch (e) {
+            console.warn('Failed to populate room selector', e);
+        }
+
         bootstrap.Modal.getOrCreateInstance(document.getElementById('lessonModal')).show();
         // Ensure when modal closes we reset aggressive state for next open
         try {
@@ -2265,11 +2464,39 @@ async function showLessonModal(day, lesson, lessonData) {
 async function getEligibleSubjectsForCell(groupName, day, lesson, lessonData) {
     // Use same data sources as Autofill (subjects, group schedule, teachers, all teacher schedules)
     const subjects = await API.get('/api/subjects') || [];
-    const groupSubjects = (subjects || []).filter(s => (s.group || '') === groupName);
+    // Include subjects from united groups that contain this group as a sub-group
+    const allGroupsList = window._groupsData || [];
+    const unitedGroupNames = allGroupsList
+        .filter(g => g.is_united && (g.sub_groups || []).includes(groupName))
+        .map(g => g.name);
+    // All sub-groups of the same united groups (siblings) — teacher busy with a sibling is NOT a conflict
+    const siblingGroups = allGroupsList
+        .filter(g => g.is_united && unitedGroupNames.includes(g.name))
+        .flatMap(g => g.sub_groups || [])
+        .filter(sg => sg !== groupName);
+    const groupSubjects = (subjects || []).filter(s =>
+        (s.group || '') === groupName || unitedGroupNames.includes(s.group || '')
+    );
 
     const groupSchedule = await API.get(`/api/schedules/group/${encodeURIComponent(groupName)}`) || {};
     const teachers = await API.get('/api/teachers') || [];
     const allTeacherSchedules = await API.get('/api/schedules/all-teachers') || {};
+    const allGroupSchedules = await API.get('/api/schedules/all-groups') || {};
+
+    // If a sibling sub-group already has a united-subject lesson in this exact slot,
+    // this group must use the same subject — no other options allowed.
+    let lockedUnitedSubject = null;
+    for (const sibling of siblingGroups) {
+        const sibSched = allGroupSchedules[sibling] || {};
+        const sibSlot = (sibSched[day] || {})[lesson] || (sibSched[day] || {})[String(lesson)];
+        if (sibSlot && sibSlot.subject) {
+            const sibSubjGroup = (subjects.find(s => s.name === sibSlot.subject) || {}).group || '';
+            if (unitedGroupNames.includes(sibSubjGroup)) {
+                lockedUnitedSubject = sibSlot.subject;
+                break;
+            }
+        }
+    }
 
     // Count occurrences per subject in group's schedule
     const placedCounts = {};
@@ -2286,8 +2513,12 @@ async function getEligibleSubjectsForCell(groupName, day, lesson, lessonData) {
     function availableTeachersForSubject(subjName) {
         const list = [];
         teachers.forEach(t => {
-            // teacher teaches subj
-            const teaches = (t.subjects || []).some(s => s.name === subjName && ((s.group || '') === groupName || !(s.group)));
+            // teacher teaches subj — also match united groups that contain this group
+            const teaches = (t.subjects || []).some(s => s.name === subjName && (
+                (s.group || '') === groupName ||
+                unitedGroupNames.includes(s.group || '') ||
+                !(s.group)
+            ));
             if (!teaches) return;
 
             // availability slots
@@ -2300,7 +2531,8 @@ async function getEligibleSubjectsForCell(groupName, day, lesson, lessonData) {
             const tSched = allTeacherSchedules[t.name] || {};
             if (tSched[day] && tSched[day][lesson]) {
                 const existing = tSched[day][lesson];
-                if (existing.group && existing.group !== groupName) return; // busy with other group
+                // busy only if occupied by a truly different group (not this group, its united group, or a sibling sub-group)
+                if (existing.group && existing.group !== groupName && !unitedGroupNames.includes(existing.group) && !siblingGroups.includes(existing.group)) return;
             }
 
             list.push(t.name);
@@ -2316,8 +2548,12 @@ async function getEligibleSubjectsForCell(groupName, day, lesson, lessonData) {
 
         const isCurrent = lessonData && lessonData.subject === s.name;
 
-        // Determine assigned teachers for this subject (matching group or any)
-        const assignedTeachers = teachers.filter(t => (t.subjects || []).some(ss => ss.name === s.name && ((ss.group || '') === groupName || !(ss.group)))).map(t => t.name);
+        // Determine assigned teachers for this subject (matching group, united group, or any)
+        const assignedTeachers = teachers.filter(t => (t.subjects || []).some(ss => ss.name === s.name && (
+            (ss.group || '') === groupName ||
+            unitedGroupNames.includes(ss.group || '') ||
+            !(ss.group)
+        ))).map(t => t.name);
 
         let availTeachers = [];
         if (assignedTeachers.length > 1) {
@@ -2333,7 +2569,8 @@ async function getEligibleSubjectsForCell(groupName, day, lesson, lessonData) {
                 const tSched = allTeacherSchedules[tn] || {};
                 if (tSched[day] && tSched[day][lesson]) {
                     const existing = tSched[day][lesson];
-                    if (existing.group && existing.group !== groupName) { allAvailable = false; break; }
+                    // busy only if occupied by a truly different group (not this group, its united group, or a sibling sub-group)
+                    if (existing.group && existing.group !== groupName && !unitedGroupNames.includes(existing.group) && !siblingGroups.includes(existing.group)) { allAvailable = false; break; }
                 }
             }
             if (allAvailable) {
@@ -2347,7 +2584,18 @@ async function getEligibleSubjectsForCell(groupName, day, lesson, lessonData) {
             availTeachers = availableTeachersForSubject(s.name);
         }
 
+        // If slot is locked to a specific united subject (sibling already has it), only allow that subject
+        if (lockedUnitedSubject && s.name !== lockedUnitedSubject) continue;
+
         if ((remaining > 0 && availTeachers.length > 0) || isCurrent) {
+            // When editing an existing lesson, always include the currently assigned teacher
+            // so the dropdown is never empty and saving doesn't wipe subject/teacher.
+            if (isCurrent && lessonData && lessonData.teacher) {
+                const currentTeachers = lessonData.teacher.split(';').map(t => t.trim()).filter(Boolean);
+                currentTeachers.forEach(ct => {
+                    if (ct && !availTeachers.includes(ct)) availTeachers = [ct, ...availTeachers];
+                });
+            }
             const color = await getColor(s.name || '');
             filtered.push({ subj: s, availTeachers: availTeachers, remaining: remaining, color });
         }
@@ -2381,6 +2629,7 @@ async function saveLesson() {
         subject: subjectToSave,
         teacher: teacher,
         group: currentGroupName,
+        room: $('#lessonForm-room').val() || '',
         color_bg: color.bg,
         color_fg: color.fg
     };

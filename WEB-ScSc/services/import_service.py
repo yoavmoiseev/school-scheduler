@@ -1,6 +1,16 @@
 import openpyxl
 from openpyxl import load_workbook
 import re
+import logging
+
+# ─── Detailed import debug logger ───────────────────────────────────────────────
+_log = logging.getLogger('import_debug')
+if not _log.handlers:
+    _h = logging.FileHandler('import_debug.log', encoding='utf-8')
+    _h.setFormatter(logging.Formatter('%(asctime)s  %(levelname)s  %(message)s'))
+    _log.addHandler(_h)
+    _log.setLevel(logging.DEBUG)
+# ────────────────────────────────────────────────────────────────────────────────
 
 
 class ImportService:
@@ -14,8 +24,12 @@ class ImportService:
         Import data from external Excel file (like hours-2.xlsx)
         Returns dict with success status and imported data summary
         """
+        _log.info('======================================================')
+        _log.info(f'import_from_file START  file={file_path!r}')
+        _log.info(f'  excel_service file_path={self.excel_service.file_path!r}')
         try:
             wb = load_workbook(file_path)
+            _log.info(f'  Source workbook sheets: {wb.sheetnames}')
             # map sheet names to worksheets case-insensitively
             sheets = {name.lower().strip(): name for name in wb.sheetnames}
             def _find_sheet_key(key):
@@ -85,14 +99,42 @@ class ImportService:
             
             # Import Teachers (case-insensitive match)
             tname = _find_sheet_key('teacher')
+            _log.info(f'  Teachers sheet found as: {tname!r}')
             if tname:
+                teachers_before = self.excel_service.get_teachers()
+                _log.info(f'  Teachers BEFORE _import_teachers: {len(teachers_before)} — {[t["name"] for t in teachers_before]}')
                 teachers_stats = self._import_teachers(wb[tname])
                 result['teachers'] = teachers_stats
+                teachers_after = self.excel_service.get_teachers()
+                _log.info(f'  Teachers AFTER _import_teachers: {len(teachers_after)} — {[t["name"] for t in teachers_after]}')
             else:
                 result['errors'].append('Teachers sheet not found')
             
+            # Import Rooms (case-insensitive, standalone Rooms sheet)
+            rname = _find_sheet_key('room')
+            _log.info(f'  Rooms sheet found as: {rname!r}')
+            if rname:
+                try:
+                    rooms_ws = wb[rname]
+                    rooms_list = []
+                    for row in rooms_ws.iter_rows(min_row=2, values_only=True):
+                        if not row or not row[0]:
+                            continue
+                        rooms_list.append({
+                            'name': str(row[0]).strip(),
+                            'description': str(row[1]).strip() if len(row) > 1 and row[1] else ''
+                        })
+                    _log.info(f'  Rooms parsed: {len(rooms_list)} — {[r["name"] for r in rooms_list]}')
+                    self.excel_service.save_rooms(rooms_list)
+                    result['rooms'] = {'imported': len(rooms_list)}
+                    _log.info(f'  Rooms saved OK')
+                except Exception as e:
+                    _log.error(f'  Rooms import error: {e}')
+                    result['errors'].append(f'Failed to import Rooms: {e}')
+
             # Import Groups (case-insensitive)
             gname = _find_sheet_key('group')
+            _log.info(f'  Groups sheet found as: {gname!r}')
             if gname:
                 groups_stats = self._import_groups(wb[gname])
                 result['groups'] = groups_stats
@@ -123,6 +165,7 @@ class ImportService:
                     teacher = row[4] if len(row) > 4 else ''
                     color_bg = row[5] if len(row) > 5 and row[5] else '#FFFFFF'
                     color_fg = row[6] if len(row) > 6 and row[6] else '#000000'
+                    room = str(row[7]).strip() if len(row) > 7 and row[7] else ''
 
                     if g not in group_schedules:
                         group_schedules[g] = {}
@@ -134,7 +177,8 @@ class ImportService:
                             'teacher': teacher or '',
                             'group': g,
                             'color_bg': color_bg,
-                            'color_fg': color_fg
+                            'color_fg': color_fg,
+                            'room': room,
                         }
                 # Save each group's schedule
                 for gname, sched in group_schedules.items():
@@ -188,6 +232,10 @@ class ImportService:
             except Exception:
                 pass
             
+            _log.info(f'import_from_file END  result={result}')
+            final_teachers = self.excel_service.get_teachers()
+            _log.info(f'  FINAL get_teachers() count={len(final_teachers)} names={[t["name"] for t in final_teachers]}')
+            _log.info('======================================================')
             return result
             
         except Exception as e:
@@ -201,9 +249,16 @@ class ImportService:
     
     def _import_teachers(self, sheet):
         """Import teachers from Teachers sheet"""
+        _log.info('=== _import_teachers START ===')
+        _log.info(f'  Sheet title: {sheet.title!r}')
+        _log.info(f'  max_row={sheet.max_row}  max_column={sheet.max_column}')
+        # Log header row
+        header = [cell.value for cell in next(sheet.iter_rows(min_row=1, max_row=1))]
+        _log.info(f'  HEADER row (col indices 0..{len(header)-1}): {header}')
         added = 0
         updated = 0
         existing_teachers = self.excel_service.get_teachers()
+        _log.info(f'  Existing teachers in Excel BEFORE import: {[t["name"] for t in existing_teachers]}')
         teachers_list = list(existing_teachers)  # Convert to list for modification
         teacher_names_to_idx = {t['name']: i for i, t in enumerate(teachers_list)}
         
@@ -216,6 +271,7 @@ class ImportService:
             total_hours = row[2] if len(row) > 2 else 0
             availability = row[3] if len(row) > 3 else None
             weekly_hours = row[4] if len(row) > 4 else None
+            _log.debug(f'  ROW for teacher {teacher_name!r}: col0={row[0]!r} col1={str(subjects_raw)[:60]!r} col2={total_hours!r} col3={str(availability)[:40]!r} col4={str(weekly_hours)[:60]!r}')
             
             # Parse subjects (accept either newline-separated or semicolon-separated entries)
             subjects = []
@@ -282,18 +338,28 @@ class ImportService:
                 'available_slots': {}
             }
             
+            _log.debug(f'    parsed subjects count={len(subjects)}  check_in_days={list(check_in_hours.keys())}')
             if teacher_name in teacher_names_to_idx:
                 # Update existing teacher
                 idx = teacher_names_to_idx[teacher_name]
                 teachers_list[idx] = teacher_data
                 updated += 1
+                _log.info(f'  UPDATED teacher: {teacher_name!r}')
             else:
                 # Add new teacher
                 teachers_list.append(teacher_data)
                 added += 1
+                _log.info(f'  ADDED teacher: {teacher_name!r}')
         
+        _log.info(f'  Total teachers_list to save: {len(teachers_list)} — names: {[t["name"] for t in teachers_list]}')
         # Save all teachers
         self.excel_service.save_teachers(teachers_list)
+        _log.info(f'  save_teachers() called. Verifying with get_teachers()...')
+        verify = self.excel_service.get_teachers()
+        _log.info(f'  AFTER save — get_teachers() returns {len(verify)} teachers: {[t["name"] for t in verify]}')
+        if len(verify) != len(teachers_list):
+            _log.error(f'  *** MISMATCH! sent {len(teachers_list)} but read back {len(verify)} ***')
+        _log.info(f'=== _import_teachers END: added={added} updated={updated} ===')
         return {'added': added, 'updated': updated}
     
     def _import_groups(self, sheet):
@@ -316,12 +382,15 @@ class ImportService:
             # Col 4: SubGroups (semicolon-separated)
             sub_groups_raw = row[3] if len(row) > 3 else None
             sub_groups = [s.strip() for s in str(sub_groups_raw).split(';') if s.strip()] if sub_groups_raw else []
+            # Col 5: Room
+            room = str(row[4]).strip() if len(row) > 4 and row[4] else ''
 
             group_data = {
                 'name': group_name,
                 'subjects': [str(comment)] if comment else [],
                 'is_united': is_united,
-                'sub_groups': sub_groups
+                'sub_groups': sub_groups,
+                'room': room,
             }
             
             if group_name in group_names_to_idx:

@@ -24,10 +24,11 @@ from routes.auth_routes import auth_bp
 from routes.import_routes import import_bp
 from routes.admin_routes import admin_bp
 from routes.favorites_routes import favorites_bp
+from routes.rooms import rooms_bp
 
 # Import route initializers
 from routes import teachers, groups, subjects, schedules, config_routes, auth_routes, import_routes
-from routes import admin_routes
+from routes import admin_routes, rooms
 
 # Create Flask app
 app = Flask(__name__)
@@ -96,6 +97,8 @@ def before_request():
     import_routes.init_routes(import_service)
     # admin routes
     admin_routes.init_routes(excel_service, autofill_service)
+    # rooms
+    rooms.init_routes(excel_service)
 
 
 # Register blueprints
@@ -107,6 +110,7 @@ app.register_blueprint(config_bp)
 app.register_blueprint(import_bp)
 app.register_blueprint(admin_bp)
 app.register_blueprint(favorites_bp)
+app.register_blueprint(rooms_bp)
 
 
 # Context processor for i18n

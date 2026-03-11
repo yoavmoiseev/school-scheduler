@@ -148,6 +148,35 @@
     </div>
 </div>
 
+<!-- Room Modal -->
+<div class="modal fade" id="roomModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="roomModalTitle">{{ _('Add Room') }}</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="roomForm">
+                    <input type="hidden" name="original_name">
+                    <div class="mb-3">
+                        <label for="roomForm-name" class="form-label">{{ _(10) }}</label>
+                        <input id="roomForm-name" type="text" class="form-control" name="name" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="roomForm-description" class="form-label">{{ _('Description') }}</label>
+                        <textarea id="roomForm-description" class="form-control" name="description" rows="2"></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ _(25) }}</button>
+                <button type="button" class="btn btn-primary" onclick="saveRoom()">{{ _(26) }}</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <!-- Edit Group Modal -->
 <div class="modal fade" id="groupModal" tabindex="-1">
     <div class="modal-dialog">
@@ -166,6 +195,14 @@
                     <div class="mb-3">
                         <label for="groupForm-comments" class="form-label">{{ _('Comments') }}</label>
                         <textarea id="groupForm-comments" class="form-control" name="comments" rows="2"></textarea>
+                    </div>
+                    <div class="mb-3" id="groupForm-roomPanel">
+                        <label for="groupForm-room" class="form-label">{{ _('Room') }}</label>
+                        <select id="groupForm-room" class="form-select" name="room">
+                            <option value="">— {{ _('No room') }} —</option>
+                            <!-- Populated by JS -->
+                        </select>
+                        <div id="groupForm-unitedRooms" class="form-text text-muted" style="display:none;"></div>
                     </div>
                     <!-- United Group feature -->
                     <div class="mb-3 form-check">
@@ -251,6 +288,13 @@
                     <div class="mb-3">
                         <label for="lessonForm-teacher" class="form-label">{{ _(3) }}</label>
                         <select id="lessonForm-teacher" class="form-select" name="teacher" required>
+                            <!-- Populated by JS -->
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="lessonForm-room" class="form-label">{{ _('Room') }}</label>
+                        <select id="lessonForm-room" class="form-select" name="room">
+                            <option value="">— {{ _('No room') }} —</option>
                             <!-- Populated by JS -->
                         </select>
                     </div>
