@@ -500,7 +500,7 @@ class ExcelService:
         groups = []
         for row in sheet.iter_rows(min_row=2, values_only=True):
             if row[0]:
-                name = row[0]
+                name = str(row[0]).strip()
                 subjects = row[1].split(';') if len(row) > 1 and row[1] else []
                 is_united = bool(row[2]) if len(row) > 2 and row[2] else False
                 sub_groups_raw = row[3] if len(row) > 3 and row[3] else ''
@@ -608,7 +608,7 @@ class ExcelService:
             if row[0]:
                 subjects.append({
                     'name': row[0],
-                    'group': row[1] if len(row) > 1 else '',
+                    'group': str(row[1]).strip() if row[1] is not None else '',
                     'hours_per_week': int(row[2]) if len(row) > 2 and row[2] else 0,
                     'teacher': row[3] if len(row) > 3 else ''
                 })

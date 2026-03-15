@@ -374,7 +374,7 @@ class ImportService:
             if not row[0]:  # Skip empty rows
                 continue
             
-            group_name = row[0]
+            group_name = str(row[0]).strip()
             comment = row[1] if len(row) > 1 else None
             # Col 3: IsUnited (0/1 or blank)
             is_united_raw = row[2] if len(row) > 2 else None
@@ -424,7 +424,7 @@ class ImportService:
             
             subject_name = row[0]
             hours_per_week = row[1] if len(row) > 1 else 0
-            group = row[2] if len(row) > 2 else ''
+            group = str(row[2]).strip() if row[2] is not None else ''
             
             # Parse hours_per_week if it's a string
             if isinstance(hours_per_week, str):
