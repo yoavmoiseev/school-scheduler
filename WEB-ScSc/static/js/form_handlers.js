@@ -2264,7 +2264,7 @@ async function loadDayView() {
                 const lessonData = daySchedule[lesson];
                 // Find cell by data attributes safely (avoid selector-escaping issues)
                 const cell = container.find('td').filter(function() {
-                    return $(this).data('group') === g.name && parseInt($(this).data('lesson')) === lesson;
+                    return $(this).attr('data-group') === String(g.name) && parseInt($(this).data('lesson')) === lesson;
                 }).first();
 
                 if (!cell || cell.length === 0) continue;
@@ -2291,14 +2291,14 @@ async function loadDayView() {
             let hasContent = false;
             for (let lesson = 1; lesson <= lessonsCount; lesson++) {
                 const cell = container.find('td').filter(function() {
-                    return $(this).data('group') === g.name && parseInt($(this).data('lesson')) === lesson;
+                    return $(this).attr('data-group') === String(g.name) && parseInt($(this).data('lesson')) === lesson;
                 }).first();
                 if (cell && cell.hasClass('filled')) { hasContent = true; break; }
             }
 
             // Apply width styles
             const header = headers.eq(colIndex);
-            const colCells = container.find('td').filter(function() { return $(this).data('group') === g.name; });
+            const colCells = container.find('td').filter(function() { return $(this).attr('data-group') === String(g.name); });
             if (hasContent) {
                 header.css('min-width', '180px');
                 colCells.css('min-width', '180px');
