@@ -129,5 +129,22 @@
   "Aggressive Assigned - Against the Rules": "Агрессивное назначение - нарушение правил",
   "Double-click the area to enable aggressive assignment.": "Дважды щёлкните по области, чтобы включить агрессивное назначение.",
   "All schedules cleared": "Все расписания очищены",
-  "All data cleared": "Все данные удалены"
+  "All data cleared": "Все данные удалены",
+  "Reduce lessons from {FROM} to {TO}?": "Уменьшить число уроков с {FROM} до {TO}?",
+  "Time slots for lessons {FROM}..{TO} will be deleted. Continue?": "Будут удалены временные слоты для уроков {FROM}..{TO}. Продолжить?",
+  "Warning: Changing weekday names will significantly affect the schedule!": "Внимание: изменение названий дней недели существенно повлияет на расписание!",
+  "Teacher working days will need to be redone.": "Рабочие дни учителей потребуется переназначить.",
+  "Are you sure you want to continue?": "Вы уверены, что хотите продолжить?",
+  "Lesson number must be between 1 and 30": "Номер урока должен быть от 1 до 30",
+  "Please enter a time range": "Пожалуйста, введите временной диапазон",
+  "Invalid time format. Use H:MM-H:MM or HH:MM-HH:MM (e.g., 9:15-10:00)": "Неверный формат времени. Используйте H:MM-H:MM или HH:MM-HH:MM (например, 9:15-10:00)",
+  "End time must be after start time": "Время окончания должно быть позже времени начала",
+  "Delete time slot for lesson {N}?": "Удалить временной слот для урока {N}?",
+  "Invalid lessons number": "Недопустимое количество уроков",
+  "Failed to add time slot: ": "Ошибка добавления временного слота: ",
+  "Failed to save: ": "Ошибка сохранения: ",
+  "Failed to delete: ": "Ошибка удаления: ",
+  "Failed to save configuration: ": "Ошибка сохранения конфигурации: ",
+  "Failed to clear schedules: ": "Ошибка очистки расписаний: ",
+  "United group issues:\n": "Проблемы объединённых групп:\n"
 }

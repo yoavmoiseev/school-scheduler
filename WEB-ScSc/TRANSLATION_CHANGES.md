@@ -2,6 +2,21 @@
 
 All translation edits performed by the assistant are recorded here.
 
+## 2026-03-15 — United group error reporting
+- Keys added to `services/i18n_he_new.json`:
+  - "Success": "הצלחה"
+  - "Failed": "נכשל"
+  - "United group issues:\n": "בעיות קבוצות מאוחדות:\n"
+- Keys added to `services/i18n_ru_new.json`:
+  - "United group issues:\n": "Проблемы объединённых групп:\n"
+  (Note: "Success" and "Failed" were already present in i18n_ru_new.json)
+
+Files modified:
+- `services/i18n_he_new.json` (added Success, Failed, United group issues)
+- `services/i18n_ru_new.json` (added United group issues)
+- `routes/schedules.py` (capture united group autofill errors, return united_issues)
+- `static/js/form_handlers.js` (show united_issues in autofill alert; fix rebuild errors field; Failed for united groups; anyFailures includes united; auto-expand collapsed united block on failure)
+
 ## 2026-01-05 — Initial bulk overrides added by assistant
 - Keys added to `services/i18n_he_new.json` and `services/i18n_ru_new.json`:
   - "Delete all data files (teachers/groups/subjects/schedules)?"

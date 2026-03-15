@@ -260,6 +260,10 @@ def rebuild_all():
                                         excel_service.force_merge_into_group_schedule(sub_name, schedule)
                                     except Exception:
                                         pass
+                            # Stop retrying after any save: retrying with preserve_existing=False
+                            # would mark all teachers busy via the force-merged sub-group schedules,
+                            # causing subsequent attempts to place 0 lessons and overwrite last_info.
+                            break
                         if success:
                             break
                         attempt += 1
@@ -599,6 +603,12 @@ def export_excel():
             # fallback
             return 'FFFFFFFF'
 
+        # Helper to sanitize sheet names: Excel forbids / \ ? * [ ] : and limits to 31 chars
+        def _sanitize_sheet_name(name):
+            for ch in ('/', '\\', '?', '*', '[', ']', ':'):
+                name = name.replace(ch, '-')
+            return name[:31]
+
         # Determine weekdays and lessons order
         cfg_weekdays = cfg.get('WEEKDAYS', '') if cfg else ''
         weekdays = [d.strip() for d in cfg_weekdays.split(',')] if cfg_weekdays else []
@@ -609,10 +619,15 @@ def export_excel():
         groups = excel_service.get_groups() if excel_service else []
         grp_names = [g.get('name') if isinstance(g, dict) else (g or '') for g in groups]
         for gname in grp_names:
-            sname = f'Group_{gname}'
-            if not gname or sname in wb.sheetnames:
+            if not gname:
                 continue
-            tgt = wb.create_sheet(sname)
+            sname = _sanitize_sheet_name(f'Group_{gname}')
+            if sname in wb.sheetnames:
+                continue
+            try:
+                tgt = wb.create_sheet(sname)
+            except Exception:
+                continue
             # header: first cell = 'Lesson/Day', then weekdays as columns
             header = ['Lesson/Day']
             if weekdays:
@@ -655,12 +670,17 @@ def export_excel():
             tname = t.get('name', '')
             if tname:
                 teacher_availability[tname] = t.get('available_slots', {})
-        
+
         for tname, tsched in (teacher_schedules.items() if teacher_schedules else []):
-            sname = f'Teacher_{tname}'
-            if not tname or sname in wb.sheetnames:
+            if not tname:
                 continue
-            tgt = wb.create_sheet(sname)
+            sname = _sanitize_sheet_name(f'Teacher_{tname}')
+            if sname in wb.sheetnames:
+                continue
+            try:
+                tgt = wb.create_sheet(sname)
+            except Exception:
+                continue
             header = ['Lesson/Day']
             if weekdays:
                 for wd in weekdays:

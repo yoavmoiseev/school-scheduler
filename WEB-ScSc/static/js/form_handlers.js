@@ -1795,7 +1795,7 @@ function validateTimeFormat(timeStr) {
     // Flexible regex: allows single or double digit hours (0-23), minutes (00-59)
     const timeRegex = /^([0-9]|[0-1][0-9]|2[0-3]):([0-5][0-9])-([0-9]|[0-1][0-9]|2[0-3]):([0-5][0-9])$/;
     if (!timeRegex.test(timeStr)) {
-        return { valid: false, message: 'Invalid format. Use H:MM-H:MM or HH:MM-HH:MM (e.g., 9:15-10:00)' };
+        return { valid: false, message: _('Invalid time format. Use H:MM-H:MM or HH:MM-HH:MM (e.g., 9:15-10:00)') };
     }
     
     // Validate start < end
@@ -1806,7 +1806,7 @@ function validateTimeFormat(timeStr) {
     const endMinutes = endH * 60 + endM;
     
     if (startMinutes >= endMinutes) {
-        return { valid: false, message: 'End time must be after start time' };
+        return { valid: false, message: _('End time must be after start time') };
     }
     
     return { valid: true };
@@ -1925,7 +1925,7 @@ $(document).on('click', '.delete-slot', async function(e) {
     
     const lessonNum = parseInt($(this).data('lesson'));
     
-    if (!confirm(`Delete time slot for lesson ${lessonNum}?`)) {
+    if (!confirm(_('Delete time slot for lesson {N}?').replace('{N}', lessonNum))) {
         return;
     }
     
@@ -1959,8 +1959,10 @@ $(document).on('change', '#lessonsInput', function() {
         renderTimeSlots();
     } else if (newCount < currentCount) {
         // Confirm destructive action before deleting extra slots
-        const confirmMsg = `Уменьшить число уроков с ${currentCount} до ${newCount}?\n` +
-            `Будут удалены временные слоты для уроков ${newCount + 1}..${currentCount}. Продолжить?`;
+        const confirmMsg = _('Reduce lessons from {FROM} to {TO}?')
+            .replace('{FROM}', currentCount).replace('{TO}', newCount) + '\n' +
+            _('Time slots for lessons {FROM}..{TO} will be deleted. Continue?')
+            .replace('{FROM}', newCount + 1).replace('{TO}', currentCount);
         if (!confirm(confirmMsg)) {
             // revert input back
             $(this).val(currentCount);
@@ -2085,20 +2087,41 @@ function autofillGroup() {
                 
                 // Always reload the schedule to show what was placed
                 loadGroupSchedule();
-                
+
+                // Collect united group problems (may exist even if main group succeeded)
+                let unitedMsg = '';
+                if (result.united_issues && result.united_issues.length > 0) {
+                    unitedMsg = _('United group issues:\n');
+                    result.united_issues.forEach(it => {
+                        if (it.error) {
+                            unitedMsg += `[${it.united_group}] ${translateErrorMessage(it.error)}\n`;
+                        } else {
+                            const teachers = (it.teachers || []).join(', ');
+                            unitedMsg += `[${it.united_group}] ${it.subject}: ${it.placed}/${it.required}`;
+                            if (teachers) unitedMsg += ` (${_('Teachers')}: ${teachers})`;
+                            unitedMsg += '\n';
+                        }
+                    });
+                }
+
                 if (result.success) {
-                    alert(_('Schedule created successfully'));
+                    if (unitedMsg) {
+                        alert(_('Schedule created successfully') + '\n\n⚠️ ' + unitedMsg);
+                    } else {
+                        alert(_('Schedule created successfully'));
+                    }
                 } else {
                     // Build informative message with incomplete details if available
                     let msg = _('Autofill completed with some issues:\n');
                     if (result.incomplete && result.incomplete.length > 0) {
                         result.incomplete.forEach(it => {
                             const teachers = (it.teachers || []).join(', ');
-                            msg += `${it.subject}: ${it.placed}/${it.required} (teachers: ${teachers})\n`;
+                            msg += `${it.subject}: ${it.placed}/${it.required} (${_('Teachers')}: ${teachers})\n`;
                         });
                     } else if (result.errors && result.errors.length > 0) {
                         msg += result.errors.map(err => translateErrorMessage(err)).join('\n');
                     }
+                    if (unitedMsg) msg += '\n⚠️ ' + unitedMsg;
                     alert(msg);
                 }
             } catch (error) {
@@ -2531,8 +2554,14 @@ async function getEligibleSubjectsForCell(groupName, day, lesson, lessonData) {
             const tSched = allTeacherSchedules[t.name] || {};
             if (tSched[day] && tSched[day][lesson]) {
                 const existing = tSched[day][lesson];
-                // busy only if occupied by a truly different group (not this group, its united group, or a sibling sub-group)
-                if (existing.group && existing.group !== groupName && !unitedGroupNames.includes(existing.group) && !siblingGroups.includes(existing.group)) return;
+                // Sibling exemption ONLY when the sibling lesson is the exact same subject
+                // taught to all sub-groups simultaneously via a united group.
+                // A different subject taught to a sibling group IS a real conflict.
+                const existingSubjGroup = (subjects.find(sub => sub.name === existing.subject) || {}).group || '';
+                const isSiblingUnitedLesson = siblingGroups.includes(existing.group)
+                    && unitedGroupNames.includes(existingSubjGroup)
+                    && existing.subject === subjName;
+                if (existing.group && existing.group !== groupName && !unitedGroupNames.includes(existing.group) && !isSiblingUnitedLesson) return;
             }
 
             list.push(t.name);
@@ -2569,8 +2598,13 @@ async function getEligibleSubjectsForCell(groupName, day, lesson, lessonData) {
                 const tSched = allTeacherSchedules[tn] || {};
                 if (tSched[day] && tSched[day][lesson]) {
                     const existing = tSched[day][lesson];
-                    // busy only if occupied by a truly different group (not this group, its united group, or a sibling sub-group)
-                    if (existing.group && existing.group !== groupName && !unitedGroupNames.includes(existing.group) && !siblingGroups.includes(existing.group)) { allAvailable = false; break; }
+                    // Sibling exemption ONLY when the sibling lesson is the exact same subject
+                    // taught to all sub-groups simultaneously via a united group.
+                    const existingSubjGroup2 = (subjects.find(sub => sub.name === existing.subject) || {}).group || '';
+                    const isSiblingUnitedLesson2 = siblingGroups.includes(existing.group)
+                        && unitedGroupNames.includes(existingSubjGroup2)
+                        && existing.subject === s.name;
+                    if (existing.group && existing.group !== groupName && !unitedGroupNames.includes(existing.group) && !isSiblingUnitedLesson2) { allAvailable = false; break; }
                 }
             }
             if (allAvailable) {
@@ -3122,12 +3156,12 @@ async function rebuildAll() {
                     const attempts = item.attempts || 0;
                     const info = item.info || {};
                     const incomplete = info.incomplete || [];
-                    const errors = info.errors || [];
+                    const errors = item.errors || info.errors || [];
 
                     const displayAttempts = (ok && attempts === 0) ? 1 : attempts;
                     const itemClass = isUnited ? 'list-group-item list-group-item-info' : 'list-group-item';
                     const statusText = isUnited
-                        ? `<span class="badge bg-primary me-1">⊕ ${_('Virtual')}</span>${ok ? _('Success') : _('Partial')} — ${_('Attempts: ')}${displayAttempts}`
+                        ? `<span class="badge bg-primary me-1">⊕ ${_('Virtual')}</span>${ok ? _('Success') : _('Failed')} — ${_('Attempts: ')}${displayAttempts}`
                         : `${ok ? _('Success') : _('Failed')} — ${_('Attempts: ')}${displayAttempts}`;
                     h += `<div class="${itemClass}">
                         <div class="d-flex justify-content-between align-items-start">
@@ -3183,14 +3217,25 @@ async function rebuildAll() {
                 });
                 html += '</div>';
 
-                // United groups — collapsed block at the bottom
+                // United groups — collapsed block at the bottom; auto-expanded on failure
                 if (unitedLog.length > 0) {
+                    let unitedHasFailures = false;
+                    unitedLog.forEach(item => {
+                        const incomplete = (item.info || {}).incomplete || [];
+                        if (!item.success || incomplete.length > 0) { unitedHasFailures = true; anyFailures = true; }
+                    });
                     const colId = 'virtual-groups-collapse-' + Math.floor(Math.random()*10000);
+                    const expandedAttr = unitedHasFailures ? 'show' : '';
+                    const ariaExpanded = unitedHasFailures ? 'true' : 'false';
+                    const btnClass = unitedHasFailures ? 'btn btn-sm btn-outline-danger' : 'btn btn-sm btn-outline-secondary';
+                    const headerLabel = unitedHasFailures
+                        ? `▼ ${_('United groups')} (${unitedLog.length}) ⚠️`
+                        : `▼ ${_('United groups')} (${unitedLog.length})`;
                     html += `<div class="mt-3">
-                        <button class="btn btn-sm btn-outline-secondary" type="button" data-bs-toggle="collapse" data-bs-target="#${colId}" aria-expanded="false">
-                            ▼ ${_('United groups')} (${unitedLog.length})
+                        <button class="${btnClass}" type="button" data-bs-toggle="collapse" data-bs-target="#${colId}" aria-expanded="${ariaExpanded}">
+                            ${headerLabel}
                         </button>
-                        <div class="collapse" id="${colId}">
+                        <div class="collapse ${expandedAttr}" id="${colId}">
                             <div class="list-group mt-2">`;
                     unitedLog.forEach(item => { html += renderGroupItem(item); });
                     html += `</div></div></div>`;

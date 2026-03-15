@@ -340,7 +340,7 @@ class AutofillService:
                     continue
 
                 blocking_data = schedule[day][lesson_num]
-                blocking_teacher_str = blocking_data.get('teacher', '')
+                blocking_teacher_str = blocking_data.get('teacher') or ''
                 blocking_teachers = [t.strip() for t in blocking_teacher_str.split(';') if t.strip()]
                 blocking_subj = blocking_data.get('subject', '')
 

@@ -113,24 +113,34 @@ def autofill_schedule():
         g for g in all_groups
         if isinstance(g, dict) and g.get('is_united') and group_name in (g.get('sub_groups') or [])
     ]
+    united_issues = []  # collect incomplete placements from united parent groups
     if united_parents:
         for united_group in united_parents:
             united_name = united_group['name']
             # Check if united group already has a saved schedule
             existing_schedules = excel_service.get_group_schedules()
             united_schedule = existing_schedules.get(united_name, {})
-            # If no schedule exists yet, run autofill for the united group first
-            if not united_schedule or not any(united_schedule.values()):
-                try:
-                    u_success, u_schedule, _ = autofill_service.autofill_group(
-                        united_name, max_retries=max_retries, preserve_existing=False
-                    )
-                    if u_schedule and any(u_schedule.values()):
-                        excel_service.save_group_schedule(united_name, u_schedule)
-                        excel_service.rebuild_teacher_schedules()
-                        united_schedule = u_schedule
-                except Exception:
-                    pass
+            # Always run autofill for the united group so any incomplete placements
+            # are caught and reported — even if a partial schedule already exists.
+            # Use preserve_existing=True if a schedule exists (fill gaps only),
+            # preserve_existing=False if starting from scratch.
+            preserve_u = bool(united_schedule and any(united_schedule.values()))
+            try:
+                u_success, u_schedule, u_info = autofill_service.autofill_group(
+                    united_name, max_retries=max_retries, preserve_existing=preserve_u
+                )
+                if u_schedule and any(u_schedule.values()):
+                    excel_service.save_group_schedule(united_name, u_schedule)
+                    excel_service.rebuild_teacher_schedules()
+                    united_schedule = u_schedule
+                # Always capture incomplete placements (regardless of success flag)
+                if not u_success and isinstance(u_info, dict):
+                    for item in (u_info.get('incomplete') or []):
+                        united_issues.append(dict(item, united_group=united_name))
+                    for err in (u_info.get('errors') or []):
+                        united_issues.append({'united_group': united_name, 'error': err})
+            except Exception as e:
+                united_issues.append({'united_group': united_name, 'error': str(e)})
             # Force-insert united group's lessons into this sub-group's slots
             if united_schedule and any(united_schedule.values()):
                 excel_service.force_merge_into_group_schedule(group_name, united_schedule)
@@ -159,7 +169,8 @@ def autofill_schedule():
         'success': success,
         'schedule': schedule,
         'errors': info.get('errors', []) if isinstance(info, dict) else (info or []),
-        'incomplete': info.get('incomplete', []) if isinstance(info, dict) else []
+        'incomplete': info.get('incomplete', []) if isinstance(info, dict) else [],
+        'united_issues': united_issues
     })
 
 
