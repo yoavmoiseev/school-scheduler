@@ -1,9 +1,18 @@
 import os
+import sys
+
+def _get_base_dir():
+    """Return the writable base directory: exe folder when frozen, project folder otherwise."""
+    if getattr(sys, 'frozen', False):
+        return os.path.dirname(sys.executable)
+    return os.path.dirname(os.path.abspath(__file__))
+
+_BASE_DIR = _get_base_dir()
 
 class Config:
     SECRET_KEY = os.environ.get('SECRET_KEY') or 'dev-secret-key-change-in-production'
-    EXCEL_FILE = os.path.join(os.path.dirname(__file__), 'data', 'SchoolScheduler.xlsx')
-    UPLOAD_FOLDER = os.path.join(os.path.dirname(__file__), 'uploads')
+    EXCEL_FILE = os.path.join(_BASE_DIR, 'data', 'SchoolScheduler.xlsx')
+    UPLOAD_FOLDER = os.path.join(_BASE_DIR, 'uploads')
     MAX_CONTENT_LENGTH = 16 * 1024 * 1024  # 16MB max file size
     
     # From source_consts.py

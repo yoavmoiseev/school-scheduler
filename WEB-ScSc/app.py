@@ -3,6 +3,20 @@ from flask_cors import CORS
 from config import Config
 from datetime import timedelta
 import os
+import sys
+
+# When running as a PyInstaller frozen exe, change CWD to the folder containing
+# the exe so all relative paths (uploads/, data/) resolve correctly.
+if getattr(sys, 'frozen', False):
+    os.chdir(os.path.dirname(sys.executable))
+    # Auto-open browser after server starts
+    import threading
+    import webbrowser
+    def _open_browser():
+        import time
+        time.sleep(1.5)
+        webbrowser.open('http://127.0.0.1:5000')
+    threading.Thread(target=_open_browser, daemon=True).start()
 
 # Import services
 from services.excel_service import ExcelService
@@ -204,7 +218,7 @@ def get_translations(lang):
 @app.route('/api/download/<filename>')
 def download_file(filename):
     """Download a generated file"""
-    file_path = os.path.join('uploads', filename)
+    file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
     if os.path.exists(file_path):
         if os.path.getsize(file_path) == 0:
             return jsonify({'error': 'File is empty'}), 500
@@ -225,8 +239,10 @@ def internal_error(error):
 
 if __name__ == '__main__':
     # Ensure directories exist
-    os.makedirs('data', exist_ok=True)
-    os.makedirs('uploads', exist_ok=True)
+    os.makedirs(app.config.get('UPLOAD_FOLDER', 'uploads'), exist_ok=True)
+    data_dir = os.path.join(os.path.dirname(app.config['EXCEL_FILE']))
+    os.makedirs(data_dir, exist_ok=True)
     
-    # Run development server
-    app.run(debug=True, host='0.0.0.0', port=5000)
+    # Run server: disable debug/reloader when frozen as EXE (prevents double browser window)
+    _debug = not getattr(sys, 'frozen', False)
+    app.run(debug=_debug, host='0.0.0.0', port=5000)

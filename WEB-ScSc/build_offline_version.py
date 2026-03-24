@@ -14,6 +14,11 @@ import subprocess
 import shutil
 from pathlib import Path
 
+# Fix stdout encoding for Unicode checkmarks on Windows terminals
+if sys.stdout.encoding and sys.stdout.encoding.lower() not in ('utf-8', 'utf8'):
+    import io
+    sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8', errors='replace')
+
 def check_pyinstaller():
     """Check if PyInstaller is installed"""
     try:
@@ -119,6 +124,7 @@ def build_executable():
         subprocess.check_call([
             sys.executable, '-m', 'PyInstaller',
             '--clean',
+            '--noconfirm',
             'school_scheduler.spec'
         ])
         print("\n✓ Build completed successfully")
@@ -175,21 +181,31 @@ pause >nul
 
 def create_readme():
     """Create README for offline version"""
-    readme_content = """# School Scheduler - Offline Version
+    readme_content = """# School Scheduler - Offline Version 2.0
+
+## What's New in Version 2
+
+- **United Groups** — the main new feature: combine multiple class groups
+  into a single united group for shared lessons (e.g. combined Hebrew/English
+  classes). United groups appear in the schedule grid alongside regular groups.
+- Dozens of bug fixes and stability improvements
+- Improved import from Excel (Russian/Hebrew filenames, numeric group names)
+- Better AutoFill: preserves manual selections, improved conflict detection
+- Day View fixed for numeric group names
+- Multi-language UI improvements (Hebrew, Russian, English)
 
 ## How to Use
 
 1. **Start the Application**
-   - Double-click on `START_HERE.bat`
-   - The server will start and your browser will open automatically
+   - Double-click `SchoolScheduler.exe`
+   - The server starts and your browser opens automatically
 
 2. **Access the Application**
-   - The application will open at: http://127.0.0.1:5000
-   - If the browser doesn't open automatically, open it manually and go to the above address
+   - Browser opens at: http://127.0.0.1:5000
+   - If it doesn't open, go there manually
 
 3. **Stop the Application**
-   - Close the command window
-   - OR press Ctrl+C in the command window
+   - Close the console window, or press Ctrl+C inside it
 
 ## System Requirements
 
@@ -198,42 +214,17 @@ def create_readme():
 - No Python installation required
 - All dependencies included
 
-## Features
-
-- Complete offline operation
-- All data stored locally in Excel files
-- Multi-language support (English, Hebrew, Russian)
-- Automatic schedule generation
-- PDF export capability
-
-## Troubleshooting
-
-**Problem:** Application doesn't start
-- Make sure no other program is using port 5000
-- Try running as Administrator
-
-**Problem:** Browser doesn't open
-- Manually open your browser and go to: http://127.0.0.1:5000
-
-**Problem:** "Port already in use" error
-- Close any other instance of the application
-- Check if another program is using port 5000
-
 ## Data Location
 
-All your data is stored in the `data` folder:
-- `data/users/[username]/schedule_data.xlsx` - Your schedule data
-
-To backup your data, simply copy the entire folder to another location.
+All data is stored in the `data` folder next to the exe.
+To backup, copy that folder to another location.
 
 ## Support
 
-For issues or questions, visit:
 https://github.com/yoavmoiseev/school-scheduler
 
 ---
-Built with PyInstaller for offline use
-Compatible with Windows 7/8/10/11
+Version 2.0 | Built with PyInstaller | Windows 7/8/10/11
 """
     
     dist_path = Path('dist/SchoolScheduler')
@@ -241,10 +232,10 @@ Compatible with Windows 7/8/10/11
         readme_path = dist_path / 'README.txt'
         with open(readme_path, 'w', encoding='utf-8') as f:
             f.write(readme_content)
-        print(f"✓ Created README: {readme_path}")
+        print(f"\u2713 Created README: {readme_path}")
         return True
     else:
-        print(f"✗ Distribution folder not found: {dist_path}")
+        print(f"\u2717 Distribution folder not found: {dist_path}")
         return False
 
 def copy_data_folders():
@@ -303,16 +294,12 @@ def main():
     copy_data_folders()
     print()
     
-    # Step 5: Create launcher
-    create_launcher()
-    print()
-    
-    # Step 6: Create README
+    # Step 5: Create README
     create_readme()
     print()
     
     print("=" * 60)
-    print("✓ BUILD COMPLETE!")
+    print("✓ BUILD COMPLETE! Version 2.0")
     print("=" * 60)
     print()
     print("The offline version is ready in: dist\\SchoolScheduler")
@@ -320,7 +307,8 @@ def main():
     print("To distribute:")
     print("1. Zip the 'dist\\SchoolScheduler' folder")
     print("2. Users extract the zip")
-    print("3. Users double-click 'START_HERE.bat'")
+    print("3. Users double-click 'SchoolScheduler.exe'")
+    print("   (browser opens automatically)")
     print()
     print("No installation required!")
     print("=" * 60)
