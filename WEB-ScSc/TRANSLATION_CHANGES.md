@@ -2,6 +2,21 @@
 
 All translation edits performed by the assistant are recorded here.
 
+## 2026-03-15 — United group error reporting
+- Keys added to `services/i18n_he_new.json`:
+  - "Success": "הצלחה"
+  - "Failed": "נכשל"
+  - "United group issues:\n": "בעיות קבוצות מאוחדות:\n"
+- Keys added to `services/i18n_ru_new.json`:
+  - "United group issues:\n": "Проблемы объединённых групп:\n"
+  (Note: "Success" and "Failed" were already present in i18n_ru_new.json)
+
+Files modified:
+- `services/i18n_he_new.json` (added Success, Failed, United group issues)
+- `services/i18n_ru_new.json` (added United group issues)
+- `routes/schedules.py` (capture united group autofill errors, return united_issues)
+- `static/js/form_handlers.js` (show united_issues in autofill alert; fix rebuild errors field; Failed for united groups; anyFailures includes united; auto-expand collapsed united block on failure)
+
 ## 2026-01-05 — Initial bulk overrides added by assistant
 - Keys added to `services/i18n_he_new.json` and `services/i18n_ru_new.json`:
   - "Delete all data files (teachers/groups/subjects/schedules)?"
@@ -235,6 +250,20 @@ Behavior:
 - **AutoFill button**: Users can manually place some lessons, then click AutoFill to complete the schedule
 - **Rebuild All button**: Clears everything and rebuilds all group schedules from scratch
 - **No changes** to Rebuild All logic - it works exactly as before
+
+## 2026-03-01 — United Group feature + name validation translations
+- Added overrides for new United Group UI strings (HE + RU):
+  - "United Group" → HE: "קבוצה מאוחדת" / RU: "Объединённая группа"
+  - "Sub-groups in this united group:" → HE: "תת-קבוצות בקבוצה המאוחדת:" / RU: "Подгруппы в объединённой группе:"
+  - "Add All" → HE: "הוסף הכל" / RU: "Добавить все"
+  - "Name contains forbidden characters: / \\ : ? * [ ]" → HE: "השם מכיל תווים אסורים: / \\ : ? * [ ]" / RU: "Имя содержит запрещённые символы: / \\ : ? * [ ]"
+
+Files modified:
+- `services/i18n_he_new.json` (added overrides)
+- `services/i18n_ru_new.json` (added overrides)
+
+Notes:
+- After this change, restart the server and hard-refresh the browser (Ctrl+F5) to pick up client-side changes
 
 Notes:
 - After this change, restart the server to apply the changes

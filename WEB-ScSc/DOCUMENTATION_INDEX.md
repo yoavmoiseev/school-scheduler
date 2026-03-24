@@ -1,0 +1,254 @@
+# 📚 Индекс документации проекта
+
+Все инструкции и документация для работы с проектом School Scheduler.
+
+## 🎯 Быстрый старт
+
+### Что читать первым?
+
+1. **Нужно обновить код?** → [QUICK_REFERENCE.md](QUICK_REFERENCE.md) - копируй команды и работай
+2. **Забыл как что-то делать?** → [QUICK_REFERENCE.md](QUICK_REFERENCE.md) - все частые задачи
+3. **Нужно настроить с нуля?** → [deploy/ORACLE_CLOUD_SETUP.md](deploy/ORACLE_CLOUD_SETUP.md) - полная инструкция
+4. **Что-то сломалось?** → [QUICK_REFERENCE.md](QUICK_REFERENCE.md) раздел "Если что-то сломалось"
+
+---
+
+## 📄 Список документов
+
+### 🚀 Для ежедневной работы
+
+#### [QUICK_REFERENCE.md](QUICK_REFERENCE.md)
+**Кратка справка на каждый день**
+- Как обновить код на сервере
+- Как подключиться по SSH
+- Как перезапустить приложение
+- Как посмотреть логи
+- Быстрое решение проблем
+
+**Когда использовать:** Всегда! Это твоя основная шпаргалка.
+
+---
+
+### 🔧 Настройка и деплой
+
+#### [deploy/ORACLE_CLOUD_SETUP.md](deploy/ORACLE_CLOUD_SETUP.md)
+**Полная инструкция по настройке Oracle Cloud**
+
+**Разделы:**
+1. Регистрация Oracle Cloud
+2. Создание VM Instance
+3. Настройка сервера (firewall, ПО)
+4. Деплой приложения
+5. Настройка домена и SSL
+6. Защита от удаления VM (Idle Reclaim)
+7. **Обновление кода через Git**
+8. **Текущая настройка проекта** (все пароли, пути, IP)
+
+**Когда использовать:**
+- Создаёшь новый сервер
+- Переносишь на другой хостинг
+- Забыл какие настройки сделаны
+- Нужно восстановить после сбоя
+
+---
+
+### 🤖 Автоматизация
+
+#### [update_server.ps1](../update_server.ps1)
+**PowerShell скрипт для автоматического обновления сервера**
+
+**Что делает:**
+1. `git add .` - добавляет все изменения
+2. `git commit -m "..."` - создаёт коммит
+3. `git push origin main` - отправляет на GitHub
+4. Подключается к серверу по SSH
+5. Выполняет `git pull` на сервере
+6. Перезапускает Flask приложение
+7. Показывает статус
+
+**Как использовать:**
+```powershell
+cd C:\Users\User\Desktop\WEB-ScSc
+.\update_server.ps1
+```
+
+Скрипт спросит сообщение для коммита, остальное сделает сам.
+
+---
+
+### 📋 Информация о проекте
+
+#### [README.md](README.md)
+Описание проекта School Scheduler (расписание для школы)
+
+#### [PROJECT_SUMMARY.md](PROJECT_SUMMARY.md)
+Краткое описание структуры проекта
+
+#### [QUICKSTART.md](QUICKSTART.md)
+Быстрый старт для локальной разработки
+
+---
+
+### 🌍 Развёртывание (альтернативные способы)
+
+#### [deploy/deploy_pythonanywhere.md](deploy/deploy_pythonanywhere.md)
+Инструкция по деплою на PythonAnywhere (альтернатива Oracle Cloud)
+
+#### [deploy/DEPLOY_PYTHONANYWHERE_RU.md](deploy/DEPLOY_PYTHONANYWHERE_RU.md)
+То же самое на русском
+
+#### [deploy/DEPLOY_REPORT.md](deploy/DEPLOY_REPORT.md)
+Отчёт о деплое на PythonAnywhere
+
+---
+
+### 🔄 Перевод и локализация
+
+#### [TRANSLATION_CHANGES.md](TRANSLATION_CHANGES.md)
+Изменения в системе переводов
+
+#### [TRANSLATION_PROCESS.RMD](TRANSLATION_PROCESS.RMD)
+Процесс добавления переводов
+
+---
+
+## 🗂️ Структура проекта
+
+```
+WEB-ScSc/
+├── 📚 Документация
+│   ├── QUICK_REFERENCE.md              ⭐ Начни здесь!
+│   ├── DOCUMENTATION_INDEX.md          📄 Этот файл
+│   ├── README.md                       📖 Описание проекта
+│   ├── QUICKSTART.md                   🚀 Локальная разработка
+│   └── deploy/
+│       └── ORACLE_CLOUD_SETUP.md       🔧 Полная инструкция Oracle
+│
+├── 🤖 Автоматизация
+│   └── update_server.ps1               ⚙️ Скрипт обновления сервера
+│
+├── 🐍 Python приложение
+│   ├── app.py                          🌐 Главный Flask файл
+│   ├── config.py                       ⚙️ Конфигурация
+│   ├── requirements.txt                📦 Зависимости Python
+│   ├── routes/                         🛣️ Маршруты
+│   ├── services/                       🔧 Бизнес-логика
+│   ├── models/                         💾 Модели данных
+│   ├── templates/                      📄 HTML шаблоны
+│   └── static/                         🎨 CSS, JS, изображения
+│
+└── 📊 Данные
+    ├── data/                           💾 База данных SQLite
+    └── uploads/                        📤 Загруженные файлы
+```
+
+---
+
+## 🔗 Важные ссылки
+
+### Проект
+- **Сайт:** https://sc.yamsoft.org
+- **GitHub:** https://github.com/yoavmoiseev/school-scheduler
+
+### Управление
+- **Oracle Cloud Console:** https://cloud.oracle.com/
+- **Cloudflare Dashboard:** https://dash.cloudflare.com/
+
+### Доступ к серверу
+- **IP:** 151.145.84.100
+- **SSH:** `ssh -i ~\.ssh\oracle_cloud_key ubuntu@151.145.84.100`
+- **SSH ключ:** `C:\Users\User\.ssh\oracle_cloud_key`
+
+---
+
+## 💡 Советы
+
+### Обновление кода - правильный порядок
+
+1. **Разработка локально** (на твоём компьютере)
+   ```powershell
+   # Делай изменения в коде
+   # Тестируй локально
+   ```
+
+2. **Отправка на сервер**
+   ```powershell
+   # Используй скрипт
+   .\update_server.ps1
+   
+   # ИЛИ вручную (рекомендуется жёсткая синхронизация на сервере)
+   git add .
+   git commit -m "Описание изменений"
+   git push origin main
+   ssh -i ~\.ssh\oracle_cloud_key ubuntu@151.145.84.100 'cd ~/apps/WEB-ScSc && git fetch origin && git reset --hard origin/main && sudo chown -R ubuntu:ubuntu /home/ubuntu/apps/WEB-ScSc && sudo systemctl restart flask-app'
+   ```
+
+   **Примечание:** Убедитесь, что `flask-app.service` использует `WorkingDirectory=/home/ubuntu/apps/WEB-ScSc/WEB-ScSc`,
+   иначе systemd может запускать другой (неотслеживаемый) набор файлов.
+
+3. **Проверка**
+   - Открой https://sc.yamsoft.org
+   - Проверь что всё работает
+   - Если нужно - посмотри логи:
+     ```bash
+     ssh -i ~\.ssh\oracle_cloud_key ubuntu@151.145.84.100 'sudo journalctl -u flask-app -n 50 --no-pager'
+     ```
+
+### Backup и восстановление
+
+**Где backup:**
+- На сервере: `/home/ubuntu/apps/WEB-ScSc.backup/`
+
+**Как восстановить данные:**
+```bash
+# База данных
+ssh -i ~\.ssh\oracle_cloud_key ubuntu@151.145.84.100 'cp /home/ubuntu/apps/WEB-ScSc.backup/data/users.db /home/ubuntu/apps/WEB-ScSc/data/'
+
+# Загруженные файлы
+ssh -i ~\.ssh\oracle_cloud_key ubuntu@151.145.84.100 'cp -r /home/ubuntu/apps/WEB-ScSc.backup/uploads/* /home/ubuntu/apps/WEB-ScSc/uploads/'
+```
+
+### Безопасность
+
+- ✅ SSH ключ надёжно хранится: `C:\Users\User\.ssh\oracle_cloud_key`
+- ✅ SSL сертификат автоматически обновляется (Let's Encrypt)
+- ✅ Keep-alive защищает от удаления VM
+- ⚠️ **НЕ делись SSH ключом!**
+- ⚠️ **НЕ коммить sensitive данные** (пароли, токены) в Git
+
+---
+
+## 📞 Поддержка
+
+**Если застрял:**
+
+1. **Проверь [QUICK_REFERENCE.md](QUICK_REFERENCE.md)** - там 90% решений
+2. **Посмотри логи** - они скажут что сломалось
+3. **Перезапусти сервис** - часто помогает
+4. **Проверь последний коммит** - может там ошибка?
+
+**Полезные команды для диагностики:**
+
+```bash
+# Всё ли работает?
+ssh -i ~\.ssh\oracle_cloud_key ubuntu@151.145.84.100 'sudo systemctl status flask-app nginx'
+
+# Что в логах?
+ssh -i ~\.ssh\oracle_cloud_key ubuntu@151.145.84.100 'sudo journalctl -u flask-app -n 100 --no-pager'
+
+# Какая версия кода на сервере?
+ssh -i ~\.ssh\oracle_cloud_key ubuntu@151.145.84.100 'cd ~/apps/WEB-ScSc && git log -1 --oneline'
+```
+
+---
+
+**Последнее обновление:** 25 января 2026
+
+### Ветки и даты релизов
+
+- `origin/main` — 2026-01-07T14:51:42+02:00
+- `origin/work/local-changes-20260108` — 2026-01-08T18:30:07+02:00
+- `origin/ci/add-deploy-workflow` — 2026-01-22T13:21:00+02:00
+- `origin/offline` — 2026-01-25T23:25:52+02:00  — Offline-версия (не для деплоя)
+
+**Проект работает на:** Oracle Cloud Always Free ☁️ (бесплатно навсегда!)

@@ -1,7 +1,17 @@
 import os
+import logging
 import openpyxl
 from openpyxl import Workbook, load_workbook
 from models import Teacher, Group, Subject
+
+# ─── Detailed Excel-service debug logger ────────────────────────────────────────
+_xlog = logging.getLogger('excel_debug')
+if not _xlog.handlers:
+    _xh = logging.FileHandler('import_debug.log', encoding='utf-8')
+    _xh.setFormatter(logging.Formatter('%(asctime)s  %(levelname)s  %(message)s'))
+    _xlog.addHandler(_xh)
+    _xlog.setLevel(logging.DEBUG)
+# ────────────────────────────────────────────────────────────────────────────────
 
 
 class ExcelService:
@@ -121,15 +131,19 @@ class ExcelService:
         
         # Sheet 6: Groups
         ws_groups = self.wb.create_sheet('Groups')
-        ws_groups.append(['Name', 'Comments'])
-        
+        ws_groups.append(['Name', 'Comments', 'IsUnited', 'SubGroups', 'Room'])
+
+        # Sheet 6b: Rooms
+        ws_rooms = self.wb.create_sheet('Rooms')
+        ws_rooms.append(['Name', 'Description'])
+
         # Sheet 7: Subjects
         ws_subjects = self.wb.create_sheet('Subjects')
         ws_subjects.append(['Name', 'Group', 'Hours Per Week', 'Teacher'])
         
         # Sheet 8: Group Schedules
         ws_group_sched = self.wb.create_sheet('Group Schedules')
-        ws_group_sched.append(['Group', 'Day', 'Lesson', 'Subject', 'Teacher', 'Color BG', 'Color FG'])
+        ws_group_sched.append(['Group', 'Day', 'Lesson', 'Subject', 'Teacher', 'Color BG', 'Color FG', 'Room'])
         
         # Sheet 9: Teacher Schedules
         ws_teacher_sched = self.wb.create_sheet('Teacher Schedules')
@@ -243,9 +257,13 @@ class ExcelService:
     def get_teachers(self):
         """Read Teachers sheet with PRIORITY logic"""
         if 'Teachers' not in self.wb.sheetnames:
+            _xlog.warning('get_teachers: Teachers sheet NOT in workbook!')
             return []
         
         sheet = self.wb['Teachers']
+        _xlog.debug(f'get_teachers: sheet max_row={sheet.max_row} max_col={sheet.max_column}')
+        header = [cell.value for cell in next(sheet.iter_rows(min_row=1, max_row=1))]
+        _xlog.debug(f'get_teachers: HEADER={header}')
         teachers = {}
         time_slots = self.get_time_slots()
         
@@ -259,6 +277,7 @@ class ExcelService:
             group = row[3] if len(row) > 3 else None
             weekly_hours = row[4] if len(row) > 4 else None
             availability = row[5] if len(row) > 5 else None
+            _xlog.debug(f'  get_teachers ROW: name={name!r} subject={subject!r} hours={hours!r} group={group!r} weekly_hours={str(weekly_hours)[:50]!r}')
             
             if name not in teachers:
                 teachers[name] = {
@@ -288,7 +307,9 @@ class ExcelService:
             elif availability:
                 teachers[name]['available_slots'] = self._parse_availability(availability)
         
-        return list(teachers.values())
+        result_list = list(teachers.values())
+        _xlog.debug(f'get_teachers: returning {len(result_list)} teachers: {[t["name"] for t in result_list]}')
+        return result_list
     
     def _parse_weekly_hours(self, weekly_hours_str):
         """
@@ -398,15 +419,19 @@ class ExcelService:
     
     def save_teachers(self, teachers):
         """Save teachers to Excel"""
+        _xlog.info(f'save_teachers: called with {len(teachers)} teachers: {[t["name"] for t in teachers]}')
         if 'Teachers' not in self.wb.sheetnames:
+            _xlog.info('save_teachers: Teachers sheet does NOT exist — creating')
             ws = self.wb.create_sheet('Teachers')
             ws.append(['Name', 'Subject', 'Hours', 'Group', 'Teachers Weekly Hours', 'Availability'])
         else:
             ws = self.wb['Teachers']
+            _xlog.info(f'save_teachers: Teachers sheet exists — clearing rows 2..{ws.max_row}')
             # Clear existing data
             ws.delete_rows(2, ws.max_row)
         
         # Write teachers
+        rows_written = 0
         for teacher in teachers:
             name = teacher['name']
             subjects = teacher.get('subjects', [])
@@ -430,10 +455,15 @@ class ExcelService:
                         weekly_hours,
                         availability
                     ])
+                    rows_written += 1
             else:
                 ws.append([name, '', 0, '', weekly_hours, availability])
+                rows_written += 1
         
+        _xlog.info(f'save_teachers: wrote {rows_written} rows to Teachers sheet')
+        _xlog.info(f'save_teachers: calling self.save() to disk — file={self.file_path!r}')
         self.save()
+        _xlog.info(f'save_teachers: self.save() done')
     
     def _format_weekly_hours(self, check_in, check_out):
         """Format check_in/check_out to string"""
@@ -465,33 +495,107 @@ class ExcelService:
         """Read Groups sheet"""
         if 'Groups' not in self.wb.sheetnames:
             return []
-        
+
         sheet = self.wb['Groups']
         groups = []
         for row in sheet.iter_rows(min_row=2, values_only=True):
             if row[0]:
-                name = row[0]
+                name = str(row[0]).strip()
                 subjects = row[1].split(';') if len(row) > 1 and row[1] else []
+                is_united = bool(row[2]) if len(row) > 2 and row[2] else False
+                sub_groups_raw = row[3] if len(row) > 3 and row[3] else ''
+                sub_groups = [s.strip() for s in sub_groups_raw.split(';') if s.strip()] if sub_groups_raw else []
+                room = str(row[4]).strip() if len(row) > 4 and row[4] else ''
                 groups.append({
                     'name': name,
-                    'subjects': [s.strip() for s in subjects if s.strip()]
+                    'subjects': [s.strip() for s in subjects if s.strip()],
+                    'is_united': is_united,
+                    'sub_groups': sub_groups,
+                    'room': room,
                 })
         return groups
-    
+
     def save_groups(self, groups):
         """Save groups to Excel"""
         if 'Groups' not in self.wb.sheetnames:
             ws = self.wb.create_sheet('Groups')
-            ws.append(['Name', 'Comments'])
+            ws.append(['Name', 'Comments', 'IsUnited', 'SubGroups', 'Room'])
         else:
             ws = self.wb['Groups']
             ws.delete_rows(2, ws.max_row)
-        
+
         for group in groups:
             subjects_str = '; '.join(group.get('subjects', []))
-            ws.append([group['name'], subjects_str])
-        
+            is_united = 1 if group.get('is_united') else 0
+            sub_groups_str = '; '.join(group.get('sub_groups', []))
+            room = group.get('room', '') or ''
+            ws.append([group['name'], subjects_str, is_united, sub_groups_str, room])
+
         self.save()
+
+    def get_rooms(self):
+        """Read Rooms sheet"""
+        if 'Rooms' not in self.wb.sheetnames:
+            return []
+        sheet = self.wb['Rooms']
+        rooms = []
+        for row in sheet.iter_rows(min_row=2, values_only=True):
+            if row[0]:
+                rooms.append({
+                    'name': str(row[0]).strip(),
+                    'description': str(row[1]).strip() if len(row) > 1 and row[1] else '',
+                })
+        return rooms
+
+    def save_rooms(self, rooms):
+        """Save rooms to Excel"""
+        if 'Rooms' not in self.wb.sheetnames:
+            ws = self.wb.create_sheet('Rooms')
+            ws.append(['Name', 'Description'])
+        else:
+            ws = self.wb['Rooms']
+            ws.delete_rows(2, ws.max_row)
+        for room in rooms:
+            ws.append([room.get('name', ''), room.get('description', '')])
+        self.save()
+
+    def merge_into_group_schedule(self, group_name, lessons):
+        """Merge a set of lessons into an existing group's schedule without overwriting.
+        Used to propagate united-group lessons into each sub-group's schedule.
+        Args:
+            group_name: name of the sub-group to update
+            lessons: dict {day: {lesson_num: lesson_data}} from the united group
+        """
+        schedules = self.get_group_schedules()
+        existing = schedules.get(group_name, {})
+        for day, day_lessons in lessons.items():
+            if day not in existing:
+                existing[day] = {}
+            for lesson_num, lesson_data in day_lessons.items():
+                # Only fill if slot is empty (do not overwrite manual entries)
+                if lesson_num not in existing[day]:
+                    existing[day][lesson_num] = lesson_data
+        self.save_group_schedule(group_name, existing)
+
+    def force_merge_into_group_schedule(self, group_name, lessons):
+        """Force-insert a set of lessons into a sub-group's schedule, overwriting
+        any existing content in those slots.  Used after a united group is built
+        so that its slots are locked into each sub-group BEFORE that sub-group's
+        own autofill runs (with preserve_existing=True).  This guarantees the
+        9/N united lessons always appear in every sub-group, identical slots.
+        Args:
+            group_name: name of the sub-group to update
+            lessons: dict {day: {lesson_num: lesson_data}} from the united group
+        """
+        schedules = self.get_group_schedules()
+        existing = schedules.get(group_name, {})
+        for day, day_lessons in lessons.items():
+            if day not in existing:
+                existing[day] = {}
+            for lesson_num, lesson_data in day_lessons.items():
+                # Overwrite regardless – united lessons take priority
+                existing[day][lesson_num] = lesson_data
+        self.save_group_schedule(group_name, existing)
     
     def get_subjects(self):
         """Read Subjects sheet"""
@@ -504,7 +608,7 @@ class ExcelService:
             if row[0]:
                 subjects.append({
                     'name': row[0],
-                    'group': row[1] if len(row) > 1 else '',
+                    'group': str(row[1]).strip() if row[1] is not None else '',
                     'hours_per_week': int(row[2]) if len(row) > 2 and row[2] else 0,
                     'teacher': row[3] if len(row) > 3 else ''
                 })
@@ -590,6 +694,7 @@ class ExcelService:
             teacher = row[4] if len(row) > 4 else ''
             color_bg = row[5] if len(row) > 5 else '#FFFFFF'
             color_fg = row[6] if len(row) > 6 else '#000000'
+            room = str(row[7]).strip() if len(row) > 7 and row[7] else ''
             
             if group not in schedules:
                 schedules[group] = {}
@@ -601,7 +706,8 @@ class ExcelService:
                 'teacher': teacher,
                 'group': group,
                 'color_bg': color_bg,
-                'color_fg': color_fg
+                'color_fg': color_fg,
+                'room': room,
             }
         
         return schedules
@@ -610,7 +716,7 @@ class ExcelService:
         """Save a group's schedule"""
         if 'Group Schedules' not in self.wb.sheetnames:
             ws = self.wb.create_sheet('Group Schedules')
-            ws.append(['Group', 'Day', 'Lesson', 'Subject', 'Teacher', 'Color BG', 'Color FG'])
+            ws.append(['Group', 'Day', 'Lesson', 'Subject', 'Teacher', 'Color BG', 'Color FG', 'Room'])
         else:
             ws = self.wb['Group Schedules']
         
@@ -633,7 +739,8 @@ class ExcelService:
                     lesson_data.get('subject', ''),
                     lesson_data.get('teacher', ''),
                     lesson_data.get('color_bg', '#FFFFFF'),
-                    lesson_data.get('color_fg', '#000000')
+                    lesson_data.get('color_fg', '#000000'),
+                    lesson_data.get('room', ''),
                 ])
         
         self.save()

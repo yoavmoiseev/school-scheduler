@@ -84,7 +84,7 @@ def get_groups():
     return jsonify(out)
 
 
-@groups_bp.route('/api/groups/<name>', methods=['GET'])
+@groups_bp.route('/api/groups/<path:name>', methods=['GET'])
 def get_group(name):
     """Get group details"""
     groups = excel_service.get_groups()
@@ -117,7 +117,7 @@ def create_group():
     return jsonify({'success': True, 'group': data}), 201
 
 
-@groups_bp.route('/api/groups/<name>', methods=['PUT'])
+@groups_bp.route('/api/groups/<path:name>', methods=['PUT'])
 def update_group(name):
     """Update group"""
     data = request.json
@@ -173,7 +173,7 @@ def update_group(name):
     return jsonify({'success': True, 'group': data})
 
 
-@groups_bp.route('/api/groups/<name>', methods=['DELETE'])
+@groups_bp.route('/api/groups/<path:name>', methods=['DELETE'])
 def delete_group(name):
     """Delete group"""
     groups = excel_service.get_groups()
@@ -189,7 +189,7 @@ def delete_group(name):
     return jsonify({'success': True})
 
 
-@groups_bp.route('/api/groups/<name>/move', methods=['POST'])
+@groups_bp.route('/api/groups/<path:name>/move', methods=['POST'])
 def move_group(name):
     """Move group up or down in the list"""
     data = request.json

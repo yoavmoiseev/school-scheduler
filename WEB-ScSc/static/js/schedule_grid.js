@@ -63,8 +63,21 @@ const ScheduleGrid = {
                     const content = $('<div>').addClass('cell-content');
                     content.append($('<div>').addClass('subject').text(lessonData.subject));
                     content.append($('<div>').addClass('teacher').text(lessonData.teacher));
-                    if (lessonData.group) {
+                    if (lessonData.group && !options.hideGroup) {
                         content.append($('<div>').addClass('group').text(lessonData.group));
+                    }
+                    if (lessonData.room) {
+                        const roomLabel = $('<div>').addClass('room small').css('opacity','0.85');
+                        const prefix = $('<span>').addClass('room-header').css({'font-weight':'600','font-size':'0.75em','opacity':'0.7'}).text(_('Room') + ': ');
+                        const roomName = $('<span>').text(lessonData.room);
+                        roomLabel.append(prefix).append(roomName);
+                        content.append(roomLabel);
+                    } else if (options.groupRoom) {
+                        const roomLabel = $('<div>').addClass('room small').css('opacity','0.85');
+                        const prefix = $('<span>').addClass('room-header').css({'font-weight':'600','font-size':'0.75em','opacity':'0.7'}).text(_('Room') + ': ');
+                        const roomName = $('<span>').text(options.groupRoom);
+                        roomLabel.append(prefix).append(roomName);
+                        content.append(roomLabel);
                     }
                     cell.append(content);
                 }

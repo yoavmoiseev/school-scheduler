@@ -41,6 +41,7 @@
                                 <div class="row">
                                     <div class="col-12">
                                         <label for="availableSubjects" class="form-label small">{{ _('Available Subjects') }}</label>
+                                        <input id="availableSubjectsSearch" type="text" class="form-control form-control-sm mb-1" placeholder="{{ _('Search...') }}" oninput="filterAvailableSubjects(this.value)">
                                         <select id="availableSubjects" class="form-select" size="8">
                                             <!-- Populated by JS -->
                                         </select>
@@ -147,6 +148,35 @@
     </div>
 </div>
 
+<!-- Room Modal -->
+<div class="modal fade" id="roomModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="roomModalTitle">{{ _('Add Room') }}</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="roomForm">
+                    <input type="hidden" name="original_name">
+                    <div class="mb-3">
+                        <label for="roomForm-name" class="form-label">{{ _(10) }}</label>
+                        <input id="roomForm-name" type="text" class="form-control" name="name" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="roomForm-description" class="form-label">{{ _('Description') }}</label>
+                        <textarea id="roomForm-description" class="form-control" name="description" rows="2"></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ _(25) }}</button>
+                <button type="button" class="btn btn-primary" onclick="saveRoom()">{{ _(26) }}</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <!-- Edit Group Modal -->
 <div class="modal fade" id="groupModal" tabindex="-1">
     <div class="modal-dialog">
@@ -165,6 +195,32 @@
                     <div class="mb-3">
                         <label for="groupForm-comments" class="form-label">{{ _('Comments') }}</label>
                         <textarea id="groupForm-comments" class="form-control" name="comments" rows="2"></textarea>
+                    </div>
+                    <div class="mb-3" id="groupForm-roomPanel">
+                        <label for="groupForm-room" class="form-label">{{ _('Room') }}</label>
+                        <select id="groupForm-room" class="form-select" name="room">
+                            <option value="">— {{ _('No room') }} —</option>
+                            <!-- Populated by JS -->
+                        </select>
+                        <div id="groupForm-unitedRooms" class="form-text text-muted" style="display:none;"></div>
+                    </div>
+                    <!-- United Group feature -->
+                    <div class="mb-3 form-check">
+                        <input class="form-check-input" type="checkbox" id="groupForm-isUnited" name="is_united" onchange="toggleUnitedGroupPanel()">
+                        <label class="form-check-label fw-semibold" for="groupForm-isUnited">{{ _('United Group') }}</label>
+                    </div>
+                    <div id="unitedGroupPanel" style="display:none;">
+                        <div class="mb-2 d-flex gap-2 align-items-center">
+                            <select id="unitedGroupSelector" class="form-select form-select-sm" style="max-width:200px;">
+                                <!-- Populated by JS -->
+                            </select>
+                            <button type="button" class="btn btn-sm btn-outline-primary" onclick="addSubGroupFromSelector()">{{ _('Add') }}</button>
+                            <button type="button" class="btn btn-sm btn-outline-secondary" onclick="addAllSubGroups()">{{ _('Add All') }}</button>
+                        </div>
+                        <div class="mb-1 small text-muted">{{ _('Sub-groups in this united group:') }}</div>
+                        <ul id="unitedSubGroupsList" class="list-group list-group-flush mb-2" style="max-height:160px;overflow-y:auto;border:1px solid #dee2e6;border-radius:4px;">
+                            <!-- Populated by JS -->
+                        </ul>
                     </div>
                 </form>
             </div>
@@ -232,6 +288,13 @@
                     <div class="mb-3">
                         <label for="lessonForm-teacher" class="form-label">{{ _(3) }}</label>
                         <select id="lessonForm-teacher" class="form-select" name="teacher" required>
+                            <!-- Populated by JS -->
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="lessonForm-room" class="form-label">{{ _('Room') }}</label>
+                        <select id="lessonForm-room" class="form-select" name="room">
+                            <option value="">— {{ _('No room') }} —</option>
                             <!-- Populated by JS -->
                         </select>
                     </div>

@@ -18,7 +18,7 @@ def get_subjects():
     return jsonify(subjects)
 
 
-@subjects_bp.route('/api/subjects/<name>', methods=['GET'])
+@subjects_bp.route('/api/subjects/<path:name>', methods=['GET'])
 def get_subject(name):
     """Get subject details"""
     subjects = excel_service.get_subjects()
@@ -49,7 +49,7 @@ def create_subject():
     return jsonify({'success': True, 'subject': data}), 201
 
 
-@subjects_bp.route('/api/subjects/<name>', methods=['PUT'])
+@subjects_bp.route('/api/subjects/<path:name>', methods=['PUT'])
 def update_subject(name):
     """Update subject"""
     data = request.json
@@ -72,7 +72,7 @@ def update_subject(name):
     return jsonify({'success': True, 'subject': data})
 
 
-@subjects_bp.route('/api/subjects/<name>', methods=['DELETE'])
+@subjects_bp.route('/api/subjects/<path:name>', methods=['DELETE'])
 def delete_subject(name):
     """Delete subject"""
     subjects = excel_service.get_subjects()
@@ -93,7 +93,7 @@ def delete_subject(name):
     return jsonify({'success': True})
 
 
-@subjects_bp.route('/api/subjects/<name>/move', methods=['POST'])
+@subjects_bp.route('/api/subjects/<path:name>/move', methods=['POST'])
 def move_subject(name):
     """Move subject up or down in the list"""
     data = request.json

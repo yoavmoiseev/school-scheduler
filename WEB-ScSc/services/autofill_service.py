@@ -9,7 +9,7 @@ class AutofillService:
         self.checker = conflict_checker
         self.color_service = color_service
     
-    def autofill_group(self, group_name, max_retries=100, preserve_existing=True):
+    def autofill_group(self, group_name, max_retries=100, preserve_existing=True, subject_order=None):
         """
         Autofill schedule for a group.
         Args:
@@ -55,6 +55,50 @@ class AutofillService:
         incomplete = []
         # Filter subjects for this group
         group_subjects = [s for s in subjects if s['group'] == group_name]
+
+        # Sort subjects by priority order.
+        # If a subject_order list is provided (from Rebuild All priorities UI), respect it.
+        # Otherwise auto-sort: multi-teacher subjects first (most constrained), then by hours desc.
+        if subject_order:
+            _order_index = {name: i for i, name in enumerate(subject_order)}
+            group_subjects.sort(key=lambda s: _order_index.get(s.get('name', ''), len(subject_order)))
+        else:
+            # Build a quick teacher-count map for this group's subjects
+            _subj_teacher_count = {}
+            for s in group_subjects:
+                sn = s.get('name', '')
+                cnt = sum(
+                    1 for t in teachers
+                    for ts in t.get('subjects', [])
+                    if ts.get('name') == sn and (ts.get('group', '') == group_name or ts.get('group', '') == '')
+                )
+                _subj_teacher_count[sn] = cnt
+
+            # MRV-эвристика: считаем минимальное число доступных слотов у преподавателя предмета.
+            # Предмет с наиболее ограниченным преподавателем ставится в расписание первым.
+            def _count_slots(teacher):
+                avail = teacher.get('available_slots', {})
+                if not avail:
+                    return 999  # без ограничений = максимально гибкий
+                return sum(len(v) for v in avail.values() if v)
+
+            _subj_min_slots = {}
+            for s in group_subjects:
+                sn = s.get('name', '')
+                t_list = [
+                    t for t in teachers
+                    for ts in t.get('subjects', [])
+                    if ts.get('name') == sn and (ts.get('group', '') == group_name or ts.get('group', '') == '')
+                ]
+                _subj_min_slots[sn] = min((_count_slots(t) for t in t_list), default=999)
+
+            # Сортировка: сначала самый ограниченный по слотам,
+            # затем предметы с несколькими преподавателями, затем по часам
+            group_subjects.sort(key=lambda s: (
+                _subj_min_slots.get(s.get('name', ''), 999),
+                0 if _subj_teacher_count.get(s.get('name', ''), 0) > 1 else 1,
+                -int(s.get('hours_per_week', 0) or 0)
+            ))
 
         # Initialize schedule
         schedule = {}
@@ -243,8 +287,22 @@ class AutofillService:
 
                 if not placed_this_round:
                     retries += 1
+                    random.shuffle(possible_slots)  # вариируем порядок при следующей попытке
                 else:
                     retries = 0
+
+            # Swap-based backtracking: если greedy-цикл не разместил все уроки,
+            # пробуем освободить занятые слоты, переставив блокирующий урок в другое место.
+            while placed < required:
+                swapped = self._try_swap_placement(
+                    schedule, busy_map, teacher_name_map, weekdays, lessons,
+                    subj_name, assigned_teachers, group_name,
+                    max_sequence, max_per_day
+                )
+                if not swapped:
+                    break
+                placed += 1
+                _log_detail(f"swap_placed | subject={subj_name} | placed={placed}/{required}")
 
             if placed < required:
                 errors.append("Could not place all hours for {SUBJ} (placed {NUM_PLACED}/{NUM_REQUIRED})".replace('{SUBJ}', subj_name).replace('{NUM_PLACED}', str(placed)).replace('{NUM_REQUIRED}', str(required)))
@@ -268,6 +326,125 @@ class AutofillService:
             'incomplete': incomplete
         }
     
+    def _try_swap_placement(self, schedule, busy_map, teacher_name_map, weekdays, lessons,
+                             subj_name, assigned_teachers, group_name,
+                             max_sequence, max_per_day):
+        """
+        Пытается разместить один урок subj_name, переставив блокирующий урок на другой слот.
+        Возвращает True если перестановка выполнена (schedule и busy_map изменены in-place).
+        """
+        for day in weekdays:
+            for lesson_num in lessons:
+                # Нас интересуют только занятые слоты (пустые уже проверены greedy-циклом)
+                if lesson_num not in schedule.get(day, {}):
+                    continue
+
+                blocking_data = schedule[day][lesson_num]
+                blocking_teacher_str = blocking_data.get('teacher') or ''
+                blocking_teachers = [t.strip() for t in blocking_teacher_str.split(';') if t.strip()]
+                blocking_subj = blocking_data.get('subject', '')
+
+                # Не трогаем уроки того же предмета
+                if blocking_subj == subj_name:
+                    continue
+
+                # Все наши учителя должны быть доступны в этом слоте
+                teachers_ok = True
+                for tn in assigned_teachers:
+                    t_obj = teacher_name_map.get(tn)
+                    if not t_obj or not self._is_teacher_available(t_obj, day, lesson_num):
+                        teachers_ok = False
+                        break
+                if not teachers_ok:
+                    continue
+
+                # Наши учителя не должны быть заняты в этом слоте другими группами
+                # (блокирующий урок здесь — не считается: мы его уберём)
+                teachers_free = True
+                for tn in assigned_teachers:
+                    if tn in blocking_teachers:
+                        # Тот же преподаватель — swap невозможен
+                        teachers_free = False
+                        break
+                    if self.checker.is_busy(busy_map, tn, day, lesson_num):
+                        teachers_free = False
+                        break
+                if not teachers_free:
+                    continue
+
+                # Проверяем ограничения для нашего предмета в этом слоте
+                # (временно убираем блокирующий урок для чистой проверки)
+                temp_removed = schedule[day].pop(lesson_num)
+                constraints_ok = self._check_constraints(
+                    schedule, day, lesson_num, subj_name, max_sequence, max_per_day
+                )
+                schedule[day][lesson_num] = temp_removed
+                if not constraints_ok:
+                    continue
+
+                # Ищем альтернативный пустой слот для блокирующего урока
+                for alt_day in weekdays:
+                    for alt_lesson in lessons:
+                        if alt_lesson in schedule.get(alt_day, {}):
+                            continue
+                        if alt_day == day and alt_lesson == lesson_num:
+                            continue
+
+                        # Учителя блокирующего урока должны быть доступны
+                        bt_avail = True
+                        for btn in blocking_teachers:
+                            bt_obj = teacher_name_map.get(btn)
+                            if not bt_obj or not self._is_teacher_available(bt_obj, alt_day, alt_lesson):
+                                bt_avail = False
+                                break
+                        if not bt_avail:
+                            continue
+
+                        # Учителя блокирующего урока не должны быть заняты
+                        bt_free = True
+                        for btn in blocking_teachers:
+                            if self.checker.is_busy(busy_map, btn, alt_day, alt_lesson):
+                                bt_free = False
+                                break
+                        if not bt_free:
+                            continue
+
+                        # Ограничения для блокирующего предмета в alt-слоте
+                        temp_blocking = schedule[day].pop(lesson_num)
+                        alt_ok = self._check_constraints(
+                            schedule, alt_day, alt_lesson, blocking_subj, max_sequence, max_per_day
+                        )
+                        if not alt_ok:
+                            schedule[day][lesson_num] = temp_blocking
+                            continue
+
+                        # ✅ SWAP возможен — выполняем
+                        # 1. Снимаем занятость учителей блокирующего урока в исходном слоте
+                        for btn in blocking_teachers:
+                            if btn in busy_map and day in busy_map[btn]:
+                                busy_map[btn][day].pop(lesson_num, None)
+
+                        # 2. Перемещаем блокирующий урок в alt-слот
+                        schedule[alt_day][alt_lesson] = temp_blocking
+                        for btn in blocking_teachers:
+                            self.checker.mark_busy(busy_map, btn, alt_day, alt_lesson)
+
+                        # 3. Размещаем наш предмет в освобождённый слот
+                        color_bg, color_fg = self.color_service.get_color(subj_name)
+                        schedule[day][lesson_num] = {
+                            'subject': subj_name,
+                            'teacher': ';'.join(assigned_teachers),
+                            'group': group_name,
+                            'color_bg': color_bg,
+                            'color_fg': color_fg
+                        }
+                        for tn in assigned_teachers:
+                            self.checker.mark_busy(busy_map, tn, day, lesson_num)
+
+                        return True
+
+        return False
+
     def _find_teacher(self, subject, teachers):
         """Find a teacher who teaches this subject for this group"""
         subject_name = subject['name']

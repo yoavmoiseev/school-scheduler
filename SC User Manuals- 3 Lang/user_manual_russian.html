@@ -1,0 +1,1097 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Школьная автоматическая система расписания - Руководство пользователя</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 11pt;
+            line-height: 1.6;
+            color: #333;
+            background: #fff;
+        }
+
+        .cover {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px;
+            page-break-after: always;
+        }
+
+        .cover-icon {
+            font-size: 80px;
+            margin-bottom: 20px;
+        }
+
+        .cover-title {
+            font-size: 36pt;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .cover-subtitle {
+            font-size: 18pt;
+            margin-bottom: 30px;
+            opacity: 0.95;
+        }
+
+        .cover-description {
+            font-size: 12pt;
+            max-width: 600px;
+            margin: 0 auto 40px;
+            opacity: 0.9;
+        }
+
+        .cover-info {
+            font-size: 11pt;
+            margin: 10px 0;
+        }
+
+        .cover-creator {
+            margin-top: 40px;
+            font-size: 12pt;
+            opacity: 0.95;
+        }
+
+        .toc {
+            padding: 40px;
+            page-break-after: always;
+        }
+
+        .toc h1 {
+            font-size: 28pt;
+            color: #667eea;
+            border-bottom: 3px solid #764ba2;
+            padding-bottom: 10px;
+            margin-bottom: 30px;
+        }
+
+        .toc ul {
+            list-style: none;
+        }
+
+        .toc li {
+            margin: 15px 0;
+            display: flex;
+            align-items: baseline;
+        }
+
+        .toc-number {
+            font-weight: bold;
+            color: #667eea;
+            min-width: 40px;
+        }
+
+        .toc-title {
+            flex: 1;
+        }
+
+        .toc-dots {
+            flex: 1;
+            border-bottom: 2px dotted #ccc;
+            margin: 0 10px;
+            min-width: 50px;
+        }
+
+        .toc-page {
+            color: #764ba2;
+            font-weight: bold;
+        }
+
+        .toc a {
+            text-decoration: none;
+            color: inherit;
+            display: flex;
+            align-items: baseline;
+            width: 100%;
+        }
+
+        .toc a:hover {
+            color: #667eea;
+        }
+
+        .section {
+            padding: 40px;
+            page-break-before: always;
+        }
+
+        .section h1 {
+            font-size: 28pt;
+            color: #667eea;
+            border-bottom: 3px solid #764ba2;
+            padding-bottom: 10px;
+            margin-bottom: 30px;
+        }
+
+        .section h2 {
+            font-size: 20pt;
+            color: #764ba2;
+            margin-top: 30px;
+            margin-bottom: 15px;
+        }
+
+        .section h3 {
+            font-size: 16pt;
+            color: #667eea;
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+
+        .section p {
+            margin: 10px 0;
+        }
+
+        .section ul, .section ol {
+            margin: 15px 0 15px 30px;
+        }
+
+        .section li {
+            margin: 8px 0;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .feature-card {
+            border: 2px solid #667eea;
+            border-radius: 8px;
+            padding: 20px;
+            background: #f8f9ff;
+        }
+
+        .feature-card h3 {
+            color: #667eea;
+            margin-top: 0;
+        }
+
+        .highlight-box {
+            background: #fff9c4;
+            border-left: 4px solid #ffd600;
+            padding: 15px;
+            margin: 20px 0;
+        }
+
+        .success-box {
+            background: #e8f5e9;
+            border-left: 4px solid #4caf50;
+            padding: 15px;
+            margin: 20px 0;
+        }
+
+        .warning-box {
+            background: #fff3e0;
+            border-left: 4px solid #ff9800;
+            padding: 15px;
+            margin: 20px 0;
+        }
+
+        .error-box {
+            background: #ffebee;
+            border-left: 4px solid #f44336;
+            padding: 15px;
+            margin: 20px 0;
+        }
+
+        .info-box {
+            background: #e3f2fd;
+            border-left: 4px solid #2196f3;
+            padding: 15px;
+            margin: 20px 0;
+        }
+
+        .step-number {
+            display: inline-block;
+            width: 30px;
+            height: 30px;
+            line-height: 30px;
+            text-align: center;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 9pt;
+            font-weight: bold;
+            margin: 0 5px;
+        }
+
+        .badge-success {
+            background: #4caf50;
+            color: white;
+        }
+
+        .badge-warning {
+            background: #ff9800;
+            color: white;
+        }
+
+        .badge-danger {
+            background: #f44336;
+            color: white;
+        }
+
+        .badge-info {
+            background: #2196f3;
+            color: white;
+        }
+
+        .code-block {
+            background: #f5f5f5;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 15px;
+            font-family: 'Courier New', monospace;
+            font-size: 10pt;
+            overflow-x: auto;
+            margin: 15px 0;
+        }
+
+        .no-break {
+            page-break-inside: avoid;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        table th {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 12px;
+            text-align: left;
+            font-weight: bold;
+        }
+
+        table td {
+            border: 1px solid #ddd;
+            padding: 10px;
+        }
+
+        table tr:nth-child(even) {
+            background: #f8f9ff;
+        }
+
+        .thank-you {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px;
+            page-break-before: always;
+        }
+
+        @media print {
+            .section {
+                page-break-before: always;
+            }
+            .cover, .thank-you {
+                page-break-after: always;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .feature-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Обложка -->
+    <div class="cover">
+        <div class="cover-icon">📅</div>
+        <h1 class="cover-title">Школьная автоматическая система расписания<br>(School Auto-Scheduler)</h1>
+        <p class="cover-subtitle">Полное руководство для школьных администраторов</p>
+        <p class="cover-description">
+            Исчерпывающее руководство по созданию автоматических школьных расписаний, управлению учителями,
+            классами с интеллектуальным обнаружением конфликтов и оптимизацией.
+        </p>
+        <div class="cover-info"><strong>Версия:</strong> 2.0</div>
+        <div class="cover-info"><strong>Дата:</strong> Февраль 2026</div>
+        <div class="cover-info"><strong>Сайт:</strong> https://sc.yamsoft.org</div>
+        <div class="cover-creator">
+            <strong>Создано:</strong> Йоав Моисеев<br>
+            <strong>Сайт:</strong> www.yamsoft.org
+        </div>
+    </div>
+
+    <!-- Оглавление -->
+    <div class="toc">
+        <h1>📑 Оглавление</h1>
+        <ul>
+            <li>
+                <a href="#introduction">
+                    <span class="toc-number">1.</span>
+                    <span class="toc-title">Введение</span>
+                    <span class="toc-dots"></span>
+                    <span class="toc-page">1</span>
+                </a>
+            </li>
+            <li>
+                <a href="#getting-started">
+                    <span class="toc-number">2.</span>
+                    <span class="toc-title">Начало работы</span>
+                    <span class="toc-dots"></span>
+                    <span class="toc-page">2</span>
+                </a>
+            </li>
+            <li>
+                <a href="#creating-schedules">
+                    <span class="toc-number">3.</span>
+                    <span class="toc-title">Создание расписаний</span>
+                    <span class="toc-dots"></span>
+                    <span class="toc-page">3</span>
+                </a>
+            </li>
+            <li>
+                <a href="#features">
+                    <span class="toc-number">4.</span>
+                    <span class="toc-title">Основные функции</span>
+                    <span class="toc-dots"></span>
+                    <span class="toc-page">4</span>
+                </a>
+            </li>
+            <li>
+                <a href="#managing-data">
+                    <span class="toc-number">5.</span>
+                    <span class="toc-title">Управление данными</span>
+                    <span class="toc-dots"></span>
+                    <span class="toc-page">5</span>
+                </a>
+            </li>
+            <li>
+                <a href="#constraints">
+                    <span class="toc-number">6.</span>
+                    <span class="toc-title">Ограничения и правила</span>
+                    <span class="toc-dots"></span>
+                    <span class="toc-page">6</span>
+                </a>
+            </li>
+            <li>
+                <a href="#optimization">
+                    <span class="toc-number">7.</span>
+                    <span class="toc-title">Оптимизация</span>
+                    <span class="toc-dots"></span>
+                    <span class="toc-page">7</span>
+                </a>
+            </li>
+            <li>
+                <a href="#viewing-results">
+                    <span class="toc-number">8.</span>
+                    <span class="toc-title">Просмотр результатов</span>
+                    <span class="toc-dots"></span>
+                    <span class="toc-page">8</span>
+                </a>
+            </li>
+            <li>
+                <a href="#best-practices">
+                    <span class="toc-number">9.</span>
+                    <span class="toc-title">Лучшие практики и советы</span>
+                    <span class="toc-dots"></span>
+                    <span class="toc-page">9</span>
+                </a>
+            </li>
+            <li>
+                <a href="#troubleshooting">
+                    <span class="toc-number">10.</span>
+                    <span class="toc-title">Устранение неполадок</span>
+                    <span class="toc-dots"></span>
+                    <span class="toc-page">10</span>
+                </a>
+            </li>
+            <li>
+                <a href="#quick-reference">
+                    <span class="toc-number">11.</span>
+                    <span class="toc-title">Быстрый справочник</span>
+                    <span class="toc-dots"></span>
+                    <span class="toc-page">11</span>
+                </a>
+            </li>
+            <li>
+                <a href="#rooms-locations">
+                    <span class="toc-number">12.</span>
+                    <span class="toc-title">Кабинеты и места проведения</span>
+                    <span class="toc-dots"></span>
+                    <span class="toc-page">12</span>
+                </a>
+            </li>
+            <li>
+                <a href="#united-groups">
+                    <span class="toc-number">13.</span>
+                    <span class="toc-title">Объединённые группы (расширенные возможности)</span>
+                    <span class="toc-dots"></span>
+                    <span class="toc-page">13</span>
+                </a>
+            </li>
+        </ul>
+    </div>
+
+    <!-- Раздел 1: Введение -->
+    <div class="section" id="introduction">
+        <h1>1. Введение</h1>
+
+        <h2>📚 Что такое школьная автоматическая система расписания?</h2>
+        <p>
+            Школьная автоматическая система расписания — это мощное интеллектуальное веб-приложение,
+            предназначенное для упрощения и автоматизации сложной задачи составления школьных расписаний.
+            Она управляет назначениями учителей и временными слотами, автоматически выявляя и
+            предотвращая конфликты. Система поддерживает <strong>три режима составления расписания</strong>
+            для любого стиля работы:
+        </p>
+        <h2>✨ Основные функции</h2>
+        <div class="feature-grid" style="margin-bottom:10px">
+            <div class="feature-card">
+                <h3>🤖 Автоматический (Автозаполнение)</h3>
+                <p>Система заполняет всё расписание автоматически одним нажатием, опираясь на ограничения, доступность учителей и требования предметов.</p>
+            </div>
+            <div class="feature-card">
+                <h3>✋ Ручной (с подсказками)</h3>
+                <p>Нажмите на любой свободный слот и выберите из умного списка <em>только подходящих предметов и учителей</em> — система скрывает недоступные и конфликтующие варианты.</p>
+            </div>
+            <div class="feature-card">
+                <h3>🔀 Полуавтоматический (гибридный)</h3>
+                <p>Сначала вручную разместите уроки, которые должны быть в фиксированных слотах, затем запустите автозаполнение, чтобы в автоматическом режиме заполнить все остальные слоты — лучшее из двух миров.</p>
+            </div>
+        </div>
+
+        <div class="feature-grid">
+            <div class="feature-card">
+                <h3>🤖 Три режима составления расписания</h3>
+                <p>Автоматический, ручной (с подсказками) и гибридный — выберите подход, подходящий для вашего рабочего процесса.</p>
+            </div>
+            <div class="feature-card">
+                <h3>👨‍🏫 Управление учителями</h3>
+                <p>Управление учителями с назначениями предметов, недельными часами и временными слотами доступности.</p>
+            </div>
+            <div class="feature-card">
+                <h3>👥 Поддержка подгрупп</h3>
+                <p>Разделение классов на подгруппы или уровни, где несколько учителей преподают одновременно разным группам.</p>
+            </div>
+            <div class="feature-card">
+                <h3>🔍 Обнаружение конфликтов</h3>
+                <p>Проверка конфликтов в реальном времени предотвращает двойное бронирование учителей и нарушения ограничений.</p>
+            </div>
+            <div class="feature-card">
+                <h3>📊 Множественные представления</h3>
+                <p>Просмотр расписаний по группе (классу) или по учителю для полной прозрачности.</p>
+            </div>
+            <div class="feature-card">
+                <h3>🌍 Многоязычность</h3>
+                <p>Полная поддержка английского, иврита (RTL) и русского языков с более чем 200 переведенными строками.</p>
+            </div>
+            <div class="feature-card">
+                <h3>📄 Варианты экспорта</h3>
+                <p>Экспорт расписаний в PDF, Excel или печать непосредственно из браузера.</p>
+            </div>
+            <div class="feature-card">
+                <h3>⚙️ Гибкие ограничения</h3>
+                <p>Настройка максимума последовательных уроков, максимума уроков в день и пользовательских правил.</p>
+            </div>
+            <div class="feature-card">
+                <h3>🏫 Кабинеты и местоположения</h3>
+                <p>Определяйте классы, лаборатории и залы. Система отслеживает занятость кабинетов в реальном времени и показывает статус свободен/занят при назначении уроков.</p>
+            </div>
+            <div class="feature-card">
+                <h3>🔗 Объединённые группы</h3>
+                <p>Объединяйте несколько классов в одну группу для совместного урока или разделяйте класс на подгруппы для практических занятий — всё управляется автоматически.</p>
+            </div>
+        </div>
+
+        <h2>💻 Системные требования</h2>
+        <ul>
+            <li><strong>Браузер:</strong> Современный веб-браузер (Chrome, Firefox, Safari, Edge)</li>
+            <li><strong>Интернет-соединение:</strong> Требуется для онлайн-версии</li>
+            <li><strong>Разрешение экрана:</strong> Рекомендуется 1024x768 или выше</li>
+            <li><strong>JavaScript:</strong> Должен быть включен</li>
+        </ul>
+
+        <h2>🌐 Где получить доступ</h2>
+        <div class="info-box">
+            <strong>🔗 Онлайн-версия:</strong><br>
+            Посетите <strong>https://sc.yamsoft.org</strong>, чтобы получить доступ к системе с любого устройства с подключением к Интернету.
+            Установка не требуется!
+        </div>
+
+        <h2>💾 Автономная/локальная версия</h2>
+        <div class="highlight-box">
+            <strong>🏆 Идеально для школ без надежного интернета!</strong><br><br>
+            Школьная автоматическая система расписания также доступна в автономной версии, которая работает полностью на вашем локальном компьютере или школьном сервере:
+            
+            <h3>Почему выбрать автономную версию?</h3>
+            <ul>
+                <li><strong>Максимальная безопасность данных:</strong> Все ваши данные остаются на вашем собственном сервере</li>
+                <li><strong>Интернет не требуется:</strong> Отлично работает в удаленных районах или районах с ненадежным подключением</li>
+                <li><strong>Более быстрая производительность:</strong> Без задержек сети, мгновенное время отклика</li>
+                <li><strong>Полный контроль:</strong> Вы владеете и контролируете все аспекты системы</li>
+                <li><strong>Пользовательское развертывание:</strong> Может быть установлена на существующей инфраструктуре вашей школы</li>
+            </ul>
+
+            <h3>Особенно идеально для:</h3>
+            <ul>
+                <li><strong>Религиозных учебных заведений:</strong> Ортодоксальные, ультраортодоксальные школы и семинарии, предпочитающие отсутствие доступа к интернету</li>
+                <li><strong>Харедим/ультраортодоксальных еврейских общин:</strong> Школы, обслуживающие общины со строгой политикой в отношении интернета</li>
+                <li>Школ в удаленных или сельских районах</li>
+                <li>Учреждений со строгими требованиями к конфиденциальности данных</li>
+                <li>Организаций, которые предпочитают локальные решения</li>
+                <li>Школ с ограниченным или дорогим интернет-соединением</li>
+            </ul>
+
+            <strong>📥 Скачать автономную версию:</strong><br>
+            <a href="https://drive.google.com/file/d/1SkE4XTJ2p_L4uMdK-DMtpbrP3NuCQjuf/view?usp=sharing" target="_blank" style="color: #764ba2; font-weight: bold;">Скачать ZIP-архив</a><br><br>
+
+            <strong>📞 Контактная информация:</strong><br>
+            Для получения поддержки по установке, вариантов индивидуального развертывания или вопросов, пожалуйста, посетите:<br>
+            <strong>www.yamsoft.org</strong>
+        </div>
+    </div>
+
+    <!-- Раздел 2: Начало работы -->
+    <div class="section" id="getting-started">
+        <h1>2. Начало работы</h1>
+
+        <h2>🚀 Руководство по быстрому старту</h2>
+        <p>Следуйте этим 5 простым шагам, чтобы создать свое первое расписание:</p>
+
+        <div class="no-break">
+            <h3><span class="step-number">1</span> Зарегистрируйтесь или войдите</h3>
+            <p>Создайте новую учетную запись или войдите с существующими учетными данными.</p>
+        </div>
+
+        <div class="no-break">
+            <h3><span class="step-number">2</span> Настройте параметры</h3>
+            <p>Установите базовые параметры, такие как количество уроков, язык и ограничения.</p>
+        </div>
+
+        <div class="no-break">
+            <h3><span class="step-number">3</span> Добавьте данные</h3>
+            <p>Введите учителей, группы (классы) и предметы в систему.</p>
+        </div>
+
+        <div class="no-break">
+            <h3><span class="step-number">4</span> Создайте расписание</h3>
+            <p>Нажмите "Автозаполнение" для автоматического создания оптимизированного расписания.</p>
+        </div>
+
+        <div class="no-break">
+            <h3><span class="step-number">5</span> Просмотрите и экспортируйте</h3>
+            <p>Просмотрите созданное расписание и экспортируйте в PDF или Excel.</p>
+        </div>
+
+        <h2>📝 Процесс регистрации</h2>
+        <ol>
+            <li>Посетите <strong>https://sc.yamsoft.org</strong></li>
+            <li>Нажмите кнопку <strong>"Регистрация"</strong></li>
+            <li>Введите свои данные:
+                <ul>
+                    <li>Имя пользователя (будет использоваться для входа)</li>
+                    <li>Пароль (минимум 6 символов)</li>
+                    <li>Электронная почта (необязательно, для восстановления пароля)</li>
+                </ul>
+            </li>
+            <li>Нажмите <strong>"Создать аккаунт"</strong></li>
+            <li>Вы автоматически войдете в систему</li>
+        </ol>
+
+        <h2>🔐 Процесс входа</h2>
+        <ol>
+            <li>Посетите <strong>https://sc.yamsoft.org</strong></li>
+            <li>Введите свое <strong>имя пользователя</strong> и <strong>пароль</strong></li>
+            <li>Нажмите <strong>"Войти"</strong></li>
+            <li>Вы будете перенаправлены на главную панель управления</li>
+        </ol>
+
+        <div class="info-box">
+            <strong>💡 Совет:</strong> Ваш сеанс останется активным в течение 7 дней. После этого вам нужно будет снова войти в систему по соображениям безопасности.
+        </div>
+
+        <h2>🎛️ Обзор панели управления</h2>
+        <p>После входа вы увидите главную панель управления с несколькими вкладками:</p>
+
+        <table>
+            <tr>
+                <th>Название вкладки</th>
+                <th>Назначение</th>
+            </tr>
+            <tr>
+                <td><strong>Учителя</strong></td>
+                <td>Добавление, редактирование и управление профилями учителей с предметами и доступностью</td>
+            </tr>
+            <tr>
+                <td><strong>Группы</strong></td>
+                <td>Создание и управление группами учащихся (классами)</td>
+            </tr>
+            <tr>
+                <td><strong>Предметы</strong></td>
+                <td>Определение предметов с часами в неделю для каждой группы</td>
+            </tr>
+            <tr>
+                <td><strong>Расписание групп</strong></td>
+                <td>Просмотр и создание расписаний для каждого класса/группы</td>
+            </tr>
+            <tr>
+                <td><strong>Расписание учителей</strong></td>
+                <td>Просмотр индивидуальных расписаний учителей</td>
+            </tr>
+            <tr>
+                <td><strong>Конфигурация</strong></td>
+                <td>Установка системных настроек и ограничений</td>
+            </tr>
+            <tr>
+                <td><strong>Импорт/Экспорт</strong></td>
+                <td>Импорт из Excel или экспорт всех данных</td>
+            </tr>
+        </table>
+
+        <h2>🎬 Создание первого расписания</h2>
+        <div class="success-box">
+            <strong>Пример:</strong> Давайте создадим простое расписание для "10-А класса" с 3 учителями и 5 предметами.
+            
+            <ol>
+                <li><strong>Добавьте учителей:</strong>
+                    <ul>
+                        <li>Джон Смит (Математика, Физика)</li>
+                        <li>Сара Джонсон (Английский, История)</li>
+                        <li>Дэвид Ли (Химия)</li>
+                    </ul>
+                </li>
+                <li><strong>Создайте группу:</strong> "10-А класс"</li>
+                <li><strong>Добавьте предметы:</strong>
+                    <ul>
+                        <li>Математика - 5 часов в неделю</li>
+                        <li>Английский - 4 часа в неделю</li>
+                        <li>Физика - 3 часа в неделю</li>
+                        <li>Химия - 3 часа в неделю</li>
+                        <li>История - 2 часа в неделю</li>
+                    </ul>
+                </li>
+                <li><strong>Создайте:</strong> Перейдите в Расписание групп, выберите "10-А класс", нажмите "Автозаполнение"</li>
+                <li><strong>Готово!</strong> Ваше расписание готово!</li>
+            </ol>
+        </div>
+    </div>
+
+    <!-- Раздел 3: Создание расписаний -->
+    <div class="section" id="creating-schedules">
+        <h1>3. Создание расписаний</h1>
+
+        <h2>📊 Обзор входных данных</h2>
+        <p>Школьная автоматическая система расписания требует три основных типа данных для создания расписаний:</p>
+
+        <h3>1️⃣ Информация об учителях</h3>
+        <ul>
+            <li><strong>Имя:</strong> Полное имя учителя</li>
+            <li><strong>Предметы:</strong> Список предметов, которые они преподают, с часами в неделю и назначениями групп</li>
+            <li><strong>Недельные часы:</strong> Временные диапазоны, когда учитель свободен (формат: День:ЧЧ:ММ-ЧЧ:ММ)</li>
+            <li><strong>Доступность:</strong> Альтернативный формат с использованием номеров уроков (формат: День:1-5)</li>
+        </ul>
+
+        <div class="code-block">
+<strong>Пример записи учителя:</strong>
+Имя: Джон Смит
+Предметы:
+  - Математика (5 часов, 10-А класс)
+  - Физика (3 часа, 10-А класс)
+Недельные часы:
+  Monday:08:00-12:00; Tuesday:08:00-15:00; Wednesday:13:00-17:00
+        </div>
+
+        <h3>2️⃣ Группы (Классы)</h3>
+        <ul>
+            <li>Просто список названий классов/групп</li>
+            <li>Примеры: "10-А класс", "11-Б класс", "Группа продвинутой математики"</li>
+        </ul>
+
+        <h3>3️⃣ Предметы</h3>
+        <ul>
+            <li><strong>Название:</strong> Название предмета (Математика, Английский и т.д.)</li>
+            <li><strong>Группа:</strong> Какому классу/группе принадлежит этот предмет</li>
+            <li><strong>Часов в неделю:</strong> Сколько уроков в неделю</li>
+        </ul>
+
+        <div class="warning-box">
+            <strong>⚠️ Примечание о приоритете:</strong> Если заполнены как "Недельные часы", так и "Доступность", система будет использовать <strong>Недельные часы</strong> и игнорировать Доступность. Недельные часы имеют приоритет!
+        </div>
+
+        <h2>🔨 Создание расписания</h2>
+        <ol>
+            <li>Перейдите на вкладку <strong>"Расписание групп"</strong></li>
+            <li>Выберите группу из выпадающего меню</li>
+            <li>Нажмите кнопку <strong>"Автозаполнение"</strong></li>
+            <li>Подтвердите действие (оно перестроит расписание)</li>
+            <li>Подождите немного, пока работает алгоритм</li>
+            <li>Расписание появится в сетке!</li>
+        </ol>
+
+        <div class="success-box">
+            <strong>✅ Успех!</strong> Если все настроено правильно, вы должны увидеть полное расписание со всеми заполненными уроками, цветовой кодировкой по предметам.
+        </div>
+    </div>
+
+    <!-- Разделы 4-11 -->
+    <div class="section" id="features">
+        <h1>4. Основные функции</h1>
+        <p>Система обеспечивает автоматическое обнаружение конфликтов, управление доступностью учителей, распределение кабинетов, требования к предметам, управление временными слотами и специальные ограничения.</p>
+    </div>
+
+    <div class="section" id="managing-data">
+        <h1>5. Управление данными</h1>
+        
+        <h2>📚 Загрузка из примеров</h2>
+        <div class="highlight-box">
+            <strong>🎓 Отлично для новых пользователей!</strong><br><br>
+            Система включает готовые примеры расписаний, которые помогают понять формат и структуру данных:
+            
+            <h3>Доступные примеры:</h3>
+            <ul>
+                <li><strong>English Example.xlsx:</strong> Полный пример на английском языке с примерами учителей, групп и предметов</li>
+                <li><strong>Hebrew-עברית.xlsx:</strong> Пример на иврите (поддержка RTL)</li>
+                <li><strong>Russian-Русский.xlsx:</strong> Пример на русском языке</li>
+            </ul>
+
+            <h3>Как использовать примеры:</h3>
+            <ol>
+                <li>Перейдите на вкладку <strong>Импорт/Экспорт</strong></li>
+                <li>Найдите кнопку <strong>"Загрузить пример"</strong> или выпадающий список</li>
+                <li>Выберите пример (английский, иврит или русский)</li>
+                <li>Нажмите <strong>"Загрузить"</strong></li>
+                <li>Данные примера будут импортированы</li>
+                <li>Изучите данные, чтобы понять формат</li>
+                <li>Измените их в соответствии с потребностями вашей школы!</li>
+            </ol>
+
+            <div class="success-box">
+                <strong>✅ Совет по обучению:</strong> Начните с примера, создайте расписание, затем постепенно заменяйте данные примера реальными данными вашей школы. Это самый простой способ обучения!
+            </div>
+        </div>
+
+        <h2>👥 Продвинутая функция: Поддержка подгрупп и параллельных занятий</h2>
+        <div class="highlight-box">
+            <strong>🎯 Разделение классов на уровни и подгруппы!</strong><br><br>
+            
+            Система поддерживает разделение одного класса на несколько подгрупп или уровней, обучение которых ведется одновременно разными учителями.
+            
+            <h3>📚 Распространенные случаи использования:</h3>
+            <ul>
+                <li><strong>Уровни математики:</strong> Продвинутая, обычная и базовая группы</li>
+                <li><strong>Уровни английского:</strong> Разделение по уровню владения языком</li>
+                <li><strong>Языки:</strong> Носители языка против изучающих как второй язык</li>
+                <li><strong>Элективы:</strong> Студенты выбирают разные предметы в одно и то же время</li>
+            </ul>
+
+            <h3>⚙️ Как это работает:</h3>
+            <ol>
+                <li><strong>Создайте нескольких учителей:</strong> Определите всех учителей, которые будут вести параллельные уроки</li>
+                <li><strong>Назначьте одинаковый предмет и группу:</strong> Несколько учителей назначаются на один предмет для одного класса</li>
+                <li><strong>Умное планирование:</strong> Система находит общие доступные временные слоты для всех учителей</li>
+                <li><strong>Одновременные уроки:</strong> Создает уроки, где все учителя преподают свои подгруппы одновременно</li>
+                <li><strong>Обнаружение конфликтов:</strong> Предупреждает при добавлении уроков, которые делят несколько учителей</li>
+            </ol>
+
+            <strong>✅ Преимущества:</strong>
+            <ul>
+                <li><strong>Автоматическая координация:</strong> Находит временные слоты, где все учителя доступны</li>
+                <li><strong>Без двойного бронирования:</strong> Система понимает, что это параллельные, а не конфликтующие уроки</li>
+                <li><strong>Гибкость в группах:</strong> Поддерживает любое количество подгрупп (2, 3 или более)</li>
+                <li><strong>Обучение на основе уровня:</strong> Обеспечивает дифференцированное обучение</li>
+            </ul>
+
+            <strong>Пример:</strong>
+            <ul>
+                <li>У класса 10А математика, 5 часов в неделю</li>
+                <li>Учитель Джон преподает продвинутой группе</li>
+                <li>Учитель Сара преподает обычной группе</li>
+                <li>Учитель Майк преподает базовой группе</li>
+                <li>Система планирует всех 3 учителей одновременно на эти 5 часов</li>
+            </ul>
+        </div>
+
+        <p>Вы можете загружать данные вручную через веб-интерфейс или импортировать из Excel. Редактируйте существующие расписания, просматривайте различные представления и управляйте всеми аспектами данных.</p>
+    </div>
+
+    <div class="section" id="constraints">
+        <h1>6. Ограничения и правила</h1>
+        <p>Система работает с жесткими ограничениями (которые должны быть выполнены) и мягкими ограничениями (предпочтениями). Управляйте рабочей нагрузкой учителей, вместимостью кабинетов и распределением предметов.</p>
+    </div>
+
+    <div class="section" id="optimization">
+        <h1>7. Оптимизация</h1>
+        <p>Алгоритм работает балансируя конкурирующие требования, соблюдая ограничения и создавая качественные сбалансированные расписания. Используйте ручные корректировки для доработки.</p>
+    </div>
+
+    <div class="section" id="viewing-results">
+        <h1>8. Просмотр результатов</h1>
+        <p>Система предлагает множественные представления: представление группы, представление учителя, представление кабинета и варианты экспорта в PDF, Excel и печать.</p>
+    </div>
+
+    <div class="section" id="best-practices">
+        <h1>9. Лучшие практики и советы</h1>
+        <p>Узнайте, как подготовить данные, общие стратегии составления расписания, как избежать распространенных ошибок и советы для сложных расписаний.</p>
+    </div>
+
+    <div class="section" id="troubleshooting">
+        <h1>10. Устранение неполадок</h1>
+        <p>Решения для общих проблем: сбои автозаполнения, конфликты расписания, ошибки импорта данных и проблемы производительности.</p>
+        
+        <div class="info-box">
+            <strong>📞 Обратиться в службу поддержки:</strong><br>
+            Веб-сайт: www.yamsoft.org<br>
+            Электронная почта: support@yamsoft.org
+        </div>
+    </div>
+
+    <div class="section" id="quick-reference">
+        <h1>11. Быстрый справочник</h1>
+        
+        <h2>✅ Контрольный список для создания расписаний</h2>
+        <div class="success-box">
+            <ul>
+                <li>☐ Соберите всю информацию об учителях</li>
+                <li>☐ Перечислите все классы/группы</li>
+                <li>☐ Определите учебный план (предметы и часы)</li>
+                <li>☐ Определите структуру учебного дня</li>
+                <li>☐ Выявите ограничения и предпочтения</li>
+                <li>☐ Добавьте все данные в систему</li>
+                <li>☐ Запустите автозаполнение</li>
+                <li>☐ Проверьте и внесите корректировки</li>
+                <li>☐ Экспортируйте и распространите</li>
+            </ul>
+        </div>
+
+        <h2>📞 Быстрая контактная информация</h2>
+        <div class="info-box">
+            <strong>Школьная автоматическая система расписания</strong><br>
+            Версия 2.0 - Февраль 2026<br><br>
+            
+            <strong>🌐 Онлайн-доступ:</strong> https://sc.yamsoft.org<br>
+            <strong>💾 Информация об автономной версии:</strong> www.yamsoft.org<br>
+            <strong>📧 Поддержка:</strong> support@yamsoft.org<br><br>
+            
+            <strong>Создано Йоав Моисеев</strong><br>
+            YamSoft - Решения для образовательного программного обеспечения<br>
+            www.yamsoft.org
+        </div>
+    </div>
+
+    <!-- Раздел 12: Кабинеты и места проведения -->
+    <div class="section" id="rooms-locations">
+        <h1>12. Кабинеты и места проведения</h1>
+
+        <h2>🏫 Общий обзор</h2>
+        <p>
+            Функция <strong>Кабинеты</strong> позволяет определять физические аудитории в школе
+            (классы, лаборатории, спортзал и т.д.) и назначать их отдельным урокам.
+            Система отслеживает занятость кабинетов в режиме реального времени
+            и предотвращает назначение двух классов в один кабинет одновременно.
+        </p>
+
+        <h2>➕ Добавление кабинетов</h2>
+        <ol>
+            <li>Откройте вкладку <strong>Кабинеты</strong> в главном меню.</li>
+            <li>Нажмите <strong>Добавить кабинет</strong>.</li>
+            <li>Введите название кабинета (например: «Лаб. 101», «Спортзал», «Библиотека»).</li>
+            <li>При желании добавьте описание (например: «Компьютерный класс, 30 мест»).</li>
+            <li>Нажмите <strong>Сохранить</strong>.</li>
+        </ol>
+
+        <div class="highlight-box">
+            <strong>💡 Совет:</strong> Для каждой группы можно задать <em>кабинет по умолчанию</em>.
+            При редактировании урока система автоматически предвыберет этот кабинет, экономя время.
+        </div>
+
+        <h2>🔗 Назначение кабинета по умолчанию для группы</h2>
+        <p>
+            Во вкладке <strong>Группы</strong> у каждой группы есть необязательное поле <em>Кабинет</em>.
+            Укажите там домашнюю аудиторию группы. Тот кабинет будет автоматически
+            подставляться при редактировании или назначении урока для этой группы.
+        </p>
+
+        <h2>📝 Назначение кабинета уроку</h2>
+        <ol>
+            <li>В виде <strong>Расписание групп</strong> нажмите на любой временной слот.</li>
+            <li>Откроется диалог <strong>Редактировать выбранное</strong>.</li>
+            <li>В выпадающем списке <strong>Кабинет</strong> отображены все определённые кабинеты:<br>
+                <ul>
+                    <li>Кабинеты с <strong>✓</strong> — <em>свободны</em> в это время.</li>
+                    <li>Кабинеты с <strong>✗</strong> — <em>заняты</em>, отображены серым.</li>
+                </ul>
+            </li>
+            <li>Выберите нужный кабинет и нажмите <strong>Сохранить</strong>.</li>
+        </ol>
+
+        <div class="success-box">
+            <strong>✅ Предотвращение конфликтов:</strong> кабинет помечается занятым сразу после сохранения урока.
+            Если вы пытаетесь назначить занятый кабинет, он будет виден. Назначение всё равно возможно, но требует внимания.
+        </div>
+
+        <h2>🖨️ Кабинет в экспорте PDF</h2>
+        <p>
+            При экспорте расписания в PDF назначенный кабинет печатается внутри ячейки урока,
+            чтобы учителя и ученики сразу видели место проведения урока.
+        </p>
+
+        <h2>✏️ Редактирование и удаление кабинетов</h2>
+        <ul>
+            <li>Выберите кабинет из списка и нажмите <strong>Редактировать выбранное</strong> для переименования или изменения описания.</li>
+            <li>Нажмите <strong>Удалить выбранное</strong> для удаления кабинета. Уроки, назначенные в этот кабинет, автоматически очистят поле кабинета.</li>
+        </ul>
+
+        <div class="warning-box">
+            <strong>⚠️ Важно:</strong> Удаление кабинета <em>не удаляет</em> уроки — оно лишь убирает            привязку к кабинету. Уроки остаются в расписании.
+        </div>
+    </div>
+
+    <!-- Раздел 13: Объединённые группы -->
+    <div class="section" id="united-groups">
+        <h1>13. Объединённые группы (расширенные возможности)</h1>
+
+        <h2>🔗 Что такое объединённая группа?</h2>
+        <p>
+            <strong>Объединённая группа</strong> — это виртуальная группа, объединяющая два или более
+            обычных классов (подгрупп) для проведения совместного урока.
+            Эта мощная возможность охватывает два распространённых сценария:
+        </p>
+
+        <div class="feature-grid">
+            <div class="feature-card">
+                <h3>📚 Сценарий А — Объединение классов</h3>
+                <p>
+                    Два или более класса слишком малы или изучают один предмет (напр., электив).
+                    Они занимаются вместе в одном кабинете у одного учителя в один слот.
+                </p>
+            </div>
+            <div class="feature-card">
+                <h3>✂️ Сценарий Б — Разделение класса на подгруппы</h3>
+                <p>
+                    Один класс делится на подгруппы для практических занятий (лаб., физкультура и т.д.).
+                    Каждая подгруппа занимается в разное время, но все они тяготеют к одной объединённой группе.
+                </p>
+            </div>
+        </div>
+
+        <h2>➕ Создание объединённой группы</h2>
+        <ol>
+            <li>Откройте вкладку <strong>Группы</strong>.</li>
+            <li>Нажмите <strong>Добавить группу</strong>.</li>
+            <li>Введите описательное название (напр.: «10А+10Б Английский», «Лаб. 10 класс»).</li>
+            <li>Поставьте галочку <strong>Объединённая группа</strong>.</li>
+            <li>В поле <strong>Подгруппы</strong> выберите названия классов, входящих в эту группу.</li>
+            <li>Нажмите <strong>Сохранить</strong>.</li>
+        </ol>
+
+        <div class="highlight-box">
+            <strong>💡 Пример:</strong> Группы «10А» и «10Б» объединяются в «10А+10Б — Английская литература».
+            Один учитель преподаёт оба класса вместе. Система автоматически расставяет обе группы на один слот.
+        </div>
+
+        <h2>📋 Назначение предметов для объединённой группы</h2>
+        <p>
+            Предметы назначаются <em>объединённой группе</em>, а не отдельным подгруппам.
+            Во вкладке <strong>Предметы</strong> при добавлении укажите в поле <strong>Группа</strong>
+            название объединённой группы. Система зачтёт все подгруппы участниками.
+        </p>
+
+        <h2>⚙️ Как система работает с объединёнными группами</h2>
+        <ul>
+            <li>Автозаполнение помещает урок одновременно
+                <em>во все</em> подгруппы объединённой группы.</li>
+            <li>Расписание учителя обновляется один раз — учитель помечается занятым для всех объединённых групп.</li>
+            <li>Если подгруппа уже занята в данном слоте другой объединённой группой,
+                слот считается занятым и пропускается.</li>
+            <li><strong>Правило сиблингов:</strong> если подгруппы одной объединённой группы
+                находятся в одном слоте для одного учителя — это один объединённый урок, а не конфликт.</li>
+        </ul>
+
+        <h2>✏️ Ручное редактирование урока объединённой группы</h2>
+        <p>
+            Нажмите на любой слот в расписании для одной из подгрупп. Диалог
+            <strong>Редактировать выбранное</strong> покажет только подходящие предметы
+            для данного слота, включая предметы из объединённых групп.
+            Сохранение сразу обновляет все связанные подгруппы.
+        </p>
+
+        <div class="success-box">
+            <strong>✅ Результат:</strong> Объединённые группы исключают необходимость вручную
+            синхронизацию расписаний нескольких классов — система делает это автоматически.
+        </div>
+
+        <h2>⚠️ Агрессивное назначение (принудительное)</h2>
+        <p>
+            В исключительных случаях можно использовать функцию
+            <strong>Агрессивное назначение</strong> в нижней части диалога <em>Редактировать выбранное</em>:
+        </p>
+        <ol>
+            <li>Нажмите на слот, чтобы открыть <strong>Редактировать выбранное</strong>.</li>
+            <li>Выберите нужный предмет в разделе <strong>Агрессивное назначение</strong>.</li>
+            <li><strong>Дважды нажмите</strong> на затемнённую область, чтобы разблокировать.</li>
+            <li>Назначение будет сохранено, даже если оно нарушает обычные правила доступности.</li>
+        </ol>
+        <div class="warning-box">
+            <strong>⚠️ С осторожностью:</strong> агрессивное назначение обходит проверку конфликтов.
+            Такие назначения отмечены в расписании и должны быть проверены перед публикацией.
+        </div>
+
+        <h2>📌 Рекомендации по объединённым группам</h2>
+        <ul>
+            <li>Давайте объединённым группам описательные названия (напр.: «10А+10Б — Физика»).</li>
+            <li>Сохраняйте последовательность в названиях подгрупп в соответствии со списком активных групп.</li>
+            <li>Внимательно настраивайте доступность учителя — он должен быть свободен для всех подгрупп.</li>
+            <li>Используйте вид <strong>Расписание учителя</strong>, чтобы проверить, что учитель не перегружен.</li>
+            <li>После финализации экспортируйте полное расписание в PDF для распределения всем подгруппам.</li>
+        </ul>
+    </div>
+
+    <!-- Страница благодарности -->
+    <div class="thank-you">
+        <h1 style="font-size: 36pt; margin-bottom: 20px;">Спасибо!</h1>
+        <p style="font-size: 14pt; max-width: 600px; margin: 0 auto 30px;">
+            Мы надеемся, что это руководство поможет вам создавать эффективные расписания без конфликтов для вашей школы.
+        </p>
+        <p style="font-size: 12pt; opacity: 0.9;">
+            По вопросам, поддержке или отзывам посетите:
+        </p>
+        <p style="font-size: 16pt; font-weight: bold; margin: 20px 0;">
+            www.yamsoft.org
+        </p>
+        <p style="font-size: 11pt; margin-top: 40px; opacity: 0.85;">
+            <strong>Йоав Моисеев</strong><br>
+            Создатель и разработчик<br>
+            YamSoft Образовательные решения
+        </p>
+        <p style="font-size: 10pt; margin-top: 30px; opacity: 0.7;">
+            © 2026 YamSoft. Все права защищены.
+        </p>
+    </div>
+
+</body>
+</html>
